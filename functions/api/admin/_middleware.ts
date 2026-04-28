@@ -26,12 +26,24 @@ export const onRequest: PagesFunction<Env, string, AdminContextData> = async (co
     return await context.next();
   }
 
-  const jwt = request.headers.get('Cf-Access-Jwt-Assertion');
-  if (!jwt) {
-    return jsonResponse({ ok: false, error: 'Missing Access JWT' }, 401);
-  }
   if (!env.CF_ACCESS_AUD || !env.CF_ACCESS_TEAM_DOMAIN) {
     return jsonResponse({ ok: false, error: 'Access not configured (CF_ACCESS_AUD / CF_ACCESS_TEAM_DOMAIN unset)' }, 500);
+  }
+
+  // Cloudflare injects Cf-Access-Jwt-Assertion for paths covered by an Access policy.
+  // For /api/admin/* (not directly in the policy), fall back to the CF_Authorization
+  // cookie which the browser sends automatically after authenticating at /admin.html.
+  const jwt =
+    request.headers.get('Cf-Access-Jwt-Assertion') ||
+    (request.headers.get('cookie') || '')
+      .split(';')
+      .map((c) => c.trim())
+      .find((c) => c.startsWith('CF_Authorization='))
+      ?.slice('CF_Authorization='.length) ||
+    null;
+
+  if (!jwt) {
+    return jsonResponse({ ok: false, error: 'Missing Access JWT' }, 401);
   }
   try {
     const user = await verifyAccessJWT(jwt, env.CF_ACCESS_AUD, env.CF_ACCESS_TEAM_DOMAIN);

@@ -31,6 +31,21 @@ function renderErrors(errors) {
     '</ul></div>';
 }
 
+function fmtEventDates(starts, ends) {
+  if (!starts) return 'dates TBD';
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const [sy, sm, sd] = starts.split('-').map(Number);
+  // Single-day or missing/matching end date
+  if (!ends || ends === starts) return `${MONTHS[sm - 1]} ${sd}, ${sy}`;
+  const [ey, em, ed] = ends.split('-').map(Number);
+  if (sm === em && sy === ey) {
+    // Same month: "May 22–25, 2026"
+    return `${MONTHS[sm - 1]} ${sd}–${ed}, ${sy}`;
+  }
+  // Different months (same year assumed): "Nov 8 – Dec 1, 2026"
+  return `${MONTHS[sm - 1]} ${sd} – ${MONTHS[em - 1]} ${ed}, ${ey}`;
+}
+
 async function loadEvents() {
   const select = $('#event_id');
   const { ok, body } = await api('GET', '/api/public/events');
@@ -42,7 +57,7 @@ async function loadEvents() {
   }
   const options = ['<option value="">— choose a gathering —</option>'];
   for (const ev of body.events) {
-    const dates = ev.starts_on && ev.ends_on ? ` (${ev.starts_on} → ${ev.ends_on})` : ' (dates TBD)';
+    const dates = ` (${fmtEventDates(ev.starts_on, ev.ends_on)})`;
     const star = ev.kind === 'grand_gathering' ? ' ★' : '';
     options.push(`<option value="${escapeHtml(ev.id)}" data-kind="${escapeHtml(ev.kind)}">${escapeHtml(ev.name)}${star}${escapeHtml(dates)}</option>`);
   }

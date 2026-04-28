@@ -462,6 +462,121 @@ async function loadEventsTab(silent = false) {
   });
 }
 
+function openNewEventModal() {
+  openModal('Add event', `
+    <form id="event-form">
+      <label class="field">
+        <span class="label-text">ID <span class="muted">(slug, e.g. courtly_night_2027)</span></span>
+        <input name="id" placeholder="my_event_2027" required pattern="[a-z0-9_]+" title="Lowercase letters, numbers and underscores only">
+      </label>
+      <label class="field">
+        <span class="label-text">Name</span>
+        <input name="name" placeholder="A Courtly Night" required>
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span class="label-text">Kind</span>
+          <select name="kind">
+            <option value="expedition">Expedition</option>
+            <option value="grand_gathering">Grand Gathering</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="label-text">Active</span>
+          <select name="active">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </label>
+      </div>
+      <div class="field-row">
+        <label class="field">
+          <span class="label-text">Starts on</span>
+          <input type="date" name="starts_on">
+        </label>
+        <label class="field">
+          <span class="label-text">Ends on</span>
+          <input type="date" name="ends_on">
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="secondary" id="cancel-event">Cancel</button>
+        <button type="submit" class="primary">Create</button>
+      </div>
+    </form>
+  `);
+  $('#cancel-event').addEventListener('click', closeModal);
+  $('#event-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const r = await api('POST', '/api/admin/events', {
+      id: f.get('id'),
+      name: f.get('name'),
+      kind: f.get('kind'),
+      starts_on: f.get('starts_on') || null,
+      ends_on: f.get('ends_on') || null,
+      active: f.get('active') === '1',
+    });
+    if (r.ok) { showToast('Event created'); closeModal(); loadEventsTab(); allEvents = []; }
+    else showToast(r.body?.error || 'Create failed', 'error');
+  });
+}
+
+function openNewSeekerModal() {
+  openModal('Add seeker', `
+    <form id="add-seeker-form">
+      <label class="field">
+        <span class="label-text">Name</span>
+        <input type="text" name="name" required>
+      </label>
+      <label class="field">
+        <span class="label-text">Email</span>
+        <input type="email" name="email" required>
+      </label>
+      <label class="field">
+        <span class="label-text">House <span class="muted">(optional)</span></span>
+        <input type="text" name="house">
+      </label>
+      <div class="field">
+        <span class="label-text">Rings pursued</span>
+        <div class="checkbox-row" role="group">
+          <label><input type="checkbox" name="rings_pursued" value="body"> Body</label>
+          <label><input type="checkbox" name="rings_pursued" value="mind"> Mind</label>
+          <label><input type="checkbox" name="rings_pursued" value="soul"> Soul</label>
+        </div>
+      </div>
+      <label class="field">
+        <span class="label-text">First gathering</span>
+        <select name="event_id" required>
+          <option value="">— choose —</option>
+          ${allEvents.map((e) => `<option value="${escapeHtml(e.id)}">${escapeHtml(e.name)}</option>`).join('')}
+        </select>
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="secondary" id="cancel-add-seeker">Cancel</button>
+        <button type="submit" class="primary">Add to Scroll</button>
+      </div>
+    </form>
+  `);
+  $('#cancel-add-seeker').addEventListener('click', closeModal);
+  $('#add-seeker-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const r = await api('POST', '/api/seekers', {
+      name: f.get('name'),
+      email: f.get('email'),
+      house: f.get('house') || null,
+      rings_pursued: f.getAll('rings_pursued'),
+      event_id: f.get('event_id'),
+      preferred_date: null,
+      preferred_time: null,
+      bookings: [],
+    });
+    if (r.ok && r.body?.ok) { showToast('Seeker added'); closeModal(); loadSeekers(); }
+    else showToast(r.body?.error || r.body?.errors?.join(', ') || 'Add failed', 'error');
+  });
+}
+
 function openEventEditModal(id) {
   const ev = allEvents.find((e) => e.id === id);
   if (!ev) return;
@@ -544,6 +659,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const q = e.target.value.toLowerCase();
     renderSeekers(allSeekers.filter((s) => (s.name + ' ' + s.email).toLowerCase().includes(q)));
   });
+  $('#add-event-btn').addEventListener('click', () => openNewEventModal());
+  $('#add-seeker-btn').addEventListener('click', async () => {
+    if (!allEvents.length) await loadEventsTab(true);
+    openNewSeekerModal();
+  });
+
   $('#windows-add-btn').addEventListener('click', () => {
     if (!editingWindowsEventId) return showToast('Choose an event first', 'error');
     editingWindowsBuffer.push({ day_date: '', start_time: '09:00', end_time: '17:00' });

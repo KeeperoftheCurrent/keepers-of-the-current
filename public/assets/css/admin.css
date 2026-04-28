@@ -122,6 +122,7 @@
   display: flex; align-items: center; justify-content: center;
   z-index: 50;
 }
+.modal-backdrop[hidden] { display: none !important; }
 .modal {
   background: var(--red-bg);
   border: 1px solid var(--gold);
