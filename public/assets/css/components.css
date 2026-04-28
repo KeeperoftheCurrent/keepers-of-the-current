@@ -294,6 +294,7 @@ button.secondary:hover { border-color: var(--gold); color: var(--gold-light); }
   z-index: 200;
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 0;
   background: var(--red-dark);
