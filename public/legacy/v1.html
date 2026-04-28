@@ -719,6 +719,44 @@ nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
   .kata-info{max-width:100%;text-align:center;}
   .kata-dots,.kata-controls{justify-content:center;}
 }
+/* ── MOBILE IMPROVEMENTS ─────────────────────────────── */
+nav{display:flex;flex-wrap:wrap;justify-content:center;gap:0.4rem;padding:0.6rem 0.5rem;position:sticky;top:0;z-index:100;background:#1a1008;border-bottom:1px solid rgba(200,150,62,0.15);}
+nav button{flex:1 1 auto;min-width:100px;padding:0.65rem 0.5rem;font-size:0.78rem;}
+
+/* Quick-start panel */
+.quickstart{background:rgba(200,150,62,0.07);border:1px solid rgba(200,150,62,0.25);border-radius:4px;padding:1.2rem 1rem;margin:0 0 1.4rem;}
+.quickstart h3{color:var(--gold);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;margin:0 0 0.8rem;}
+.qs-steps{display:flex;gap:0.8rem;flex-wrap:wrap;margin-bottom:1rem;}
+.qs-step{flex:1 1 120px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:3px;padding:0.6rem 0.7rem;font-size:0.78rem;color:var(--text-dim);line-height:1.5;}
+.qs-step strong{display:block;color:var(--text-light);margin-bottom:0.2rem;}
+.qs-register{display:block;width:100%;text-align:center;padding:0.75rem;background:rgba(200,150,62,0.15);border:1px solid var(--gold);border-radius:3px;color:var(--gold);font-size:0.9rem;text-decoration:none;letter-spacing:0.05em;cursor:pointer;}
+.qs-register:hover{background:rgba(200,150,62,0.25);}
+
+/* Collapsible lore sections */
+details.lore-section{border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:0;}
+details.lore-section summary{list-style:none;cursor:pointer;padding:0.9rem 0;display:flex;align-items:center;justify-content:space-between;}
+details.lore-section summary::-webkit-details-marker{display:none;}
+details.lore-section summary .sum-title{color:var(--text-light);font-family:Georgia,serif;font-size:0.9rem;letter-spacing:0.04em;}
+details.lore-section summary .sum-sub{font-size:0.72rem;color:var(--text-dim);font-style:italic;display:block;margin-top:0.1rem;}
+details.lore-section summary .sum-arrow{color:var(--gold);font-size:0.8rem;transition:transform 0.2s;flex-shrink:0;margin-left:0.8rem;}
+details.lore-section[open] summary .sum-arrow{transform:rotate(90deg);}
+details.lore-section .lore-body{padding-bottom:1rem;}
+
+@media(max-width:600px){
+  .progress-grid,.rings-trio{grid-template-columns:1fr;}
+  .cord-layout{grid-template-columns:1fr;}
+  .bearer-display{grid-template-columns:1fr;text-align:center;}
+  .event-gate-banner{flex-direction:column;}
+  .gate-item+.gate-item{border-left:none;border-top:1px solid var(--border);}
+  .kata-anim-inner{flex-direction:column;}
+  .kata-info{max-width:100%;text-align:center;}
+  .kata-dots,.kata-controls{justify-content:center;}
+  .site-header h1{font-size:1.4rem;}
+  .page{padding:1rem 0.75rem 3rem;}
+  .titles-row{grid-template-columns:1fr;}
+  .ring-card{padding:1rem;}
+  .section-title{font-size:0.9rem;}
+}
 </style>
 </head>
 <body>
@@ -757,7 +795,7 @@ nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
 
   <!-- What is the Current -->
   <div class="lore-body-section">
-    <h2 class="section-title">What Is the Current?<small>The energy that moves between genuine souls</small></h2>
+    <details class="lore-section" open><summary><span class="sum-title">What Is the Current?<span class="sum-sub">The energy that moves between genuine souls</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
     <p>The Current is not water, though the faithful speak of it as a river. It is not fire, though those who give themselves fully to it are said to glow. The Current is a living energy — moving between and through genuine souls wherever they gather in true connection. It is ancient and was long forgotten by the world, rediscovered when a scholar unearthed a manuscript whose teachings had been lost to time.</p>
     <p>Those who walk in its presence have described it as warmth behind the sternum, a hum at the edge of hearing, a weight behind the eyes that is somehow also lightness. It does not grant power over others. It grants something quieter and more profound — the understanding that you are never truly alone. Every soul who walks with the Current adds to your own, and you to theirs. We are all connected. That connection is the foundation of everything the Keepers believe, and the greatest strength there is.</p>
     <div class="lore-pull">"The Current flows toward unity. It does not force. It waits — patient as water finding cracks in stone — for the soul willing to move with it rather than against it."</div>
@@ -766,7 +804,7 @@ nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
 
   <!-- The Four Elements -->
   <div class="lore-body-section">
-    <h2 class="section-title">The Four Elements<small>The pillars of the human self, as the Current understands them</small></h2>
+    </div></details><details class="lore-section"><summary><span class="sum-title">The Four Elements<span class="sum-sub">The pillars of the human self, as the Current understands them</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
     <p>The faith recognizes four elemental forces, each corresponding to a dimension of what it means to be fully alive. The first three — Earth, Wind, and Water — govern the three Pillars that all Keepers are called to develop. Fire is different. Fire does not govern one Pillar. Fire emerges when all three are mastered and moving together.</p>
     <div class="lore-elements-grid">
       <div class="lore-element-card earth">
@@ -831,7 +869,7 @@ nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
 
   <!-- Core Beliefs -->
   <div class="lore-body-section">
-    <h2 class="section-title">Core Beliefs<small>What the Keepers hold to be true</small></h2>
+    </div></details><details class="lore-section"><summary><span class="sum-title">Core Beliefs<span class="sum-sub">What the Keepers hold to be true</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
     <p><strong style="color:var(--gold-light)">The Current flows through all things.</strong> A living force moves through every breathing creature — through flesh and stone, through words spoken and unspoken, through the silence between people who finally understand one another. This is the Current. It is not worshipped. It is felt. It is the reason a stranger's grief can move you to tears, and why a crowd can suddenly breathe as one. You are not separate from the world around you. You are woven into it — and it into you. To become aware of this is the beginning. To move with it is the practice.</p>
     <p><strong style="color:var(--gold-light)">Unity.</strong> The Keepers do not believe in isolation. A soul that cuts itself off — from the Current, from the people and world around it — diminishes. Not as punishment, but as consequence, the way a branch cut from a tree does not flourish. You cannot carry the Current alone. It grows between people. When a circle holds, when a vow is kept, when someone shows up for another without being asked — the Current moves through the space they make for it. We move as one, or we do not move at all.</p>
     <p><strong style="color:var(--gold-light)">Balance.</strong> The Current seeks equilibrium the way water seeks level. It does not require perfection — it requires honesty about where the weight lies. When something is out of balance, the Current presses against it, patient as tide. The Keepers do not try to force the world into a shape they prefer. They try to remain sensitive to where they are adding to the imbalance, and where they are in a position to restore it. Balance is not stillness. It is the willingness to keep adjusting.</p>
@@ -843,7 +881,7 @@ nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
 
   <!-- The Keeper's Call -->
   <div class="lore-body-section">
-    <h2 class="section-title">The Keeper's Call<small>Liturgy and practice</small></h2>
+    </div></details><details class="lore-section"><summary><span class="sum-title">The Keeper's Call<span class="sum-sub">Liturgy and practice</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
     <p>When the Keeper calls the faithful to attention — before a ritual, at the opening of a Circle, at the close of a working — there is a call and response that has become the heartbeat of the faith. It is spoken over a single drum pulse:</p>
     <div class="lore-pull" style="text-align:center;font-size:0.95rem;">
       <strong style="color:var(--gold-light);font-style:normal;">Keeper: "When I call you respond."</strong><br>
@@ -854,7 +892,7 @@ nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
 
   <!-- Talia -->
   <div class="lore-body-section">
-    <h2 class="section-title">Talia Emberborn<small>High Priestess of the Current</small></h2>
+    </div></details><details class="lore-section"><summary><span class="sum-title">Talia Emberborn<span class="sum-sub">High Priestess of the Current</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
     <div class="lore-talia-row">
       <img class="lore-talia-portrait" src="../TaliaEmberborn_portrait.png" alt="Talia Emberborn" onerror="this.style.display='none'"/>
       <div class="lore-talia-bio">
@@ -869,7 +907,7 @@ nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
 
   <!-- Discord + Video -->
   <div class="lore-body-section">
-    <h2 class="section-title">Find the Current<small>Connect with the Keepers</small></h2>
+    </div></details><details class="lore-section"><summary><span class="sum-title">Find the Current<span class="sum-sub">Connect with the Keepers</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
     <div class="lore-media-grid">
       <div class="lore-media-card">
         <div class="media-icon">⚡</div>
@@ -892,7 +930,17 @@ nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
 </div>
 
 <!-- ══════════════════════════════════════════ TRIALS PAGE -->
-<div id="page-trials" class="page active">
+</div></details><div id="page-trials" class="page active">
+
+  <div class="quickstart">
+    <h3>How it Works</h3>
+    <div class="qs-steps">
+      <div class="qs-step"><strong>1. Register</strong>Add your name to the Trial Scroll to begin.</div>
+      <div class="qs-step"><strong>2. Complete Trials</strong>Three pillars — Body, Mind, Soul — three tiers each.</div>
+      <div class="qs-step"><strong>3. Earn Your Rings</strong>One ring per pillar. All three makes you a Master.</div>
+    </div>
+    <a class="qs-register" onclick="showPage('tracker',document.querySelector('nav button:nth-child(4)'))">✦ Register as a Seeker ✦</a>
+  </div>
 
   <div class="lore-intro">
     <blockquote>
@@ -1513,189 +1561,21 @@ updateUI();requestAnimationFrame(frame);
 
       <!-- Body ring — woven antler/thorn crown ring -->
       <div class="ring-card body-ring">
-        <svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <filter id="body-glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="2" result="b"/>
-              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <radialGradient id="bone-grad" cx="45%" cy="35%" r="65%">
-              <stop offset="0%" stop-color="#e8e4d8"/>
-              <stop offset="60%" stop-color="#c4bfaf"/>
-              <stop offset="100%" stop-color="#8a8478"/>
-            </radialGradient>
-          </defs>
-          <!-- Dark background circle -->
-          <circle cx="60" cy="60" r="56" fill="#1a1208" opacity="0.6"/>
-          <!-- Ring base — broad thorn-crown band, top-down oval -->
-          <ellipse cx="60" cy="63" rx="40" ry="14" fill="url(#bone-grad)" opacity="0.9" filter="url(#body-glow)"/>
-          <ellipse cx="60" cy="63" rx="40" ry="14" fill="none" stroke="#a09888" stroke-width="1.2"/>
-          <!-- Hollow center -->
-          <ellipse cx="60" cy="63" rx="25" ry="8" fill="#1a1208"/>
-          <ellipse cx="60" cy="63" rx="25" ry="8" fill="none" stroke="#706a58" stroke-width="0.8"/>
-          <!-- Thorn spikes radiating upward from the crown ring -->
-          <!-- Spike 1 - leftmost -->
-          <path d="M 28 58 C 24 46 20 36 22 22 C 23 30 26 42 30 54 Z" fill="#d4cfc0" stroke="#9a9280" stroke-width="0.8"/>
-          <!-- Spike 2 -->
-          <path d="M 38 54 C 36 40 34 28 37 14 C 38 24 40 38 42 52 Z" fill="#ccc8b8" stroke="#9a9280" stroke-width="0.8"/>
-          <!-- Spike 3 - center-left -->
-          <path d="M 50 52 C 50 36 50 22 52 10 C 53 22 53 38 54 51 Z" fill="#d8d4c4" stroke="#9a9280" stroke-width="0.8"/>
-          <!-- Spike 4 - center -->
-          <path d="M 60 51 C 60 34 60 20 60 8 C 61 20 61 36 61 51 Z" fill="#e0dcd0" stroke="#a09888" stroke-width="1"/>
-          <!-- Spike 5 - center-right -->
-          <path d="M 70 52 C 70 36 70 22 68 10 C 68 22 68 38 67 51 Z" fill="#d8d4c4" stroke="#9a9280" stroke-width="0.8"/>
-          <!-- Spike 6 -->
-          <path d="M 82 54 C 84 40 86 28 83 14 C 82 24 80 38 78 52 Z" fill="#ccc8b8" stroke="#9a9280" stroke-width="0.8"/>
-          <!-- Spike 7 - rightmost -->
-          <path d="M 92 58 C 96 46 100 36 98 22 C 97 30 94 42 90 54 Z" fill="#d4cfc0" stroke="#9a9280" stroke-width="0.8"/>
-          <!-- Small cross-twig details on spikes -->
-          <path d="M 34 38 L 40 42" stroke="#a09080" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
-          <path d="M 48 32 L 55 36" stroke="#a09080" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
-          <path d="M 66 32 L 73 36" stroke="#a09080" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
-          <path d="M 80 38 L 86 42" stroke="#a09080" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
-          <!-- Ring band texture lines (woven look) -->
-          <path d="M 22 60 Q 60 55 98 60" fill="none" stroke="#a09888" stroke-width="0.6" opacity="0.5"/>
-          <path d="M 22 64 Q 60 68 98 64" fill="none" stroke="#706a58" stroke-width="0.6" opacity="0.4"/>
-          <!-- Highlight -->
-          <ellipse cx="52" cy="59" rx="12" ry="3.5" fill="#f0ede0" opacity="0.25"/>
-        </svg>
+        <img src="/assets/img/ring_body.png" alt="Ring of Endurance" style="display:block;margin:0 auto 0.8rem;width:180px;height:auto;">
         <div class="ring-title">Ring of Endurance</div>
         <div class="ring-sub">Body · Silver</div>
       </div>
 
       <!-- Mind ring — wide dark band with chain-link inlay and Roman numerals -->
       <div class="ring-card mind-ring">
-        <svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <filter id="mind-glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="1.5" result="b"/>
-              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <linearGradient id="onyx-face" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#3a3a42"/>
-              <stop offset="40%" stop-color="#1e1e24"/>
-              <stop offset="100%" stop-color="#0e0e12"/>
-            </linearGradient>
-            <linearGradient id="onyx-side" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#4a4a54"/>
-              <stop offset="100%" stop-color="#1a1a20"/>
-            </linearGradient>
-          </defs>
-          <!-- Dark background -->
-          <circle cx="60" cy="60" r="56" fill="#12120e" opacity="0.5"/>
-          <!-- Ring body — 3/4 perspective wide band ring -->
-          <!-- Bottom ellipse (underside of band) -->
-          <ellipse cx="60" cy="78" rx="38" ry="12" fill="#0e0e12"/>
-          <!-- Side face of band (front-facing thickness) -->
-          <rect x="22" y="48" width="76" height="30" fill="url(#onyx-side)" rx="2"/>
-          <!-- Top ellipse (top face of band) -->
-          <ellipse cx="60" cy="48" rx="38" ry="12" fill="url(#onyx-face)" filter="url(#mind-glow)"/>
-          <!-- Ring hole - bottom -->
-          <ellipse cx="60" cy="78" rx="22" ry="6.5" fill="#1a1208"/>
-          <!-- Ring hole - side -->
-          <rect x="38" y="48" width="44" height="30" fill="#1a1208"/>
-          <!-- Ring hole - top -->
-          <ellipse cx="60" cy="48" rx="22" ry="6.5" fill="#0c0c10"/>
-          <!-- Chain-link inlay pattern across the band face -->
-          <!-- Chain links as small interlocked ovals -->
-          <g stroke="#55555f" stroke-width="1" fill="none" opacity="0.85">
-            <!-- Row of chain links -->
-            <ellipse cx="32" cy="62" rx="5" ry="3" transform="rotate(-20,32,62)"/>
-            <ellipse cx="40" cy="60" rx="5" ry="3" transform="rotate(20,40,60)"/>
-            <ellipse cx="48" cy="62" rx="5" ry="3" transform="rotate(-20,48,62)"/>
-            <ellipse cx="56" cy="60" rx="5" ry="3" transform="rotate(20,56,60)"/>
-            <ellipse cx="64" cy="62" rx="5" ry="3" transform="rotate(-20,64,62)"/>
-            <ellipse cx="72" cy="60" rx="5" ry="3" transform="rotate(20,72,60)"/>
-            <ellipse cx="80" cy="62" rx="5" ry="3" transform="rotate(-20,80,62)"/>
-            <ellipse cx="88" cy="60" rx="5" ry="3" transform="rotate(20,88,60)"/>
-            <!-- Connecting links -->
-            <ellipse cx="36" cy="61" rx="4" ry="2.5" transform="rotate(70,36,61)" opacity="0.6"/>
-            <ellipse cx="44" cy="61" rx="4" ry="2.5" transform="rotate(70,44,61)" opacity="0.6"/>
-            <ellipse cx="52" cy="61" rx="4" ry="2.5" transform="rotate(70,52,61)" opacity="0.6"/>
-            <ellipse cx="60" cy="61" rx="4" ry="2.5" transform="rotate(70,60,61)" opacity="0.6"/>
-            <ellipse cx="68" cy="61" rx="4" ry="2.5" transform="rotate(70,68,61)" opacity="0.6"/>
-            <ellipse cx="76" cy="61" rx="4" ry="2.5" transform="rotate(70,76,61)" opacity="0.6"/>
-            <ellipse cx="84" cy="61" rx="4" ry="2.5" transform="rotate(70,84,61)" opacity="0.6"/>
-          </g>
-          <!-- Roman numerals I, II, III etched on the face -->
-          <text x="34" y="58" font-family="Georgia,serif" font-size="8" fill="#707080" opacity="0.9" text-anchor="middle" letter-spacing="1">I</text>
-          <text x="60" y="58" font-family="Georgia,serif" font-size="8" fill="#707080" opacity="0.9" text-anchor="middle" letter-spacing="1">II</text>
-          <text x="86" y="58" font-family="Georgia,serif" font-size="8" fill="#707080" opacity="0.9" text-anchor="middle" letter-spacing="1">III</text>
-          <!-- Edge highlights -->
-          <ellipse cx="60" cy="48" rx="38" ry="12" fill="none" stroke="#55555f" stroke-width="1.2" opacity="0.6"/>
-          <path d="M 22 48 L 22 78" stroke="#4a4a54" stroke-width="1" opacity="0.4"/>
-          <path d="M 98 48 L 98 78" stroke="#4a4a54" stroke-width="1" opacity="0.4"/>
-          <!-- Subtle highlight on top face -->
-          <ellipse cx="48" cy="44" rx="14" ry="4" fill="#606070" opacity="0.15"/>
-        </svg>
+        <img src="/assets/img/ring_mind.png" alt="Ring of Focus" style="display:block;margin:0 auto 0.8rem;width:180px;height:auto;">
         <div class="ring-title">Ring of Focus</div>
         <div class="ring-sub">Mind · Onyx</div>
       </div>
 
       <!-- Soul ring — gold band with celestial/scroll vine engravings -->
       <div class="ring-card soul-ring">
-        <svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <filter id="soul-glow" x="-25%" y="-25%" width="150%" height="150%">
-              <feGaussianBlur stdDeviation="2.5" result="b"/>
-              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <radialGradient id="gold-face" cx="40%" cy="35%" r="70%">
-              <stop offset="0%" stop-color="#f4d060"/>
-              <stop offset="45%" stop-color="#c8963e"/>
-              <stop offset="100%" stop-color="#7a5818"/>
-            </radialGradient>
-            <linearGradient id="gold-band" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#d4a840"/>
-              <stop offset="50%" stop-color="#9a6c20"/>
-              <stop offset="100%" stop-color="#6a4810"/>
-            </linearGradient>
-          </defs>
-          <!-- Warm dark background -->
-          <circle cx="60" cy="60" r="56" fill="#1a1208" opacity="0.55"/>
-          <!-- Band underside -->
-          <ellipse cx="60" cy="78" rx="40" ry="13" fill="#7a5818"/>
-          <!-- Band side (front face) -->
-          <rect x="20" y="47" width="80" height="31" fill="url(#gold-band)" rx="1.5"/>
-          <!-- Top face of band -->
-          <ellipse cx="60" cy="47" rx="40" ry="13" fill="url(#gold-face)" filter="url(#soul-glow)"/>
-          <!-- Ring center hole - bottom -->
-          <ellipse cx="60" cy="78" rx="24" ry="7.5" fill="#1a1208"/>
-          <!-- Ring center hole - side -->
-          <rect x="36" y="47" width="48" height="31" fill="#1a1208"/>
-          <!-- Ring center hole - top -->
-          <ellipse cx="60" cy="47" rx="24" ry="7.5" fill="#120e04"/>
-          <!-- Engraved vine/scroll pattern around the band face -->
-          <g stroke="#e8c060" stroke-width="0.9" fill="none" opacity="0.75">
-            <!-- Central vine stem -->
-            <path d="M 24 62 Q 42 56 60 62 Q 78 68 96 62"/>
-            <!-- Vine curls left side -->
-            <path d="M 30 62 C 26 54 30 50 34 54 C 30 54 28 60 30 62"/>
-            <path d="M 40 58 C 38 50 42 46 45 50 C 41 50 39 56 40 58"/>
-            <!-- Vine curls center -->
-            <path d="M 56 62 C 54 52 58 48 62 52 C 58 52 56 58 56 62"/>
-            <path d="M 64 62 C 66 70 62 74 58 70 C 62 70 64 64 64 62"/>
-            <!-- Vine curls right side -->
-            <path d="M 76 64 C 78 72 74 76 70 72 C 74 72 76 66 76 64"/>
-            <path d="M 86 62 C 90 52 86 48 82 52 C 86 52 88 58 86 62"/>
-          </g>
-          <!-- Small star/celestial dots scattered on band -->
-          <g fill="#f0d070" opacity="0.7">
-            <circle cx="28" cy="55" r="1.2"/>
-            <circle cx="46" cy="70" r="1"/>
-            <circle cx="60" cy="53" r="1.3"/>
-            <circle cx="74" cy="70" r="1"/>
-            <circle cx="92" cy="55" r="1.2"/>
-            <circle cx="38" cy="60" r="0.8"/>
-            <circle cx="82" cy="62" r="0.8"/>
-          </g>
-          <!-- Thin edge detail lines -->
-          <ellipse cx="60" cy="47" rx="40" ry="13" fill="none" stroke="#e8c060" stroke-width="1.2" opacity="0.5"/>
-          <ellipse cx="60" cy="78" rx="40" ry="13" fill="none" stroke="#a07828" stroke-width="0.8" opacity="0.4"/>
-          <!-- Highlight gleam on top face -->
-          <ellipse cx="48" cy="43" rx="15" ry="4.5" fill="#f8e890" opacity="0.2"/>
-          <ellipse cx="44" cy="42" rx="7" ry="2" fill="#fff8d0" opacity="0.25"/>
-        </svg>
+        <img src="/assets/img/ring_soul.png" alt="Ring of Connection" style="display:block;margin:0 auto 0.8rem;width:200px;height:auto;">
         <div class="ring-title">Ring of Connection</div>
         <div class="ring-sub">Soul · Gold tone</div>
       </div>
