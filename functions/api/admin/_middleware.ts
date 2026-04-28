@@ -10,9 +10,10 @@ import type { Env } from '../../lib/db';
 import { jsonResponse } from '../../_middleware';
 import { verifyAccessJWT, type AccessUser } from '../../lib/access';
 
-export interface AdminContextData {
+export type AdminContextData = {
   user: AccessUser;
-}
+  [key: string]: unknown;
+};
 
 export const onRequest: PagesFunction<Env, string, AdminContextData> = async (context) => {
   const { request, env } = context;

@@ -88,7 +88,7 @@ export const onRequestPost: PagesFunction<Env, string, AdminContextData> = async
 
   let evalResult: Awaited<ReturnType<typeof evaluateAwards>> | null = null;
   if (outcome === 'passed') {
-    evalResult = await evaluateAwards(env, seeker_id, data.user.email, event_id);
+    evalResult = await evaluateAwards(env, seeker_id!, data.user.email, event_id);
   }
 
   await audit(env, {
