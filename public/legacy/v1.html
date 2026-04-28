@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trial of the Three Rings — Keepers of the Current</title>
+<style>
+:root {
+  --gold:        #C8963E;
+  --gold-light:  #E8B96A;
+  --gold-dim:    #7a5a22;
+  --gold-faint:  rgba(200,150,62,0.12);
+  --red-bg:      #0e0404;
+  --red-dark:    #1a0808;
+  --red-mid:     #2a0e0e;
+  --red-panel:   rgba(42,14,14,0.7);
+  --copper:      #b87333;
+  --copper-bg:   rgba(184,115,51,0.12);
+  --silver:      #b0aea6;
+  --silver-bg:   rgba(176,174,166,0.12);
+  --onyx:        #2a2a30;
+  --onyx-bright: #55555f;
+  --onyx-text:   #9090a0;
+  --onyx-bg:     rgba(42,42,48,0.30);
+  --soul-gold:   #C8963E;
+  --parchment:   #f5e9d0;
+  --parchment-dim:#c4b48a;
+  --text-light:  #f0dfc0;
+  --text-dim:    #907050;
+  --border:      rgba(200,150,62,0.25);
+  --border-bright:rgba(200,150,62,0.5);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Georgia','Times New Roman',serif;
+  background:var(--red-bg);
+  color:var(--text-light);
+  min-height:100vh;
+  background-image:
+    radial-gradient(ellipse at 30% 10%, rgba(80,20,10,0.4) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 90%, rgba(60,15,5,0.3) 0%, transparent 60%);
+}
+
+/* ── HEADER ───────────────────────────────────────────── */
+.site-header{
+  background:linear-gradient(180deg,#060101 0%,var(--red-dark) 60%,var(--red-mid) 100%);
+  border-bottom:1px solid var(--border-bright);
+  padding:2.5rem 1rem 1.8rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.site-header::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(200,150,62,0.18) 0%,transparent 65%);
+  pointer-events:none;
+}
+.header-sigil{
+  display:block;
+  width:160px;height:160px;
+  object-fit:contain;
+  padding:10px;
+  margin:0 auto 0.6rem;
+  filter:drop-shadow(0 0 22px rgba(200,150,62,0.65));
+}
+.header-title-img{
+  display:block;
+  max-width:520px;width:92%;
+  margin:0 auto 0.3rem;
+  border-radius:4px;
+  filter:drop-shadow(0 2px 16px rgba(0,0,0,0.7));
+}
+.site-header h1{
+  font-size:clamp(0.95rem,2.8vw,1.55rem);
+  color:var(--gold-light);
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  text-shadow:0 0 20px rgba(200,150,62,0.35);
+  margin-bottom:0.25rem;
+  font-weight:normal;
+  font-style:italic;
+  opacity:0.85;
+}
+.site-header .religion-name{
+  font-size:0.85rem;color:var(--text-dim);
+  font-style:italic;letter-spacing:0.08em;
+  margin-bottom:1rem;
+}
+.doctrine-banner{
+  max-width:560px;margin:0 auto;
+  font-size:0.82rem;color:var(--parchment-dim);
+  font-style:italic;line-height:1.85;
+  border-top:1px solid var(--border);
+  padding-top:1rem;
+}
+.doctrine-banner strong{color:var(--gold-light);font-style:normal;}
+
+/* ── NAV ──────────────────────────────────────────────── */
+nav{
+  display:flex;justify-content:center;flex-wrap:wrap;
+  background:var(--red-dark);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+}
+nav button{
+  background:none;border:none;
+  color:var(--text-dim);
+  padding:0.75rem 1.1rem;
+  cursor:pointer;font-family:inherit;font-size:0.8rem;
+  letter-spacing:0.05em;text-transform:uppercase;
+  border-bottom:2px solid transparent;
+  transition:all 0.2s;
+}
+nav button:hover{color:var(--gold-light);}
+nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* ── LAYOUT ───────────────────────────────────────────── */
+.page{display:none;padding:2rem 1rem 4rem;max-width:920px;margin:0 auto;}
+.page.active{display:block;}
+
+/* ── ORNAMENTAL DIVIDER ───────────────────────────────── */
+.ornament{
+  display:flex;align-items:center;gap:1rem;
+  margin:2.2rem 0;color:var(--gold-dim);
+}
+.ornament::before,.ornament::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--border-bright),transparent);
+}
+.ornament span{font-size:1rem;color:var(--gold);flex-shrink:0;}
+
+/* ── SECTION TITLES ───────────────────────────────────── */
+.section-title{
+  font-size:1.2rem;color:var(--gold);
+  text-transform:uppercase;letter-spacing:0.1em;
+  margin-bottom:1.4rem;
+  padding-bottom:0.5rem;
+  border-bottom:1px solid var(--border);
+}
+.section-title small{
+  display:block;font-size:0.72rem;
+  color:var(--text-dim);text-transform:none;
+  font-style:italic;margin-top:0.2rem;
+}
+
+/* ── LORE PAGE ────────────────────────────────────────── */
+.lore-intro{
+  background:rgba(200,150,62,0.05);
+  border:1px solid var(--border);
+  border-radius:4px;padding:1.6rem;
+  margin-bottom:2rem;text-align:center;
+}
+.lore-intro blockquote{
+  font-style:italic;color:var(--parchment-dim);
+  line-height:2;font-size:0.92rem;
+}
+.lore-intro blockquote strong{color:var(--gold-light);font-style:normal;}
+
+/* ── THE CURRENT LORE PAGE ───────────────────────────── */
+.lore-hero{
+  text-align:center;padding:2rem 1rem 1.5rem;
+  border-bottom:1px solid var(--border);margin-bottom:2.5rem;
+}
+.lore-hero-sigil{
+  width:120px;height:120px;object-fit:contain;
+  padding:8px;display:block;margin:0 auto 1.2rem;
+  filter:drop-shadow(0 0 18px rgba(200,150,62,0.55));
+}
+.lore-hero-quote{
+  font-size:1.4rem;font-style:italic;color:var(--gold-light);
+  letter-spacing:0.06em;margin-bottom:0.5rem;
+  text-shadow:0 0 24px rgba(200,150,62,0.4);
+}
+.lore-hero-sub{
+  font-size:0.82rem;color:var(--text-dim);font-style:italic;
+}
+.lore-body-section{margin-bottom:2.5rem;}
+.lore-body-section p{
+  font-size:0.87rem;color:var(--text-dim);
+  line-height:1.9;margin-bottom:0.9rem;
+}
+.lore-body-section p em{color:var(--parchment-dim);}
+.lore-pull{
+  border-left:3px solid var(--gold-dim);padding:0.6rem 1rem;
+  margin:1.2rem 0;font-style:italic;
+  color:var(--parchment-dim);font-size:0.88rem;line-height:1.85;
+  background:rgba(200,150,62,0.04);
+}
+.lore-elements-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:1rem;margin:1.5rem 0;
+}
+.lore-element-card{
+  border-radius:4px;padding:1.1rem;border:1px solid;text-align:center;
+}
+.lore-element-card.earth{border-color:var(--copper);background:var(--copper-bg);}
+.lore-element-card.wind{border-color:var(--silver);background:var(--silver-bg);}
+.lore-element-card.water{border-color:var(--soul-gold);background:var(--gold-faint);}
+.lore-element-card.fire{
+  border-color:rgba(220,90,50,0.5);
+  background:rgba(180,60,40,0.1);
+}
+.lore-element-card .el-icon{
+  display:flex;justify-content:center;align-items:center;
+  height:52px;margin-bottom:0.6rem;
+}
+.lore-element-card .el-name{
+  font-size:0.8rem;text-transform:uppercase;letter-spacing:0.08em;
+  font-weight:bold;margin-bottom:0.15rem;
+}
+.lore-element-card.earth .el-name{color:var(--copper);}
+.lore-element-card.wind .el-name{color:var(--silver);}
+.lore-element-card.water .el-name{color:var(--soul-gold);}
+.lore-element-card.fire .el-name{color:#e06040;}
+.lore-element-card .el-pillar{
+  font-size:0.7rem;color:var(--text-dim);font-style:italic;margin-bottom:0.5rem;
+}
+.lore-element-card p{font-size:0.78rem;color:var(--text-dim);line-height:1.65;}
+.lore-talia-row{
+  display:flex;gap:1.8rem;align-items:flex-start;
+  margin:1.5rem 0;flex-wrap:wrap;
+}
+.lore-talia-portrait{
+  width:140px;flex-shrink:0;border-radius:4px;
+  border:1px solid var(--border-bright);
+  filter:drop-shadow(0 2px 12px rgba(0,0,0,0.5));
+}
+.lore-talia-bio{flex:1;min-width:200px;}
+.lore-talia-bio p{font-size:0.85rem;color:var(--text-dim);line-height:1.85;margin-bottom:0.7rem;}
+.lore-media-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:1.2rem;margin-top:1.5rem;
+}
+.lore-media-card{
+  border:1px solid var(--border);border-radius:4px;
+  padding:1.3rem;text-align:center;
+  background:rgba(255,255,255,0.02);
+}
+.lore-media-card .media-icon{font-size:2rem;margin-bottom:0.7rem;}
+.lore-media-card h4{
+  font-size:0.88rem;color:var(--gold-light);
+  margin-bottom:0.5rem;letter-spacing:0.04em;
+}
+.lore-media-card p{font-size:0.78rem;color:var(--text-dim);line-height:1.65;margin-bottom:0.9rem;}
+.lore-media-link{
+  display:inline-block;padding:0.45rem 1rem;
+  background:rgba(200,150,62,0.15);border:1px solid var(--gold-dim);
+  border-radius:3px;color:var(--gold);font-size:0.78rem;
+  text-decoration:none;letter-spacing:0.04em;transition:background 0.2s;
+}
+.lore-media-link:hover{background:rgba(200,150,62,0.28);color:var(--gold-light);}
+.lore-video-embed{
+  margin-top:1.2rem;border-radius:4px;overflow:hidden;
+  border:1px solid var(--border);
+}
+.lore-video-embed iframe{display:block;width:100%;border:none;}
+
+.event-gate-banner{
+  display:flex;gap:0;margin-bottom:2rem;
+  border:1px solid var(--border);border-radius:4px;overflow:hidden;
+}
+.gate-item{
+  flex:1;text-align:center;padding:0.9rem 0.5rem;
+  background:rgba(255,255,255,0.02);
+}
+.gate-item+.gate-item{border-left:1px solid var(--border);}
+.gate-item .gate-tier{
+  font-size:0.7rem;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--gold);margin-bottom:0.3rem;
+}
+.gate-item .gate-rule{
+  font-size:0.8rem;color:var(--text-dim);font-style:italic;
+}
+
+.pillar-intro-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:1.2rem;margin-bottom:2rem;
+}
+.pillar-intro-card{
+  border-radius:4px;padding:1.2rem;border:1px solid;
+}
+.pillar-intro-card.body{border-color:var(--silver);background:var(--silver-bg);}
+.pillar-intro-card.mind{border-color:var(--onyx-bright);background:var(--onyx-bg);}
+.pillar-intro-card.soul{border-color:var(--soul-gold);background:var(--gold-faint);}
+.pillar-intro-card .pillar-symbol{
+  display:flex;justify-content:center;align-items:center;
+  margin-bottom:0.8rem;
+}
+.pillar-intro-card .ring-name-large{
+  font-size:1.05rem;font-weight:bold;letter-spacing:0.06em;
+  margin-bottom:0.15rem;text-align:center;
+}
+.pillar-intro-card.body .ring-name-large{color:var(--silver);}
+.pillar-intro-card.mind .ring-name-large{color:var(--onyx-text);}
+.pillar-intro-card.soul .ring-name-large{color:var(--soul-gold);}
+.pillar-intro-card h3{
+  font-size:0.72rem;text-transform:uppercase;
+  letter-spacing:0.12em;margin-bottom:0.7rem;
+  text-align:center;
+}
+.pillar-intro-card.body h3{color:var(--silver);opacity:0.7;}
+.pillar-intro-card.mind h3{color:var(--onyx-text);opacity:0.9;}
+.pillar-intro-card.soul h3{color:var(--soul-gold);opacity:0.7;}
+.pillar-intro-card .ring-label{display:none;}
+.pillar-intro-card p{font-size:0.83rem;color:var(--text-dim);line-height:1.7;}
+
+.tier-block{
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--border);
+  border-radius:4px;margin-bottom:1rem;overflow:hidden;
+}
+.tier-header{
+  display:flex;align-items:center;gap:0.9rem;
+  padding:0.9rem 1.2rem;cursor:pointer;
+  background:rgba(255,255,255,0.02);
+  border-bottom:1px solid transparent;transition:background 0.2s;
+}
+.tier-header:hover{background:rgba(200,150,62,0.06);}
+.tier-header.open{border-bottom-color:var(--border);}
+.tier-num{
+  flex-shrink:0;width:34px;height:34px;
+  border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:0.75rem;
+  font-weight:bold;letter-spacing:0.05em;
+}
+.body .tier-num{background:rgba(176,174,166,0.18);border:1px solid var(--silver);color:var(--silver);}
+.mind .tier-num{background:rgba(42,42,48,0.35);border:1px solid var(--onyx-bright);color:var(--onyx-text);}
+.soul .tier-num{background:rgba(200,150,62,0.18);border:1px solid var(--soul-gold);color:var(--soul-gold);}
+.tier-header-text{flex:1;}
+.tier-header-text h4{font-size:0.92rem;color:var(--text-light);}
+.tier-header-text .epigraph{font-size:0.75rem;font-style:italic;color:var(--text-dim);margin-top:0.1rem;}
+.tier-badge-tag{
+  flex-shrink:0;font-size:0.65rem;
+  background:rgba(200,150,62,0.15);color:var(--gold);
+  border:1px solid var(--gold-dim);border-radius:2px;
+  padding:0.1rem 0.4rem;letter-spacing:0.05em;text-transform:uppercase;
+}
+.tier-chevron{margin-left:0.5rem;color:var(--text-dim);transition:transform 0.2s;flex-shrink:0;}
+.tier-header.open .tier-chevron{transform:rotate(180deg);}
+.tier-body{display:none;padding:1.2rem;}
+.tier-body.open{display:block;}
+.task-item{margin-bottom:1.2rem;}
+.task-item:last-child{margin-bottom:0;}
+.task-name{font-size:0.88rem;color:var(--gold-light);margin-bottom:0.35rem;}
+.task-item p{font-size:0.83rem;color:var(--text-dim);line-height:1.75;}
+.task-item p+p{margin-top:0.5rem;}
+.task-rule{
+  font-size:0.77rem;color:var(--text-dim);
+  border-top:1px solid var(--border);
+  margin-top:0.9rem;padding-top:0.6rem;font-style:italic;
+}
+.keeper-words{
+  font-size:0.8rem;color:var(--gold-light);
+  font-style:italic;margin-top:0.5rem;
+  padding:0.5rem 0.8rem;
+  border-left:2px solid var(--gold-dim);
+}
+.titles-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1rem;margin-top:1.5rem;
+}
+.title-card{
+  background:var(--gold-faint);border:1px solid var(--gold-dim);
+  border-radius:4px;padding:1.2rem;text-align:center;
+}
+.title-card .title-name{font-size:0.95rem;color:var(--gold);margin-bottom:0.4rem;letter-spacing:0.04em;}
+.title-card p{font-size:0.8rem;color:var(--text-dim);line-height:1.65;}
+
+/* ── REWARDS PAGE ─────────────────────────────────────── */
+.rewards-intro{
+  text-align:center;padding:1.5rem;
+  border:1px solid var(--border);border-radius:4px;
+  background:rgba(200,150,62,0.04);margin-bottom:2rem;
+}
+.rewards-intro p{font-size:0.9rem;color:var(--parchment-dim);font-style:italic;line-height:1.9;}
+.rewards-intro strong{color:var(--gold-light);font-style:normal;}
+
+.reward-section{margin-bottom:3rem;}
+
+.cord-layout{
+  display:grid;grid-template-columns:180px 1fr;
+  gap:2rem;align-items:start;
+}
+.cord-desc p{font-size:0.85rem;color:var(--text-dim);line-height:1.75;margin-bottom:0.8rem;}
+.cord-desc h4{font-size:0.85rem;color:var(--gold);margin-bottom:0.5rem;letter-spacing:0.04em;}
+
+.rings-trio{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1.5rem;margin-bottom:1.5rem;
+}
+.ring-card{
+  text-align:center;padding:1.2rem 0.8rem;
+  border:1px solid var(--border);border-radius:4px;
+  background:rgba(255,255,255,0.02);
+}
+.ring-card.body-ring{border-color:var(--silver);background:var(--silver-bg);}
+.ring-card.mind-ring{border-color:var(--onyx-bright);background:var(--onyx-bg);}
+.ring-card.soul-ring{border-color:var(--soul-gold);background:var(--gold-faint);}
+.ring-card svg{display:block;margin:0 auto 0.8rem;}
+.ring-card .ring-title{font-size:0.82rem;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.2rem;}
+.ring-card.body-ring .ring-title{color:var(--silver);}
+.ring-card.mind-ring .ring-title{color:var(--onyx-text);}
+.ring-card.soul-ring .ring-title{color:var(--soul-gold);}
+.ring-card .ring-sub{font-size:0.72rem;color:var(--text-dim);font-style:italic;}
+
+.combined-display{
+  display:flex;flex-direction:column;align-items:center;
+  padding:2rem;border:1px solid var(--border-bright);
+  border-radius:4px;background:rgba(200,150,62,0.04);
+  margin-bottom:1.5rem;
+}
+.combined-display p{font-size:0.82rem;color:var(--text-dim);font-style:italic;margin-top:0.8rem;text-align:center;max-width:380px;}
+
+.wear-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:1rem;
+}
+.wear-card{
+  text-align:center;padding:1rem 0.6rem;
+  border:1px solid var(--border);border-radius:4px;
+  background:rgba(255,255,255,0.02);
+}
+.wear-card svg{display:block;margin:0 auto 0.6rem;}
+.wear-card p{font-size:0.75rem;color:var(--text-dim);}
+.wear-card strong{display:block;font-size:0.78rem;color:var(--text-light);margin-bottom:0.2rem;}
+
+.bearer-display{
+  display:grid;grid-template-columns:auto 1fr;
+  gap:2rem;align-items:center;
+  padding:1.8rem;border:1px solid var(--gold-dim);
+  border-radius:4px;background:var(--gold-faint);
+}
+.bearer-display p{font-size:0.85rem;color:var(--text-dim);line-height:1.75;}
+.bearer-display h4{font-size:1rem;color:var(--gold);margin-bottom:0.5rem;}
+
+/* ── TRACKER ──────────────────────────────────────────── */
+.tracker-header{display:flex;gap:0.8rem;flex-wrap:wrap;margin-bottom:1.5rem;}
+.tracker-header input{
+  flex:1;min-width:150px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);border-radius:3px;
+  color:var(--text-light);padding:0.5rem 0.8rem;
+  font-family:inherit;font-size:0.85rem;
+}
+.tracker-header input::placeholder{color:var(--text-dim);}
+.btn{
+  background:var(--gold-dim);color:var(--parchment);
+  border:1px solid var(--gold);border-radius:3px;
+  padding:0.5rem 1.1rem;cursor:pointer;font-family:inherit;
+  font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase;
+  transition:all 0.2s;white-space:nowrap;
+}
+.btn:hover{background:var(--gold);color:#1a0808;}
+.btn.danger{background:rgba(160,30,30,0.4);border-color:#a02020;color:#ffaaaa;}
+.btn.danger:hover{background:rgba(160,30,30,0.7);}
+.btn.small{padding:0.25rem 0.6rem;font-size:0.72rem;}
+
+.candidate-card{
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--border);border-radius:4px;
+  margin-bottom:1rem;overflow:hidden;
+}
+.candidate-header{
+  display:flex;align-items:center;gap:0.9rem;
+  padding:0.9rem 1.2rem;cursor:pointer;
+  background:rgba(255,255,255,0.02);flex-wrap:wrap;
+}
+.candidate-header:hover{background:rgba(200,150,62,0.05);}
+.candidate-name{font-size:0.95rem;color:var(--text-light);flex:1;}
+.candidate-house{font-size:0.76rem;color:var(--text-dim);font-style:italic;}
+.ring-dots{display:flex;gap:0.35rem;}
+.rdot{width:15px;height:15px;border-radius:50%;border:2px solid;}
+.rdot.body{border-color:var(--silver);}
+.rdot.mind{border-color:var(--onyx-bright);}
+.rdot.soul{border-color:var(--soul-gold);}
+.rdot.earned.body{background:var(--silver);box-shadow:0 0 5px var(--silver);}
+.rdot.earned.mind{background:var(--onyx-bright);box-shadow:0 0 4px var(--onyx-bright);}
+.rdot.earned.soul{background:var(--soul-gold);box-shadow:0 0 5px var(--soul-gold);}
+
+.candidate-body{display:none;padding:1.2rem;}
+.candidate-body.open{display:block;}
+.progress-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem;}
+.prog-col h5{
+  font-size:0.72rem;text-transform:uppercase;
+  letter-spacing:0.08em;margin-bottom:0.5rem;
+}
+.prog-col.body h5{color:var(--silver);}
+.prog-col.mind h5{color:var(--onyx-text);}
+.prog-col.soul h5{color:var(--soul-gold);}
+.tier-row{
+  display:flex;align-items:center;gap:0.4rem;
+  font-size:0.8rem;color:var(--text-dim);padding:0.2rem 0;
+}
+.tier-row input[type=checkbox]{accent-color:var(--gold);width:13px;height:13px;}
+.tier-row label{display:flex;align-items:center;gap:0.35rem;cursor:pointer;}
+.tier-row.done{color:var(--text-light);}
+.witness-row{
+  display:flex;align-items:center;gap:0.5rem;
+  border-top:1px solid var(--border);padding-top:0.7rem;margin-top:0.5rem;
+  font-size:0.76rem;color:var(--text-dim);
+}
+.witness-row input{
+  flex:1;background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);border-radius:3px;
+  color:var(--text-light);padding:0.25rem 0.5rem;
+  font-family:inherit;font-size:0.76rem;
+}
+.empty-state{
+  text-align:center;color:var(--text-dim);
+  font-style:italic;padding:3rem 1rem;font-size:0.88rem;
+}
+
+/* ── LEADERBOARD ──────────────────────────────────────── */
+.bearer-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:1rem;
+}
+.bearer-tile{
+  background:var(--gold-faint);border:1px solid var(--gold-dim);
+  border-radius:4px;padding:1rem;text-align:center;
+}
+.shield-tile{
+  background:rgba(200,150,62,0.14);border:1px solid var(--gold);
+  border-radius:4px;padding:1rem;text-align:center;
+}
+.tile-name{color:var(--gold-light);font-size:0.92rem;margin-bottom:0.2rem;}
+.tile-house{font-size:0.73rem;color:var(--text-dim);font-style:italic;margin-bottom:0.6rem;}
+.tile-rings{display:flex;justify-content:center;gap:0.4rem;margin-bottom:0.4rem;}
+.tile-label{font-size:0.68rem;color:var(--text-dim);}
+
+.prog-table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+.prog-table th{
+  text-align:left;padding:0.45rem 0.8rem;
+  color:var(--gold);font-size:0.7rem;
+  text-transform:uppercase;letter-spacing:0.08em;
+  border-bottom:1px solid var(--border);
+}
+.prog-table td{
+  padding:0.5rem 0.8rem;color:var(--text-dim);
+  border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle;
+}
+.prog-table tr:hover td{background:rgba(200,150,62,0.04);}
+.prog-table .n-cell{color:var(--text-light);}
+.mini-rings{display:flex;gap:0.25rem;}
+.mr{width:11px;height:11px;border-radius:50%;border:1.5px solid;}
+.mr.body{border-color:var(--silver);}
+.mr.mind{border-color:var(--onyx-bright);}
+.mr.soul{border-color:var(--soul-gold);}
+.mr.earned.body{background:var(--silver);}
+.mr.earned.mind{background:var(--onyx-bright);}
+.mr.earned.soul{background:var(--soul-gold);}
+
+/* ── LEADERBOARD ─────────────────────────────────────── */
+.leaderboard{margin-top:1.2rem;}
+.leaderboard-tabs{display:flex;gap:0.5rem;margin-bottom:0.8rem;}
+.lb-tab{background:transparent;border:1px solid var(--border);color:var(--text-dim);
+  font-family:inherit;font-size:0.78rem;padding:0.3rem 0.8rem;border-radius:3px;cursor:pointer;}
+.lb-tab.active{border-color:var(--copper);color:var(--copper);background:var(--copper-bg);}
+.lb-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
+.lb-table th{color:var(--gold);text-transform:uppercase;letter-spacing:0.06em;
+  font-size:0.72rem;padding:0.4rem 0.6rem;border-bottom:1px solid var(--border);text-align:left;}
+.lb-table td{padding:0.45rem 0.6rem;color:var(--text-dim);border-bottom:1px solid rgba(255,255,255,0.04);}
+.lb-table tr:first-child td{color:var(--gold);font-weight:bold;}
+.lb-rank{color:var(--text-dim);width:28px;}
+.lb-name{color:var(--text-light);}
+.lb-time{color:var(--copper);font-variant-numeric:tabular-nums;text-align:right;}
+.lb-empty{color:var(--text-dim);font-style:italic;font-size:0.8rem;padding:0.6rem 0;}
+/* ── ADMIN ────────────────────────────────────────────── */
+.admin-login{max-width:360px;margin:4rem auto;text-align:center;}
+.admin-login p{color:var(--text-dim);font-size:0.83rem;margin-bottom:1.2rem;font-style:italic;}
+.admin-login input{
+  width:100%;background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);border-radius:3px;
+  color:var(--text-light);padding:0.55rem 0.8rem;
+  font-family:inherit;font-size:0.88rem;margin-bottom:0.7rem;
+}
+.admin-section{margin-bottom:1.8rem;}
+.admin-section h3{
+  color:var(--gold);font-size:0.82rem;text-transform:uppercase;
+  letter-spacing:0.08em;margin-bottom:0.9rem;
+  border-bottom:1px solid var(--border);padding-bottom:0.35rem;
+}
+.award-row{display:flex;gap:0.7rem;align-items:center;flex-wrap:wrap;margin-bottom:0.7rem;}
+.award-row select,.award-row input{
+  background:rgba(255,255,255,0.05);border:1px solid var(--border);
+  border-radius:3px;color:var(--text-light);
+  padding:0.4rem 0.6rem;font-family:inherit;font-size:0.83rem;
+}
+.award-row select{flex:1;min-width:130px;}
+.admin-log{
+  background:rgba(0,0,0,0.35);border:1px solid var(--border);
+  border-radius:3px;padding:0.8rem;font-size:0.76rem;
+  color:var(--text-dim);font-family:monospace;
+  min-height:70px;max-height:180px;overflow-y:auto;
+}
+.log-entry{padding:0.12rem 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.log-entry .ts{color:var(--text-dim);margin-right:0.5rem;}
+.log-entry .action{color:var(--gold-light);}
+
+/* ── GAMIFICATION ─────────────────────────────────────── */
+.seeker-title{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin:0.15rem 0 0.1rem;font-style:italic;}
+.flow-meter-wrap{margin:0.9rem 0 0.7rem;display:flex;align-items:center;gap:0.7rem;flex-wrap:wrap;}
+.flow-label{font-size:0.7rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);flex-shrink:0;}
+.flow-bar{flex:1;min-width:80px;height:8px;background:rgba(200,150,62,0.12);border-radius:4px;border:1px solid rgba(200,150,62,0.2);overflow:hidden;}
+.flow-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold-light));border-radius:4px;transition:width 0.4s ease;}
+.flow-pct{font-size:0.72rem;color:var(--gold);font-variant-numeric:tabular-nums;flex-shrink:0;min-width:28px;}
+.pillar-row{display:flex;gap:0.6rem;margin-bottom:0.6rem;flex-wrap:wrap;}
+.pillar-status{flex:1;min-width:80px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:4px;padding:0.45rem 0.6rem;text-align:center;}
+.pillar-status.body{border-color:rgba(176,174,166,0.25);}
+.pillar-status.mind{border-color:rgba(85,85,95,0.35);}
+.pillar-status.soul{border-color:rgba(200,150,62,0.25);}
+.pillar-status.earned{background:rgba(200,150,62,0.08);}
+.pillar-status.body.earned{background:rgba(176,174,166,0.10);}
+.pillar-status.mind.earned{background:rgba(42,42,48,0.35);}
+.ps-name{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.2rem;}
+.pillar-status.body .ps-name{color:var(--silver);}
+.pillar-status.mind .ps-name{color:var(--onyx-text);}
+.pillar-status.soul .ps-name{color:var(--gold);}
+.ps-count{font-size:0.9rem;color:var(--text-light);font-weight:bold;}
+.ps-ring{font-size:0.62rem;color:var(--gold-light);margin-top:0.15rem;letter-spacing:0.05em;}
+.next-hint{font-size:0.74rem;color:var(--text-dim);font-style:italic;margin:0.3rem 0;padding:0.35rem 0.5rem;border-left:2px solid var(--gold-dim);}
+.next-hint strong{color:var(--gold-light);font-style:normal;}
+.witness-display{font-size:0.72rem;color:var(--text-dim);margin-top:0.4rem;font-style:italic;}
+.shield-card{border-color:var(--gold-light);box-shadow:0 0 18px rgba(200,150,62,0.18);}
+.tracker-controls{display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.tracker-controls input{flex:1;min-width:160px;}
+.keeper-badge{display:inline-flex;align-items:center;gap:0.35rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);background:rgba(200,150,62,0.1);border:1px solid var(--gold-dim);border-radius:3px;padding:0.25rem 0.6rem;}
+/* ── ADMIN TRIAL GRID ──────────────────────────────────── */
+.admin-cand-card{background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:5px;padding:0.8rem;margin-bottom:0.8rem;}
+.admin-cand-header{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.6rem;flex-wrap:wrap;}
+.admin-cand-header .cand-name{flex:1;color:var(--text-light);font-size:0.9rem;}
+.admin-cand-header .cand-house{color:var(--text-dim);font-size:0.75rem;}
+.trial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.4rem;margin-bottom:0.5rem;}
+.trial-col-head{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.25rem 0;margin-bottom:0.2rem;font-weight:bold;}
+.trial-col-head.body{color:var(--silver);}
+.trial-col-head.mind{color:var(--onyx-text);}
+.trial-col-head.soul{color:var(--gold);}
+.trial-check{display:block;font-size:0.73rem;color:var(--parchment-dim);padding:0.18rem 0.1rem;cursor:pointer;transition:color 0.2s;}
+.trial-check.done{color:var(--gold-light);}
+.trial-check input{margin-right:0.3rem;accent-color:var(--gold);}
+/* ── LB ADMIN ──────────────────────────────────────────── */
+.lb-admin-table{width:100%;border-collapse:collapse;font-size:0.8rem;margin-top:0.6rem;}
+.lb-admin-table th{color:var(--text-dim);font-size:0.67rem;letter-spacing:0.1em;text-transform:uppercase;text-align:left;padding:0.3rem 0.4rem;border-bottom:1px solid var(--border);}
+.lb-admin-table td{padding:0.28rem 0.4rem;border-bottom:1px solid rgba(200,150,62,0.08);vertical-align:middle;}
+.lb-admin-table .del-btn{font-size:0.68rem;padding:0.1rem 0.4rem;background:rgba(180,50,50,0.2);border:1px solid rgba(180,50,50,0.4);color:#d06060;border-radius:2px;cursor:pointer;}
+.lb-admin-table .del-btn:hover{background:rgba(180,50,50,0.35);}
+/* ── TOAST ────────────────────────────────────────────── */
+#toast{
+  position:fixed;bottom:1.5rem;right:1.5rem;
+  background:var(--gold-dim);color:var(--parchment);
+  padding:0.6rem 1.1rem;border-radius:3px;
+  font-size:0.83rem;border:1px solid var(--gold);
+  opacity:0;transform:translateY(8px);
+  transition:all 0.3s;pointer-events:none;z-index:9999;
+}
+#toast.show{opacity:1;transform:translateY(0);}
+
+/* ── KATA ANIMATOR ─────────────────────────────────────── */
+.kata-animator{
+  margin:1.5rem 0 0.3rem;
+  background:rgba(0,0,0,0.32);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:1.1rem 1.3rem;
+}
+.kata-anim-label{
+  font-size:0.68rem;letter-spacing:0.09em;text-transform:uppercase;
+  color:var(--text-dim);text-align:center;margin-bottom:1rem;
+}
+.kata-anim-inner{
+  display:flex;justify-content:center;align-items:center;
+  gap:1.5rem;flex-wrap:wrap;
+}
+#kataCanvas{
+  border-radius:8px;
+  background:rgba(8,2,2,0.55);
+  flex-shrink:0;
+  border:1px solid rgba(200,150,62,0.18);
+}
+.kata-info{min-width:150px;max-width:210px;}
+.kata-elem-badge{
+  display:inline-block;font-size:0.67rem;letter-spacing:0.08em;
+  text-transform:uppercase;color:var(--gold);
+  background:rgba(200,150,62,0.12);
+  border:1px solid rgba(200,150,62,0.28);
+  border-radius:12px;padding:2px 10px;
+}
+.kata-pose-name{
+  font-size:1.05rem;color:var(--gold);font-style:italic;
+  margin:0.45rem 0 0.3rem;
+}
+.kata-pose-desc{
+  font-size:0.79rem;color:var(--parchment-dim);line-height:1.65;
+}
+.kata-dots{display:flex;flex-wrap:wrap;gap:4px;margin-top:0.85rem;}
+.kata-dot{
+  display:inline-block;width:7px;height:7px;border-radius:50%;
+  background:rgba(200,150,62,0.2);transition:background 0.35s;
+}
+.kata-dot.active{background:var(--gold);}
+.kata-controls{display:flex;gap:0.5rem;margin-top:0.75rem;}
+.kata-btn{
+  background:rgba(200,150,62,0.12);
+  border:1px solid rgba(200,150,62,0.22);
+  color:var(--gold);padding:4px 13px;border-radius:4px;
+  cursor:pointer;font-family:inherit;font-size:0.85rem;
+  transition:background 0.2s;
+}
+.kata-btn:hover{background:rgba(200,150,62,0.22);}
+
+@media(max-width:600px){
+  .progress-grid,.rings-trio{grid-template-columns:1fr;}
+  .cord-layout{grid-template-columns:1fr;}
+  .bearer-display{grid-template-columns:1fr;text-align:center;}
+  .event-gate-banner{flex-direction:column;}
+  .gate-item+.gate-item{border-left:none;border-top:1px solid var(--border);}
+  .kata-anim-inner{flex-direction:column;}
+  .kata-info{max-width:100%;text-align:center;}
+  .kata-dots,.kata-controls{justify-content:center;}
+}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<!-- ══════════════════════════════════════════════ HEADER -->
+<header class="site-header">
+  <img class="header-sigil" src="../KeepersOfTheCurrent_sigil.png" alt="Keepers of the Current sigil"/>
+  <img class="header-title-img" src="../KeepersOfTheCurrent_title.jpg" alt="Keepers of the Current"/>
+  <h1>Trial of the Three Rings</h1>
+  <p class="religion-name">Hynafol LARP</p>
+  <div class="doctrine-banner">
+    "Most people live against the Current. They <strong>isolate</strong> when connection would help.<br>
+    They <strong>consume</strong> when creation would ground them. They <strong>force</strong> when alignment would carry them.<br>
+    The Trial of the Three Rings is the path back — not through belief, but through <strong>practice</strong>."
+  </div>
+</header>
+
+<nav>
+  <button onclick="showPage('lore',this)">The Current</button>
+  <button class="active" onclick="showPage('trials',this)">The Trials</button>
+  <button onclick="showPage('rewards',this)">Rewards</button>
+  <button onclick="showPage('tracker',this)">Trial Tracker</button>
+  <button onclick="showPage('leaderboard',this)">Bearers &amp; Shields</button>
+  <button onclick="showPage('admin',this)">Keeper's Panel</button>
+</nav>
+
+<!-- ══════════════════════════════════════════ LORE PAGE -->
+<div id="page-lore" class="page">
+
+  <!-- Hero -->
+  <div class="lore-hero">
+    <p class="lore-hero-quote">"When we move, we move as one."</p>
+    <p class="lore-hero-sub">The faith of the Keepers of the Current — a living religion within Hynafol</p>
+  </div>
+
+  <!-- What is the Current -->
+  <div class="lore-body-section">
+    <h2 class="section-title">What Is the Current?<small>The energy that moves between genuine souls</small></h2>
+    <p>The Current is not water, though the faithful speak of it as a river. It is not fire, though those who give themselves fully to it are said to glow. The Current is a living energy — moving between and through genuine souls wherever they gather in true connection. It is ancient and was long forgotten by the world, rediscovered when a scholar unearthed a manuscript whose teachings had been lost to time.</p>
+    <p>Those who walk in its presence have described it as warmth behind the sternum, a hum at the edge of hearing, a weight behind the eyes that is somehow also lightness. It does not grant power over others. It grants something quieter and more profound — the understanding that you are never truly alone. Every soul who walks with the Current adds to your own, and you to theirs. We are all connected. That connection is the foundation of everything the Keepers believe, and the greatest strength there is.</p>
+    <div class="lore-pull">"The Current flows toward unity. It does not force. It waits — patient as water finding cracks in stone — for the soul willing to move with it rather than against it."</div>
+    <p>The Current looks for balance in all things. Those who isolate when connection would help them are moving against it. Those who consume when creation would ground them are moving against it. Those who force when alignment would carry them — against it. Most people live this way without ever knowing it. The Keepers exist to show another way.</p>
+  </div>
+
+  <!-- The Four Elements -->
+  <div class="lore-body-section">
+    <h2 class="section-title">The Four Elements<small>The pillars of the human self, as the Current understands them</small></h2>
+    <p>The faith recognizes four elemental forces, each corresponding to a dimension of what it means to be fully alive. The first three — Earth, Wind, and Water — govern the three Pillars that all Keepers are called to develop. Fire is different. Fire does not govern one Pillar. Fire emerges when all three are mastered and moving together.</p>
+    <div class="lore-elements-grid">
+      <div class="lore-element-card earth">
+        <div class="el-icon">
+          <!-- Mountain peaks with geological strata -->
+          <svg width="50" height="42" viewBox="0 0 54 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 41 L18 12 L33 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M22 41 L37 5 L52 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
+            <line x1="30" y1="22" x2="44" y2="22" stroke="#b0aea6" stroke-width="1.1" opacity="0.5"/>
+            <line x1="27" y1="31" x2="47" y2="31" stroke="#b0aea6" stroke-width="1.1" opacity="0.4"/>
+            <line x1="2" y1="41" x2="52" y2="41" stroke="#b0aea6" stroke-width="1.5" opacity="0.35"/>
+          </svg>
+        </div>
+        <div class="el-name">Earth</div>
+        <div class="el-pillar">Ring of Endurance · Body</div>
+        <p>The ground that holds the self in place. Not rigidity — rootedness. Earth does not yield to every wind, but neither is it stone unmoved by rain. The body that endures is the body that can serve something beyond itself.</p>
+      </div>
+      <div class="lore-element-card wind">
+        <div class="el-icon">
+          <!-- Three flowing wind currents -->
+          <svg width="50" height="40" viewBox="0 0 54 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 10 C11 5 19 16 27 10 C35 4 43 13 51 8" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
+            <path d="M3 21 C11 16 20 27 28 21 C36 15 44 23 51 20" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
+            <path d="M10 33 C17 28 24 38 32 33 C40 28 47 34 51 32" stroke="#b0aea6" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+          </svg>
+        </div>
+        <div class="el-name">Wind</div>
+        <div class="el-pillar">Ring of Focus · Mind</div>
+        <p>Invisible, pervasive, shaping everything it touches. The mind that is still enough to notice the wind can begin to move with it. Wind carries things across great distances — so does thought, when it is clear and honest and unhurried.</p>
+      </div>
+      <div class="lore-element-card water">
+        <div class="el-icon">
+          <!-- Water droplet falling into ripples -->
+          <svg width="44" height="50" viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 3 Q31 13 31 21 Q31 30 24 30 Q17 30 17 21 Q17 13 24 3 Z" stroke="#C8963E" stroke-width="2"/>
+            <ellipse cx="24" cy="38" rx="7" ry="3" stroke="#C8963E" stroke-width="1.5" opacity="0.75"/>
+            <ellipse cx="24" cy="40" rx="13" ry="5" stroke="#C8963E" stroke-width="1.2" opacity="0.5"/>
+            <ellipse cx="24" cy="43" rx="20" ry="7" stroke="#C8963E" stroke-width="1" opacity="0.3"/>
+          </svg>
+        </div>
+        <div class="el-name">Water</div>
+        <div class="el-pillar">Ring of Connection · Soul</div>
+        <p>Water that never leaves its vessel stagnates. The soul element is the one most easily forgotten — it requires another. Connection cannot be performed alone. Water finds its way into everything, given time and the willingness to seek cracks rather than force doors.</p>
+      </div>
+      <div class="lore-element-card fire">
+        <div class="el-icon">
+          <!-- Wild split flame with inner tongues -->
+          <svg width="36" height="50" viewBox="0 0 44 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 52 C13 43 7 33 10 20 C12 13 16 7 22 3 C28 7 32 13 34 20 C37 33 31 43 22 52 Z" stroke="#e06040" stroke-width="2"/>
+            <path d="M17 44 C13 37 11 27 15 17 C17 11 19 8 22 5" stroke="#e06040" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+            <path d="M27 44 C31 37 33 27 29 17 C27 11 25 8 22 5" stroke="#e06040" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+            <circle cx="22" cy="32" r="3" fill="#e06040" opacity="0.35"/>
+          </svg>
+        </div>
+        <div class="el-name">Fire</div>
+        <div class="el-pillar">The Final Element · All Three Rings</div>
+        <p>Fire is not earned through any single trial. It is what becomes possible when Earth, Wind, and Water stop being three separate practices and forge into one nature. The Current does not give fire — it recognizes it.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Core Beliefs -->
+  <div class="lore-body-section">
+    <h2 class="section-title">Core Beliefs<small>What the Keepers hold to be true</small></h2>
+    <p><strong style="color:var(--gold-light)">The Current flows through all things.</strong> A living force moves through every breathing creature — through flesh and stone, through words spoken and unspoken, through the silence between people who finally understand one another. This is the Current. It is not worshipped. It is felt. It is the reason a stranger's grief can move you to tears, and why a crowd can suddenly breathe as one. You are not separate from the world around you. You are woven into it — and it into you. To become aware of this is the beginning. To move with it is the practice.</p>
+    <p><strong style="color:var(--gold-light)">Unity.</strong> The Keepers do not believe in isolation. A soul that cuts itself off — from the Current, from the people and world around it — diminishes. Not as punishment, but as consequence, the way a branch cut from a tree does not flourish. You cannot carry the Current alone. It grows between people. When a circle holds, when a vow is kept, when someone shows up for another without being asked — the Current moves through the space they make for it. We move as one, or we do not move at all.</p>
+    <p><strong style="color:var(--gold-light)">Balance.</strong> The Current seeks equilibrium the way water seeks level. It does not require perfection — it requires honesty about where the weight lies. When something is out of balance, the Current presses against it, patient as tide. The Keepers do not try to force the world into a shape they prefer. They try to remain sensitive to where they are adding to the imbalance, and where they are in a position to restore it. Balance is not stillness. It is the willingness to keep adjusting.</p>
+    <p><strong style="color:var(--gold-light)">Justice.</strong> The faith does not flinch from what is owed. The Current does not forget what has been taken, what has been promised, what has been broken. It holds the record. Justice in the Current is not revenge — it is restoration: returning what was wrongly taken, making whole what was fractured, standing with the wronged even when it costs something. To align yourself with justice is not sentiment. It is alignment with the Current itself.</p>
+    <p><strong style="color:var(--gold-light)">Squeeze the lemon.</strong> The defining teaching of the Keepers came not from a temple but from a farmer. When Talia worked his fields in her wandering years, he told her what his late wife used to say: <em>"Bitterness is just sweetness that's been squeezed wrong."</em> You do not pretend the lemon is not sour. You do not perform past the sourness or suppress it. You take it in both hands and you squeeze — and you transform what life handed you into something that can sustain you. This is not optimism. It is alchemy. The Current does not promise a gentle life. It promises that nothing is wasted in the hands of someone willing to work it.</p>
+    <div class="lore-pull">"The Current does not grant invulnerability. It grants something more enduring — the understanding that no soul walks alone, and that those who move together are far stronger than any one of them could ever be."</div>
+    <p><strong style="color:var(--gold-light)">Walk your own path.</strong> The Current flows differently through every soul. The Keepers do not issue a single way of being. What is asked is that you walk deliberately — that you show up honestly, make your choices with intention, and remain connected to the larger world as you go. No one tells you what your faith must look like, what your practice must be, or what the Current means for you specifically. The path is yours. The responsibility for it is yours. The Current is shared — but how it moves through you is something no one else can determine.</p>
+  </div>
+
+  <!-- The Keeper's Call -->
+  <div class="lore-body-section">
+    <h2 class="section-title">The Keeper's Call<small>Liturgy and practice</small></h2>
+    <p>When the Keeper calls the faithful to attention — before a ritual, at the opening of a Circle, at the close of a working — there is a call and response that has become the heartbeat of the faith. It is spoken over a single drum pulse:</p>
+    <div class="lore-pull" style="text-align:center;font-size:0.95rem;">
+      <strong style="color:var(--gold-light);font-style:normal;">Keeper: "When I call you respond."</strong><br>
+      <em>Members: "When we move, we move as one."</em>
+    </div>
+    <p>It is not a recitation. It is a test — of presence, of willingness, of whether the souls in the room are genuinely here or merely occupying space. To respond is to say: I am with you. I am real. The Current moves between us.</p>
+  </div>
+
+  <!-- Talia -->
+  <div class="lore-body-section">
+    <h2 class="section-title">Talia Emberborn<small>High Priestess of the Current</small></h2>
+    <div class="lore-talia-row">
+      <img class="lore-talia-portrait" src="../TaliaEmberborn_portrait.png" alt="Talia Emberborn" onerror="this.style.display='none'"/>
+      <div class="lore-talia-bio">
+        <p>Talia Emberborn did not choose the Current. She was chosen by it — the way a dry riverbed is found by rain: not through intention, but through the long patience of water finding its path.</p>
+        <p>Before there were Keepers, there was a woman already being shaped by what the Current would later name. She was learning its lessons in silence — through loss, through the specific loneliness of a person who sees what others miss, through the weight of promises she kept when no one was watching. The faith did not give her purpose. It gave language to something that was already moving inside her.</p>
+        <p>She is <em>Emberborn</em> — touched by Ignus, fire made flesh. In the High Priestess, that is not metaphor: the Keeper glows when fully given to the Current, and in Talia, that glow is literal. This fire was carried privately for years. She was not ready to offer it, or the world was not ready to hold it. At the November 2025 Grand Gathering, it was given for the first time — to purify a corrupted heart and return it to its rightful bearer. The circle held. The bargain was enforced. The heart came home. What had been doctrine became witnessed truth.</p>
+        <p>The Current chose her because she had already been living its teaching before she had its name. That is the thing about being chosen: the choosing happened long before the recognition — in the quiet years when the work was being done in the dark, with no one watching and no reward expected.</p>
+        <p><em>The faith holds no court and claims no faction. It is open to all who move toward connection rather than against it. Talia stands with the Court of Valor — a personal alignment, not a doctrinal one. The distinction matters.</em></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Discord + Video -->
+  <div class="lore-body-section">
+    <h2 class="section-title">Find the Current<small>Connect with the Keepers</small></h2>
+    <div class="lore-media-grid">
+      <div class="lore-media-card">
+        <div class="media-icon">⚡</div>
+        <h4>Discord — The Current</h4>
+        <p>The official Keepers of the Current Discord server. Gather, discuss, bear witness to one another across the time between events. The Soul pillar lives here.</p>
+        <a class="lore-media-link" href="https://discord.gg/NvSwkxNJ" target="_blank">Join the Current</a>
+      </div>
+      <div class="lore-media-card">
+        <div class="media-icon">🔥</div>
+        <h4>The Working for Ophelia's Heart</h4>
+        <p>November 2025 Grand Gathering. A ritual of truth, sacrifice, and the first public revelation of Talia's Emberborn fire. Watch the Current move in the space between souls.</p>
+        <a class="lore-media-link" href="https://youtu.be/hSz5-hI9Mng" target="_blank">Watch on YouTube</a>
+        <div class="lore-video-embed" style="margin-top:0.9rem;">
+          <iframe width="100%" height="200" src="https://www.youtube.com/embed/hSz5-hI9Mng" title="The Working for Ophelia's Heart" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════ TRIALS PAGE -->
+<div id="page-trials" class="page active">
+
+  <div class="lore-intro">
+    <blockquote>
+      The Trial of the Three Rings is not a test of worthiness.<br>
+      It is a test of <strong>practice</strong>. Alignment comes not through belief, but through doing.<br>
+      Walk one path or all three. Each Pillar stands alone.<br>Together they form something whole.
+    </blockquote>
+  </div>
+
+  <div class="event-gate-banner">
+    <div class="gate-item">
+      <div class="gate-tier">Tier I</div>
+      <div class="gate-rule">Any event — begin where you are</div>
+    </div>
+    <div class="gate-item">
+      <div class="gate-tier">Tier II</div>
+      <div class="gate-rule">A subsequent event after Tier I</div>
+    </div>
+    <div class="gate-item">
+      <div class="gate-tier">Tier III</div>
+      <div class="gate-rule">Grand Gathering only · once per year</div>
+    </div>
+  </div>
+
+  <div class="pillar-intro-grid">
+    <div class="pillar-intro-card body">
+      <div class="pillar-symbol">
+        <!-- Mountain peaks with geological strata — Earth -->
+        <svg width="52" height="44" viewBox="0 0 54 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 41 L18 12 L33 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M22 41 L37 5 L52 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
+          <line x1="30" y1="22" x2="44" y2="22" stroke="#b0aea6" stroke-width="1.1" opacity="0.5"/>
+          <line x1="27" y1="31" x2="47" y2="31" stroke="#b0aea6" stroke-width="1.1" opacity="0.4"/>
+          <line x1="2" y1="41" x2="52" y2="41" stroke="#b0aea6" stroke-width="1.5" opacity="0.35"/>
+        </svg>
+      </div>
+      <div class="ring-name-large">Ring of Endurance</div>
+      <h3>Body · Earth</h3>
+      <p>The body is not a vessel for the Current — it is the Current moving. Endurance, presence, weight. The ground that holds the self in place.</p>
+    </div>
+    <div class="pillar-intro-card mind">
+      <div class="pillar-symbol">
+        <!-- Three flowing wind currents — Wind -->
+        <svg width="52" height="40" viewBox="0 0 54 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 10 C11 5 19 16 27 10 C35 4 43 13 51 8" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
+          <path d="M3 21 C11 16 20 27 28 21 C36 15 44 23 51 20" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
+          <path d="M10 33 C17 28 24 38 32 33 C40 28 47 34 51 32" stroke="#b0aea6" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+        </svg>
+      </div>
+      <div class="ring-name-large">Ring of Focus</div>
+      <h3>Mind · Wind</h3>
+      <p>Creation is alignment. Consumption is drift. Intellectual discipline, focus under pressure, honest reasoning. The mind that moves with clarity and intention.</p>
+    </div>
+    <div class="pillar-intro-card soul">
+      <div class="pillar-symbol">
+        <!-- Water droplet falling into ripples — Water -->
+        <svg width="46" height="52" viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 3 Q31 13 31 21 Q31 30 24 30 Q17 30 17 21 Q17 13 24 3 Z" stroke="#C8963E" stroke-width="2"/>
+          <ellipse cx="24" cy="38" rx="7" ry="3" stroke="#C8963E" stroke-width="1.5" opacity="0.75"/>
+          <ellipse cx="24" cy="40" rx="13" ry="5" stroke="#C8963E" stroke-width="1.2" opacity="0.5"/>
+          <ellipse cx="24" cy="43" rx="20" ry="7" stroke="#C8963E" stroke-width="1" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="ring-name-large">Ring of Connection</div>
+      <h3>Soul · Water</h3>
+      <p>The Current flows where genuine souls gather in true connection. Openness, service, moving toward what is not yet known. You cannot earn this one alone.</p>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <h2 class="section-title">Ring of Endurance<small>Body Pillar · Earth</small></h2>
+
+  <div class="tier-block body">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">I</div>
+      <div class="tier-header-text">
+        <h4>Tier I — Awakening of Flesh</h4>
+        <div class="epigraph">"The body must first be known before it can be mastered."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">Before the body can be trained to move with the Current, it must first learn that it can be asked to wait — and that it will not break. The Current flows through all living things, but most people never feel it because their bodies are too full of noise — food, movement, distraction, comfort. <em>The Fast empties the vessel. The Watch steadies it.</em> Together they are the first conversation between the candidate and their own flesh. The element of the Body is Earth. Earth does not announce itself. It holds.</p>
+      <div class="task-item">
+        <div class="task-name">⬤ The Fast</div>
+        <p>The candidate abstains from food and drink (water excepted; health needs respected) for a minimum of 4 hours at the event — window established with the Keeper in advance. The Fast must be witnessed. At its end, the Keeper or a Bearer releases the candidate with the words:</p>
+        <div class="keeper-words">"The body has spoken. Now let the Current speak through it."</div>
+        <p style="margin-top:0.6rem;">The Fast is not punishment. It is subtraction. When we strip away what the body expects, what remains is the body itself — present, honest, alive.</p>
+      </div>
+      <div class="task-item" style="margin-top:1rem;">
+        <div class="task-name">⬤ The Watch</div>
+        <p>The candidate stands unarmed guard at a sacred location or protecting a designated person for a minimum of 1 hour. They may not leave their post without formal dismissal from the Keeper or their charge. They may not speak unless spoken to. Passers-by may interact. The candidate holds.</p>
+        <p>The Watch is not waiting. It is choosing, moment by moment, to stay — when boredom comes, when distraction comes, when the body wants to move and cannot. <em>The body learns its first discipline: remaining.</em></p>
+      </div>
+      <div class="task-rule">Complete both tasks to pass Tier I of Body. · Any event.</div>
+    </div>
+  </div>
+
+  <div class="tier-block body">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">II</div>
+      <div class="tier-header-text">
+        <h4>Tier II — The Unison</h4>
+        <div class="epigraph">"One body in discipline is strength. Many bodies in unison — that is the Current."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">The body that has learned to be still must now learn to move with others. Not alongside — <em>with</em>. The Unison Kata is a weapon sequence performed in perfect synchronization with a group. No one leads once it begins. Every movement belongs to everyone. If one breaks rhythm, all break rhythm. The Current is not a solo act — and neither is this.</p>
+      <div class="task-item">
+        <div class="task-name">⬤ The Unison Kata</div>
+        <p>The Keeper teaches the weapon kata to the candidate in private — footwork, strikes, guards, and transitions — nine named movements to be performed with a weapon of their choice. The candidate practices alone until they know it without thought. At a subsequent event, they perform it in unison with a minimum of <strong style="color:var(--text-light)">two other participants</strong> who have also learned it. All three begin together. All three move together. All three end together.</p>
+        <p><strong style="color:var(--text-light)">I. The Ready</strong> — weapons sheathed or held at rest, feet shoulder-width, one breath of stillness before the group begins<br>
+        <strong style="color:var(--text-light)">II. The Draw</strong> — weapon raised from rest to a two-handed guard at chest height<br>
+        <strong style="color:var(--text-light)">III. The High Guard</strong> — weapon lifted overhead, arms extended, weight balanced<br>
+        <strong style="color:var(--text-light)">IV. The Strike</strong> — a controlled downward sweep from high guard to low, stopping short, weight forward<br>
+        <strong style="color:var(--text-light)">V. The Low Guard</strong> — weapon pulled to the low flank, hips rotated, opposite shoulder forward<br>
+        <strong style="color:var(--text-light)">VI. The Thrust</strong> — weapon extended directly forward, arm fully locked, held for three counts<br>
+        <strong style="color:var(--text-light)">VII. The Sweep</strong> — a wide horizontal arc from right to left, weapon parallel to the ground<br>
+        <strong style="color:var(--text-light)">VIII. The Parry</strong> — weapon angled diagonally across the body, deflecting position, weight back<br>
+        <strong style="color:var(--text-light)">IX. The Return</strong> — weapon drawn back to center, both hands at sternum, point down — the group stills together</p>
+        <p style="margin-top:0.6rem;">The test is not skill. The Keeper has seen the kata performed by trained fighters who failed, and untrained candidates who passed. What she is judging is whether the group moves as one thing. <em>A beat off is visible. An ego is visible. The Keeper will wait for the group to earn the right to perform it.</em></p>
+
+        <!-- ══ KATA ANIMATOR ══ -->
+        <div class="kata-animator">
+          <p class="kata-anim-label">The Unison Kata — Movement Reference</p>
+          <div class="kata-anim-inner">
+            <canvas id="kataCanvas" width="200" height="280"></canvas>
+            <div class="kata-info">
+              <span id="kataElemBadge" class="kata-elem-badge"></span>
+              <div id="kataPoseName" class="kata-pose-name"></div>
+              <div id="kataPoseDesc" class="kata-pose-desc"></div>
+              <div id="kataDots" class="kata-dots"></div>
+              <div class="kata-controls">
+                <button id="kataPauseBtn" class="kata-btn" onclick="kataTogglePause()">⏸</button>
+                <button class="kata-btn" onclick="kataStep(-1)">←</button>
+                <button class="kata-btn" onclick="kataStep(1)">→</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+(function(){
+const CV=document.getElementById('kataCanvas'),CX=CV.getContext('2d');
+const W=200,H=280;
+const UA=36,FA=30,TH=58,SH=60;
+function lerp(a,b,t){return a+(b-a)*t;}
+function ease(t){return t<0.5?2*t*t:1-2*(1-t)*(1-t);}
+function N(f,t,len){const dx=t[0]-f[0],dy=t[1]-f[1],d=Math.sqrt(dx*dx+dy*dy)||1;return[f[0]+dx/d*len,f[1]+dy/d*len];}
+function build(p){
+  const ls=p.ls,rs=p.rs,hip=[100,142];
+  const le=N(ls,p.le,UA), lh=N(le,p.lh,FA);
+  const re=N(rs,p.re,UA), rh=N(re,p.rh,FA);
+  const lk=N(hip,p.lk,TH), lf=N(lk,p.lf,SH);
+  const rk=N(hip,p.rk,TH), rf=N(rk,p.rf,SH);
+  return{head:[100,26],ls,rs,hip,le,lh,re,rh,lk,lf,rk,rf};
+}
+function lerpHints(a,b,t){
+  const K=['ls','rs','le','lh','re','rh','lk','lf','rk','rf'];
+  const o={ec:a.ec.map((v,i)=>lerp(v,b.ec[i],t))};
+  for(const k of K)o[k]=[lerp(a[k][0],b[k][0],t),lerp(a[k][1],b[k][1],t)];
+  return o;
+}
+/* Sword kata poses — two-handed weapon grip, weight shifting through stances */
+const POSES=[
+ {name:'I — The Ready',   elem:'Weapon at rest',ec:[139,96,64],
+  desc:'Feet shoulder-width. Weapon held at rest. One breath of stillness before the group begins.',
+  ls:[78,72],rs:[122,72], le:[72,108],lh:[68,136], re:[128,108],rh:[132,136],
+  lk:[78,198],lf:[64,256], rk:[122,198],rf:[136,256]},
+ {name:'II — The Draw',   elem:'Weapon raised',ec:[139,96,64],
+  desc:'Weapon drawn from rest to two-handed guard at chest height.',
+  ls:[78,72],rs:[122,72], le:[68,88],lh:[78,62], re:[132,78],rh:[118,58],
+  lk:[78,198],lf:[64,256], rk:[122,198],rf:[136,256]},
+ {name:'III — High Guard', elem:'Overhead guard',ec:[139,110,40],
+  desc:'Weapon lifted overhead, arms extended, weight balanced across both feet.',
+  ls:[78,72],rs:[122,72], le:[60,48],lh:[52,22], re:[140,48],rh:[148,22],
+  lk:[78,198],lf:[64,256], rk:[122,198],rf:[136,256]},
+ {name:'IV — The Strike',  elem:'Downward sweep',ec:[180,80,40],
+  desc:'Controlled downward sweep from high guard to low. Weight forward. Stop short.',
+  ls:[82,74],rs:[118,74], le:[68,60],lh:[62,34], re:[134,106],rh:[148,130],
+  lk:[72,194],lf:[52,252], rk:[128,200],rf:[146,256]},
+ {name:'V — Low Guard',   elem:'Flank guard',ec:[139,96,64],
+  desc:'Weapon pulled to the low flank. Hips rotated, opposite shoulder forward.',
+  ls:[84,74],rs:[116,74], le:[112,102],lh:[136,118], re:[102,110],rh:[96,138],
+  lk:[76,196],lf:[58,252], rk:[124,200],rf:[140,256]},
+ {name:'VI — The Thrust',  elem:'Full extension',ec:[180,80,40],
+  desc:'Weapon extended directly forward, arm fully locked. Held for three counts.',
+  ls:[80,72],rs:[120,72], le:[58,70],lh:[30,68], re:[132,70],rh:[160,68],
+  lk:[78,198],lf:[64,256], rk:[122,198],rf:[136,256]},
+ {name:'VII — The Sweep',  elem:'Horizontal arc',ec:[90,130,60],
+  desc:'Wide horizontal arc from right to left, weapon parallel to ground.',
+  ls:[78,72],rs:[122,72], le:[148,64],lh:[176,54], re:[108,80],rh:[82,74],
+  lk:[76,196],lf:[60,254], rk:[124,200],rf:[140,256]},
+ {name:'VIII — The Parry', elem:'Deflecting guard',ec:[90,130,60],
+  desc:'Weapon angled diagonally across the body, deflecting position. Weight back.',
+  ls:[80,72],rs:[120,72], le:[68,56],lh:[52,36], re:[136,96],rh:[152,116],
+  lk:[82,200],lf:[70,258], rk:[118,196],rf:[130,252]},
+ {name:'IX — The Return',  elem:'All together — still',ec:[200,150,62],
+  desc:'Weapon drawn to center, both hands at sternum, point down. The group stills as one.',
+  ls:[80,72],rs:[120,72], le:[84,98],lh:[97,112], re:[116,98],rh:[103,112],
+  lk:[80,198],lf:[68,256], rk:[120,198],rf:[132,256]},
+];
+function drawBg(ec){
+  const g=CX.createRadialGradient(W/2,H*0.38,18,W/2,H*0.38,W*0.78);
+  g.addColorStop(0,`rgba(${ec[0]},${ec[1]},${ec[2]},0.22)`);
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  CX.fillStyle=g;CX.fillRect(0,0,W,H);
+}
+function drawFigure(j){
+  const gold='200,150,62';
+  CX.strokeStyle=`rgb(${gold})`;CX.lineCap='round';CX.lineJoin='round';
+  CX.shadowColor=`rgba(${gold},0.55)`;CX.shadowBlur=10;CX.lineWidth=3;
+  const shmp=[(j.ls[0]+j.rs[0])/2,(j.ls[1]+j.rs[1])/2];
+  const S=[[j.ls,j.rs],[j.ls,j.le],[j.le,j.lh],[j.rs,j.re],[j.re,j.rh],
+    [shmp,j.hip],[j.hip,j.lk],[j.lk,j.lf],[j.hip,j.rk],[j.rk,j.rf]];
+  for(const[a,b]of S){CX.beginPath();CX.moveTo(a[0],a[1]);CX.lineTo(b[0],b[1]);CX.stroke();}
+  /* Draw weapon — line from rh extending in the direction of the strike */
+  const wx=j.rh[0]+(j.rh[0]-j.re[0])*1.4, wy=j.rh[1]+(j.rh[1]-j.re[1])*1.4;
+  CX.lineWidth=2;CX.shadowBlur=18;
+  CX.strokeStyle=`rgba(${gold},0.7)`;
+  CX.beginPath();CX.moveTo(j.lh[0],j.lh[1]);CX.lineTo(wx,wy);CX.stroke();
+  CX.strokeStyle=`rgb(${gold})`;CX.lineWidth=3;CX.shadowBlur=10;
+  CX.beginPath();CX.moveTo(j.head[0],j.head[1]+18);CX.lineTo(shmp[0],shmp[1]);CX.stroke();
+  CX.lineWidth=2.5;CX.shadowBlur=14;
+  CX.beginPath();CX.arc(j.head[0],j.head[1],18,0,Math.PI*2);CX.stroke();
+}
+let idx=0,fe=0,lastTs=null,paused=false;
+const HOLD=3,TRANS=0.9;
+function frame(ts){
+  if(lastTs===null)lastTs=ts;
+  const dt=Math.min((ts-lastTs)/1000,0.1);lastTs=ts;
+  if(!paused)fe+=dt;
+  CX.clearRect(0,0,W,H);
+  const cur=POSES[idx],nxt=POSES[(idx+1)%POSES.length];
+  if(fe<HOLD){
+    drawBg(cur.ec);drawFigure(build(cur));
+  } else if(fe<HOLD+TRANS){
+    const h=lerpHints(cur,nxt,ease((fe-HOLD)/TRANS));
+    drawBg(h.ec);drawFigure(build(h));
+  } else {
+    fe=0;idx=(idx+1)%POSES.length;updateUI();
+    drawBg(POSES[idx].ec);drawFigure(build(POSES[idx]));
+  }
+  requestAnimationFrame(frame);
+}
+function updateUI(){
+  const p=POSES[idx];
+  document.getElementById('kataElemBadge').textContent=p.elem;
+  document.getElementById('kataPoseName').textContent=p.name;
+  document.getElementById('kataPoseDesc').textContent=p.desc;
+  const dd=document.getElementById('kataDots');dd.innerHTML='';
+  POSES.forEach((_,i)=>{const d=document.createElement('span');d.className='kata-dot'+(i===idx?' active':'');dd.appendChild(d);});
+}
+window.kataTogglePause=function(){paused=!paused;document.getElementById('kataPauseBtn').textContent=paused?'▶':'⏸';};
+window.kataStep=function(d){
+  paused=true;document.getElementById('kataPauseBtn').textContent='▶';
+  idx=(idx+d+POSES.length)%POSES.length;fe=0;
+  const p=POSES[idx];
+  CX.clearRect(0,0,W,H);drawBg(p.ec);drawFigure(build(p));updateUI();
+};
+updateUI();requestAnimationFrame(frame);
+})();
+        </script>
+
+      </div>
+      <div class="task-rule">Complete The Unison Kata with a group of three or more to pass Tier II of Body. · Taught by the Keeper, performed at a subsequent event.</div>
+    </div>
+  </div>
+
+  <div class="tier-block body">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">III</div>
+      <div class="tier-header-text">
+        <h4>Tier III — The Grand Proving</h4>
+        <div class="epigraph">"The body must obey purpose across a full day of consequence."</div>
+      </div>
+      <div class="tier-badge-tag">Grand Gathering</div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">The Grand Proving spans the Grand Gathering. Earth endures not for a moment but across time — the Burden is carried across a full day, while The Plank and The Foot Race may be completed on any day of the Gathering. All three must be done before the closing ceremony. The body's proof is witnessed and recorded.</p>
+      <div class="task-item">
+        <div class="task-name">⬤ The Burden</div>
+        <p>On a designated day, the Keeper places the holy relic of the faith into the candidate's keeping. From that moment until the final bell of that day, the candidate is responsible for it — they may not set it down, transfer it, or ask for relief.</p>
+        <p>The only exception: when the Keeper herself requires the relic for her own use, she takes it. When she is finished, the candidate reclaims it and resumes the Burden. This is not relief — it is the Keeper exercising her authority, as is always her right. Surrendering it to anyone else is a failure; the tier resets to the next Grand Gathering.</p>
+      </div>
+      <div class="task-item" style="margin-top:1rem;">
+        <div class="task-name">⬤ The Plank</div>
+        <p>At any point during the Grand Gathering, the candidate assumes a plank position before witnesses and a timekeeper. They hold until they cannot. Their time is recorded on the <strong style="color:var(--gold-light)">Trial Leaderboard</strong>. Completing the challenge earns the tier — not the rank. But the result is public, and the body's proof is witnessed by all.</p>
+      </div>
+      <div class="task-item" style="margin-top:1rem;">
+        <div class="task-name">⬤ The Foot Race</div>
+        <p>100 meters, timed, at any point during the Grand Gathering. The candidate runs alone or alongside others attempting the same. Their time is recorded on the <strong style="color:var(--gold-light)">Trial Leaderboard</strong>. The Foot Race is not about being fastest — it is the moment of full release, when the body gives everything without calculation.</p>
+      </div>
+      <!-- Leaderboard pointer -->
+      <div style="margin-top:1.4rem;padding:0.9rem 1.1rem;background:rgba(184,115,51,0.06);border:1px solid rgba(184,115,51,0.2);border-radius:4px;font-size:0.83rem;color:var(--text-dim);">
+        Times are recorded by the Keeper and displayed on the <button onclick="showPage('leaderboard',document.querySelector('nav button:nth-child(5)'))" style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:inherit;font-family:inherit;text-decoration:underline;padding:0;">Bearers &amp; Shields</button> page.
+      </div>
+
+      <div class="keeper-words">"You have borne the weight and kept the way."</div>
+      <div class="task-rule">Complete all three components during the Grand Gathering to earn the Ring of Endurance ⬤</div>
+    </div>
+  </div>
+
+  <div class="ornament"><span>◆</span></div>
+
+  <!-- MIND -->
+  <h2 class="section-title">Ring of Focus<small>Mind Pillar · Wind</small></h2>
+
+  <div class="tier-block mind">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">I</div>
+      <div class="tier-header-text">
+        <h4>Tier I — Awakening of Thought</h4>
+        <div class="epigraph">"Before the mind may lead, it must prove it can sit with a question that has no clean answer."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">The element of the Mind is Wind — invisible, pervasive, shaping everything it touches. The mind that reaches for easy answers is a mind that has never truly encountered difficulty. Tier I does not ask for knowledge of the faith, nor for cleverness, nor for a correct answer. It asks for something rarer: the willingness to reason honestly when certainty is not available. The question need not touch the Current at all. <em>What the Keeper is judging is the quality of the mind encountering difficulty.</em></p>
+      <div class="task-item">
+        <div class="task-name">◆ The Dilemma</div>
+        <p>The Keeper presents the candidate with a moral or philosophical question — an ethical knot with no clean resolution. It may concern anything: loyalty versus truth, mercy versus justice, the individual against the many. No research is permitted, no consultation with others. The candidate reasons aloud, honestly, following their thought wherever it leads.</p>
+        <p>The Keeper judges whether what she hears is a mind genuinely at work — or a mind managing its appearance. <em>Truth in the reasoning matters more than elegance in the conclusion.</em></p>
+      </div>
+      <div class="task-divider">— or —</div>
+      <div class="task-item">
+        <div class="task-name">◆ The Recitation</div>
+        <p>The candidate memorizes a passage of their own choosing — a teaching, a prayer, a philosophical text, a verse composed in their own hand — and delivers it to the Keeper without reference. The Keeper judges whether the delivery is genuine, not merely whether the words are exact.</p>
+        <p><em>What the candidate chooses to memorise reveals something. The Keeper notices.</em></p>
+      </div>
+      <div class="task-rule">Complete one task to pass Tier I of Mind. · Any event.</div>
+    </div>
+  </div>
+
+  <div class="tier-block mind">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">II</div>
+      <div class="tier-header-text">
+        <h4>Tier II — Discipline of Thought</h4>
+        <div class="epigraph">"An ungoverned mind speaks first. A disciplined mind listens."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">Wind makes noise constantly. The discipline of wind is in choosing — when to blow and when to still, when to carry a voice forward and when to hold it. The mind that has proven it can encounter a true question must now prove it can govern itself: choosing silence when silence is called for, reason when reason is demanded. The Vow of Silence is not emptiness. It is the practice of choosing, moment to moment, <em>not</em> to speak while the world around you does.</p>
+      <div class="task-item">
+        <div class="task-name">◆ The Vow of Silence</div>
+        <p>The candidate maintains complete silence for a minimum three-hour window chosen by the Keeper — in the active spaces of the event. No speech, no whispers, no gesture-communication. A Bearer carries a small sealed note on the candidate's behalf that reads only <em>"I am in the Vow."</em> The candidate may present this note if directly confronted, then must re-pocket it immediately.</p>
+        <p>Other players will interact with them, ask questions, require responses. The candidate finds other ways to be present. A Bearer witnesses and attests at the window's end. <em>The discipline is not in the silence itself — it is in holding it when breaking would be so easy, so natural, so seemingly harmless.</em></p>
+      </div>
+      <div class="task-rule">Complete The Vow of Silence to pass Tier II of Mind. · Subsequent event after Tier I.</div>
+    </div>
+  </div>
+
+  <div class="tier-block mind">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">III</div>
+      <div class="tier-header-text">
+        <h4>Tier III — Proof of Focus</h4>
+        <div class="epigraph">"When thought is tested by many voices, or by none at all, only focus endures."</div>
+      </div>
+      <div class="tier-badge-tag">Grand Gathering</div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">Wind carries what it has gathered across great distances and deposits it somewhere new. The final proof of a disciplined mind is not that it can hold knowledge — it is that it can <em>move</em> knowledge into another. To teach is to discover the boundaries of your own understanding. To withstand questioning from a full panel is to discover whether that understanding holds its shape under pressure. The Keeper guides the candidate toward the path that will test them most honestly. <em>Keeper's recommendation governs.</em></p>
+      <div class="task-item">
+        <div class="task-name">◆ The Telling <span style="font-size:0.72rem;color:var(--text-dim);font-style:italic;">(Tested by presence and honest witness)</span></div>
+        <p>The candidate organizes and hosts a gathering of their own making — a real event, arranged and led by them — to which they invite at least <strong style="color:var(--text-light)">two people who are not current members of the faith</strong>. The candidate is the host, the one who set the table. The gathering does not need to be a ritual or a ceremony. It simply must be real, and it must belong to the candidate.</p>
+        <p>At the gathering, the candidate speaks honestly and without script about three things: what the Current is and what they believe, why they joined this faith, and why they are doing these trials. Not a performance. Not a recruitment pitch. A person, speaking truthfully to other people about something that matters to them.</p>
+        <p>The Keeper does not attend. The candidate reports back afterward — not what was said, but what it cost them. <em>Focus is easy in silence. The proof of true focus is whether the mind holds its shape when it has to speak what it knows out loud, to strangers, who did not ask.</em></p>
+        <div class="keeper-words">"The Current does not hoard itself. Neither may you."</div>
+      </div>
+      <div class="task-rule">Complete The Telling to earn the Ring of Focus ◆ · Grand Gathering only.</div>
+    </div>
+  </div>
+
+  <div class="ornament"><span>✦</span></div>
+
+  <!-- SOUL -->
+  <h2 class="section-title">Ring of Connection<small>Soul Pillar · Water</small></h2>
+
+  <div class="tier-block soul">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">I</div>
+      <div class="tier-header-text">
+        <h4>Tier I — Awakening of Connection</h4>
+        <div class="epigraph">"The soul cannot grow while hidden."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">The element of the Soul is Water. Water does not wait to be invited — it finds the low places and fills them. It moves toward what is open and rests in what holds it. The soul of a person living against the Current is a sealed vessel — full of itself, going nowhere. The first task of Tier I is the simplest and the most frightening: <em>move first. Step toward a stranger. Begin.</em> Both tasks require the same thing: the willingness to let another person matter.</p>
+      <div class="task-item">
+        <div class="task-name">✦ The Approach</div>
+        <p>The candidate initiates and sustains a meaningful conversation with a stranger at the event — someone they have never spoken to before. They must learn the stranger's name, house, and something true and personal about them.</p>
+        <p>After, they return to the Keeper and recount what they learned — not as a report, but as an introduction: <em>"I met someone today. Here is who they are."</em></p>
+      </div>
+      <div class="task-divider">— or —</div>
+      <div class="task-item">
+        <div class="task-name">✦ The Gift</div>
+        <p>The candidate makes something by hand — a small object, a written piece, something crafted with their own effort — and gives it to a stranger at the event. Not a friend. Not someone they know. A person they have never spoken to, chosen because something about that person called for it.</p>
+        <p>They do not explain the trial. They do not seek thanks or ask for anything in return. They give the gift and let it go. They return to the Keeper and describe the stranger — who they were, why they chose them, what it felt like to give without knowing what would be received.</p>
+        <p><em>The soul that can move toward a stranger with open hands — not asking, not performing, simply giving — has already begun to understand the Current.</em></p>
+      </div>
+      <div class="task-rule">Complete one task to pass Tier I of Soul. · Any event.</div>
+    </div>
+  </div>
+
+  <div class="tier-block soul">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">II</div>
+      <div class="tier-header-text">
+        <h4>Tier II — Discipline of Connection</h4>
+        <div class="epigraph">"The soul is shaped not by what it protects itself from, but by what it allows to touch it."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">Water that never leaves its vessel stagnates. The soul that moves only toward the familiar and the already-known is not flowing — it is pooling. Tier II asks the candidate to move toward something harder than a stranger: a <em>difference</em>. The Service asks for effort without signature — to show up for something that is not yours, and leave no mark except the act itself.</p>
+      <div class="task-item">
+        <div class="task-name">✦ The Service</div>
+        <p>The candidate assists in preparing or facilitating a ritual, gathering, or event task that belongs entirely to someone else — another faith's ceremony, a Court's event, a stranger's quest. They serve on that person's terms, without seeking recognition, without steering it toward their own faith, without personal benefit of any kind.</p>
+        <p>The beneficiary — not the Keeper — witnesses and attests. <em>Service without audience is still service. The Current sees it.</em></p>
+      </div>
+      <div class="task-rule">Complete The Service to pass Tier II of Soul. · Subsequent event after Tier I.</div>
+    </div>
+  </div>
+
+  <div class="tier-block soul">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">III</div>
+      <div class="tier-header-text">
+        <h4>Tier III — Proof of Connection</h4>
+        <div class="epigraph">"The Current cannot flow through a hidden thing. The final proof of the soul is not privacy — it is revelation."</div>
+      </div>
+      <div class="tier-badge-tag">Grand Gathering</div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">Water that flows over ground long enough changes the landscape. The final tier of the Soul pillar asks not what the candidate has done — but what it has cost them, and what it has opened. The Keeper wants to see the changed landscape. Two parts. Both required.</p>
+      <div class="task-item">
+        <div class="task-name">✦ Part One — The Tea Ceremony</div>
+        <p>The candidate arranges a private meeting with the Keeper — just the two of them, away from the gathering. Tea is prepared and shared. There is no audience. There are no witnesses. What is said here belongs to the room.</p>
+        <p>The Keeper does not test the candidate. She sits with them. She asks. And the candidate gives an honest accounting — what this trial has cost them, what it has changed in them, what broke open and what hardened, who they are now that they were not before. This is not a speech. It is a conversation between two people who have traveled some of the same road.</p>
+        <p><em>The Keeper has heard many polished answers in her time. She will wait, quietly, for as long as the truth takes to arrive. The tea helps.</em></p>
+      </div>
+      <div class="task-item" style="margin-top:1rem;">
+        <div class="task-name">✦ Part Two — The Gift of the Coin</div>
+        <p>The candidate has brought someone to the Current — not through pressure, not through recruitment, but through the quality of their own presence over the course of this trial. That person is ready. The final act belongs to the candidate.</p>
+        <p>The candidate designs and hosts a ceremony of their own making — public, witnessed, in front of others at the event. It does not need to be a formal ritual. It simply must be real and must happen in the open. At the ceremony's heart, the candidate offers the Coin of the Keepers to the new member with their own hands and their own words.</p>
+        <p><strong style="color:var(--text-light)">The new member must formally register their religion with the Keeper before this part is considered complete.</strong> The coin does not pass until that step is done. The ceremony is the candidate's gift to someone they drew toward the Current — and to the faith itself.</p>
+        <div class="keeper-words">"You did not come alone. You never do. That is the Current."</div>
+      </div>
+      <div class="task-rule">Complete both parts to earn the Ring of Connection ✦ · Grand Gathering only.</div>
+    </div>
+  </div>
+
+  <div class="ornament"><span>⬤ ◆ ✦</span></div>
+
+  <h2 class="section-title">The Four Elements<small>Earth · Wind · Water · Fire</small></h2>
+  <div style="background:rgba(200,150,62,0.05);border:1px solid var(--border);border-radius:4px;padding:1.4rem;margin-bottom:2rem;">
+    <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.85;text-align:center;font-style:italic;">The Current moves through all things — but not through all things the same way.<br>Each pillar is a face of the same eternal flow.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:1.2rem;">
+      <div style="text-align:center;padding:0.8rem;">
+        <div style="display:flex;justify-content:center;align-items:center;height:52px;margin-bottom:0.5rem;">
+          <!-- Mountain peaks with strata -->
+          <svg width="50" height="42" viewBox="0 0 54 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 41 L18 12 L33 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M22 41 L37 5 L52 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
+            <line x1="30" y1="22" x2="44" y2="22" stroke="#b0aea6" stroke-width="1.1" opacity="0.5"/>
+            <line x1="27" y1="31" x2="47" y2="31" stroke="#b0aea6" stroke-width="1.1" opacity="0.4"/>
+            <line x1="2" y1="41" x2="52" y2="41" stroke="#b0aea6" stroke-width="1.5" opacity="0.35"/>
+          </svg>
+        </div>
+        <div style="font-size:0.8rem;color:var(--silver);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Earth · Body</div>
+        <div style="font-size:0.78rem;color:var(--text-dim);font-style:italic;">Foundation. The body that holds still, endures weight, and roots itself so that all else may move.</div>
+      </div>
+      <div style="text-align:center;padding:0.8rem;">
+        <div style="display:flex;justify-content:center;align-items:center;height:52px;margin-bottom:0.5rem;">
+          <!-- Three flowing wind currents -->
+          <svg width="50" height="40" viewBox="0 0 54 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 10 C11 5 19 16 27 10 C35 4 43 13 51 8" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
+            <path d="M3 21 C11 16 20 27 28 21 C36 15 44 23 51 20" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
+            <path d="M10 33 C17 28 24 38 32 33 C40 28 47 34 51 32" stroke="#b0aea6" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+          </svg>
+        </div>
+        <div style="font-size:0.8rem;color:var(--onyx-text);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Wind · Mind</div>
+        <div style="font-size:0.78rem;color:var(--text-dim);font-style:italic;">Thought. Invisible, pervasive, capable of great force or great stillness.</div>
+      </div>
+      <div style="text-align:center;padding:0.8rem;">
+        <div style="display:flex;justify-content:center;align-items:center;height:52px;margin-bottom:0.5rem;">
+          <!-- Water droplet falling into ripples -->
+          <svg width="44" height="50" viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 3 Q31 13 31 21 Q31 30 24 30 Q17 30 17 21 Q17 13 24 3 Z" stroke="#C8963E" stroke-width="2"/>
+            <ellipse cx="24" cy="38" rx="7" ry="3" stroke="#C8963E" stroke-width="1.5" opacity="0.75"/>
+            <ellipse cx="24" cy="40" rx="13" ry="5" stroke="#C8963E" stroke-width="1.2" opacity="0.5"/>
+            <ellipse cx="24" cy="43" rx="20" ry="7" stroke="#C8963E" stroke-width="1" opacity="0.3"/>
+          </svg>
+        </div>
+        <div style="font-size:0.8rem;color:var(--soul-gold);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Water · Soul</div>
+        <div style="font-size:0.78rem;color:var(--text-dim);font-style:italic;">Connection. The Current is water — it finds its way toward what is open and fills what is hollow.</div>
+      </div>
+      <div style="text-align:center;padding:0.8rem;">
+        <div style="display:flex;justify-content:center;align-items:center;height:52px;margin-bottom:0.5rem;">
+          <!-- Wild split flame with inner tongues -->
+          <svg width="36" height="50" viewBox="0 0 44 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 52 C13 43 7 33 10 20 C12 13 16 7 22 3 C28 7 32 13 34 20 C37 33 31 43 22 52 Z" stroke="#e06040" stroke-width="2"/>
+            <path d="M17 44 C13 37 11 27 15 17 C17 11 19 8 22 5" stroke="#e06040" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+            <path d="M27 44 C31 37 33 27 29 17 C27 11 25 8 22 5" stroke="#e06040" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+            <circle cx="22" cy="32" r="3" fill="#e06040" opacity="0.35"/>
+          </svg>
+        </div>
+        <div style="font-size:0.8rem;color:#e06040;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Fire · Master of the Three Rings</div>
+        <div style="font-size:0.78rem;color:var(--text-dim);font-style:italic;">The fourth element is not earned alone. It is kindled — born when earth, wind, and water come together in one person.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Forging + Ceremony of Becoming -->
+  <div style="margin-bottom:2rem;padding:1.4rem;border:1px solid rgba(220,90,50,0.35);border-radius:4px;background:rgba(180,60,40,0.07);">
+    <h2 class="section-title" style="margin-bottom:1rem;">The Forging<small>What fire actually is</small></h2>
+    <p style="font-size:0.84rem;color:var(--text-dim);line-height:1.85;margin-bottom:0.8rem;">The three rings are earned separately. Body is tested in the flesh — endurance, presence, the willingness to carry. Mind is tested in honest thought — creation, clarity, the discipline not to drift. Soul is tested in the space between people — genuine connection, given without expectation. Each ring changes something. But the three rings together do something the three rings separately cannot: they forge.</p>
+    <p style="font-size:0.84rem;color:var(--text-dim);line-height:1.85;margin-bottom:0.8rem;">Forging is not mastery of three things. It is the moment those three things stop being things and become a single nature. When the body no longer fights the mind. When the mind no longer resists the soul. When all three move as one current rather than three separate streams — the fourth element unlocks. Not because it was hidden. Because it could not have existed before.</p>
+    <div class="lore-pull" style="margin:1rem 0;border-color:rgba(220,90,50,0.4);">"You do not reach for fire. You make yourself ready, and fire comes. The Current always finds the soul who has truly prepared a place for it."</div>
+    <h2 class="section-title" style="margin-top:1.6rem;margin-bottom:1rem;">The Ceremony of Becoming<small>Master of the Three Rings</small></h2>
+    <p style="font-size:0.84rem;color:var(--text-dim);line-height:1.85;margin-bottom:0.8rem;">When a member earns all three rings, they are invited to the Ceremony of Becoming — the formal recognition of what has changed. It is not a graduation. It is a witnessing. The faith holds that the moment all three rings rest together on a single hand for the first time, something in the structure of that soul has permanently shifted. The ceremony exists to name that shift aloud, in the presence of others, so it cannot be forgotten.</p>
+    <p style="font-size:0.84rem;color:var(--text-dim);line-height:1.85;margin-bottom:0.8rem;">The new Master of the Three Rings kneels before the High Priestess. She does not speak credentials or count completed trials. She speaks only what she has witnessed in this soul — what the Current has shown her across the time she has known them. Then, drawing on the Emberborn fire that runs in her line, she anoints the new Master: a touch to the brow, to both hands, and above the heart. Three points. Body. Mind. Soul.</p>
+    <p style="font-size:0.84rem;color:var(--text-dim);line-height:1.85;">The fire does not burn. Those who have received it describe it as <em>recognition</em> — as if something inside them had been seen fully for the first time and confirmed. The Keeper's fire does not give them their fire. No one can give it to them. What it does is tell the Current: <em>this one is ready</em>. The new Master rises wearing all three rings. From that moment, they move differently. The Current runs closer to the surface.</p>
+  </div>
+
+  <h2 class="section-title">Titles Earned</h2>
+  <div class="titles-row">
+    <div class="title-card">
+      <div class="title-name">Master of the Three Rings</div>
+      <p>All three Rings earned. The Trinity. Earth, wind, and water come together — and fire is born. Conferred in public ceremony at the Grand Gathering. The Keeper's Beacon is lit. The seeker's cord is retired. A Trinity Braid of silver, black, and gold is given in its place.</p>
+    </div>
+    <div class="title-card">
+      <div class="title-name">Shield of the Current</div>
+      <p>Entrusted, not applied for. This is the highest honour the Keeper can bestow — a recognition not of completion, but of character. The Keeper selects a Master of the Three Rings whose integrity she would stake the circle on, and assigns a personal quest. To bear this title is to be trusted with what the Current holds most sacred. Announced at the Grand Gathering in public ceremony.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════ REWARDS PAGE -->
+<div id="page-rewards" class="page">
+
+  <div class="rewards-intro">
+    <p>"The path is marked by what you carry — and by what you earn.<br>
+    The seeker's cord grows heavier. Then, one ring at a time,<br>
+    <strong>the faith is proven in metal and ceremony.</strong>"</p>
+  </div>
+
+  <!-- SEEKER'S CORD -->
+  <div class="reward-section">
+    <h2 class="section-title">The Seeker's Cord<small>Given when the trial begins. Worn until all three Rings are earned.</small></h2>
+    <div class="cord-layout">
+      <!-- Cord SVG -->
+      <svg viewBox="0 0 130 380" width="130" height="380" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="bead-glow"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <!-- Cord threads -->
+        <path d="M 40 18 Q 38 100, 40 380" stroke="#4a2808" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M 46 18 Q 48 100, 46 380" stroke="#6a3810" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+        <!-- Top loop -->
+        <path d="M 33 18 Q 43 8 53 18" fill="none" stroke="#6a3810" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Bead groups with gaps between pillars -->
+        <!-- BODY beads (silver) -->
+        <circle cx="43" cy="70" r="11" fill="#b0aea6" stroke="#706e68" stroke-width="1.5" filter="url(#bead-glow)"/>
+        <text x="43" y="74" text-anchor="middle" fill="#fff8" font-size="6" font-family="Georgia" dy="2">I</text>
+        <circle cx="43" cy="102" r="11" fill="#b0aea6" stroke="#706e68" stroke-width="1.5"/>
+        <text x="43" y="106" text-anchor="middle" fill="#fff8" font-size="6" font-family="Georgia">II</text>
+        <!-- Label -->
+        <text x="60" y="75" fill="#b0aea6" font-size="10" font-family="Georgia">Body I</text>
+        <text x="60" y="107" fill="#b0aea6" font-size="10" font-family="Georgia">Body II</text>
+        <!-- MIND beads (black/onyx) -->
+        <circle cx="43" cy="175" r="11" fill="#1e1e24" stroke="#55555f" stroke-width="1.5" filter="url(#bead-glow)"/>
+        <text x="43" y="179" text-anchor="middle" fill="#fff8" font-size="6" font-family="Georgia">I</text>
+        <circle cx="43" cy="207" r="11" fill="#1e1e24" stroke="#55555f" stroke-width="1.5"/>
+        <text x="43" y="211" text-anchor="middle" fill="#fff8" font-size="6" font-family="Georgia">II</text>
+        <text x="60" y="179" fill="#9090a0" font-size="10" font-family="Georgia">Mind I</text>
+        <text x="60" y="211" fill="#9090a0" font-size="10" font-family="Georgia">Mind II</text>
+        <!-- SOUL beads (gold) -->
+        <circle cx="43" cy="280" r="11" fill="#C8963E" stroke="#8a6020" stroke-width="1.5" filter="url(#bead-glow)"/>
+        <text x="43" y="284" text-anchor="middle" fill="#fff8" font-size="6" font-family="Georgia">I</text>
+        <circle cx="43" cy="312" r="11" fill="#C8963E" stroke="#8a6020" stroke-width="1.5"/>
+        <text x="43" y="316" text-anchor="middle" fill="#fff8" font-size="6" font-family="Georgia">II</text>
+        <text x="60" y="284" fill="#C8963E" font-size="10" font-family="Georgia">Soul I</text>
+        <text x="60" y="316" fill="#C8963E" font-size="10" font-family="Georgia">Soul II</text>
+        <!-- Tassel -->
+        <line x1="37" y1="370" x2="35" y2="380" stroke="#4a2808" stroke-width="2"/>
+        <line x1="43" y1="370" x2="43" y2="380" stroke="#4a2808" stroke-width="2"/>
+        <line x1="49" y1="370" x2="51" y2="380" stroke="#4a2808" stroke-width="2"/>
+      </svg>
+      <div class="cord-desc">
+        <h4>How it works</h4>
+        <p>When a candidate formally enters the Trial of the Three Rings, the Keeper ties them a braided cord — dark red, in the Keeper's colors. This is the seeker's cord.</p>
+        <p>Each time a Tier I or Tier II is completed, a small bead is threaded onto the cord during ceremony:</p>
+        <p style="color:var(--silver)">● Silver beads — Body Tier I and II</p>
+        <p style="color:var(--onyx-text)">● Black beads — Mind Tier I and II</p>
+        <p style="color:var(--gold)">● Gold beads — Soul Tier I and II</p>
+        <p>When a Tier III is completed and the Ring is earned, the beads for that pillar are removed from the cord in ceremony — replaced by the Ring itself. The cord remains, still holding any unearned beads, until the day all three Rings are won.</p>
+        <p>When a Bearer earns their third Ring, the cord is <strong style="color:var(--gold-light)">retired publicly</strong> and presented back to them — a keepsake of the journey.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE THREE RINGS -->
+  <div class="reward-section">
+    <h2 class="section-title">The Three Rings<small>A simple band ring for each Pillar — silver, black, and gold tone. Earned. Not bought.</small></h2>
+    <div class="rings-trio">
+
+      <!-- Body ring — woven antler/thorn crown ring -->
+      <div class="ring-card body-ring">
+        <svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="body-glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="2" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <radialGradient id="bone-grad" cx="45%" cy="35%" r="65%">
+              <stop offset="0%" stop-color="#e8e4d8"/>
+              <stop offset="60%" stop-color="#c4bfaf"/>
+              <stop offset="100%" stop-color="#8a8478"/>
+            </radialGradient>
+          </defs>
+          <!-- Dark background circle -->
+          <circle cx="60" cy="60" r="56" fill="#1a1208" opacity="0.6"/>
+          <!-- Ring base — broad thorn-crown band, top-down oval -->
+          <ellipse cx="60" cy="63" rx="40" ry="14" fill="url(#bone-grad)" opacity="0.9" filter="url(#body-glow)"/>
+          <ellipse cx="60" cy="63" rx="40" ry="14" fill="none" stroke="#a09888" stroke-width="1.2"/>
+          <!-- Hollow center -->
+          <ellipse cx="60" cy="63" rx="25" ry="8" fill="#1a1208"/>
+          <ellipse cx="60" cy="63" rx="25" ry="8" fill="none" stroke="#706a58" stroke-width="0.8"/>
+          <!-- Thorn spikes radiating upward from the crown ring -->
+          <!-- Spike 1 - leftmost -->
+          <path d="M 28 58 C 24 46 20 36 22 22 C 23 30 26 42 30 54 Z" fill="#d4cfc0" stroke="#9a9280" stroke-width="0.8"/>
+          <!-- Spike 2 -->
+          <path d="M 38 54 C 36 40 34 28 37 14 C 38 24 40 38 42 52 Z" fill="#ccc8b8" stroke="#9a9280" stroke-width="0.8"/>
+          <!-- Spike 3 - center-left -->
+          <path d="M 50 52 C 50 36 50 22 52 10 C 53 22 53 38 54 51 Z" fill="#d8d4c4" stroke="#9a9280" stroke-width="0.8"/>
+          <!-- Spike 4 - center -->
+          <path d="M 60 51 C 60 34 60 20 60 8 C 61 20 61 36 61 51 Z" fill="#e0dcd0" stroke="#a09888" stroke-width="1"/>
+          <!-- Spike 5 - center-right -->
+          <path d="M 70 52 C 70 36 70 22 68 10 C 68 22 68 38 67 51 Z" fill="#d8d4c4" stroke="#9a9280" stroke-width="0.8"/>
+          <!-- Spike 6 -->
+          <path d="M 82 54 C 84 40 86 28 83 14 C 82 24 80 38 78 52 Z" fill="#ccc8b8" stroke="#9a9280" stroke-width="0.8"/>
+          <!-- Spike 7 - rightmost -->
+          <path d="M 92 58 C 96 46 100 36 98 22 C 97 30 94 42 90 54 Z" fill="#d4cfc0" stroke="#9a9280" stroke-width="0.8"/>
+          <!-- Small cross-twig details on spikes -->
+          <path d="M 34 38 L 40 42" stroke="#a09080" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+          <path d="M 48 32 L 55 36" stroke="#a09080" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+          <path d="M 66 32 L 73 36" stroke="#a09080" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+          <path d="M 80 38 L 86 42" stroke="#a09080" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+          <!-- Ring band texture lines (woven look) -->
+          <path d="M 22 60 Q 60 55 98 60" fill="none" stroke="#a09888" stroke-width="0.6" opacity="0.5"/>
+          <path d="M 22 64 Q 60 68 98 64" fill="none" stroke="#706a58" stroke-width="0.6" opacity="0.4"/>
+          <!-- Highlight -->
+          <ellipse cx="52" cy="59" rx="12" ry="3.5" fill="#f0ede0" opacity="0.25"/>
+        </svg>
+        <div class="ring-title">Ring of Endurance</div>
+        <div class="ring-sub">Body · Silver</div>
+      </div>
+
+      <!-- Mind ring — wide dark band with chain-link inlay and Roman numerals -->
+      <div class="ring-card mind-ring">
+        <svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="mind-glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="1.5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <linearGradient id="onyx-face" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#3a3a42"/>
+              <stop offset="40%" stop-color="#1e1e24"/>
+              <stop offset="100%" stop-color="#0e0e12"/>
+            </linearGradient>
+            <linearGradient id="onyx-side" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#4a4a54"/>
+              <stop offset="100%" stop-color="#1a1a20"/>
+            </linearGradient>
+          </defs>
+          <!-- Dark background -->
+          <circle cx="60" cy="60" r="56" fill="#12120e" opacity="0.5"/>
+          <!-- Ring body — 3/4 perspective wide band ring -->
+          <!-- Bottom ellipse (underside of band) -->
+          <ellipse cx="60" cy="78" rx="38" ry="12" fill="#0e0e12"/>
+          <!-- Side face of band (front-facing thickness) -->
+          <rect x="22" y="48" width="76" height="30" fill="url(#onyx-side)" rx="2"/>
+          <!-- Top ellipse (top face of band) -->
+          <ellipse cx="60" cy="48" rx="38" ry="12" fill="url(#onyx-face)" filter="url(#mind-glow)"/>
+          <!-- Ring hole - bottom -->
+          <ellipse cx="60" cy="78" rx="22" ry="6.5" fill="#1a1208"/>
+          <!-- Ring hole - side -->
+          <rect x="38" y="48" width="44" height="30" fill="#1a1208"/>
+          <!-- Ring hole - top -->
+          <ellipse cx="60" cy="48" rx="22" ry="6.5" fill="#0c0c10"/>
+          <!-- Chain-link inlay pattern across the band face -->
+          <!-- Chain links as small interlocked ovals -->
+          <g stroke="#55555f" stroke-width="1" fill="none" opacity="0.85">
+            <!-- Row of chain links -->
+            <ellipse cx="32" cy="62" rx="5" ry="3" transform="rotate(-20,32,62)"/>
+            <ellipse cx="40" cy="60" rx="5" ry="3" transform="rotate(20,40,60)"/>
+            <ellipse cx="48" cy="62" rx="5" ry="3" transform="rotate(-20,48,62)"/>
+            <ellipse cx="56" cy="60" rx="5" ry="3" transform="rotate(20,56,60)"/>
+            <ellipse cx="64" cy="62" rx="5" ry="3" transform="rotate(-20,64,62)"/>
+            <ellipse cx="72" cy="60" rx="5" ry="3" transform="rotate(20,72,60)"/>
+            <ellipse cx="80" cy="62" rx="5" ry="3" transform="rotate(-20,80,62)"/>
+            <ellipse cx="88" cy="60" rx="5" ry="3" transform="rotate(20,88,60)"/>
+            <!-- Connecting links -->
+            <ellipse cx="36" cy="61" rx="4" ry="2.5" transform="rotate(70,36,61)" opacity="0.6"/>
+            <ellipse cx="44" cy="61" rx="4" ry="2.5" transform="rotate(70,44,61)" opacity="0.6"/>
+            <ellipse cx="52" cy="61" rx="4" ry="2.5" transform="rotate(70,52,61)" opacity="0.6"/>
+            <ellipse cx="60" cy="61" rx="4" ry="2.5" transform="rotate(70,60,61)" opacity="0.6"/>
+            <ellipse cx="68" cy="61" rx="4" ry="2.5" transform="rotate(70,68,61)" opacity="0.6"/>
+            <ellipse cx="76" cy="61" rx="4" ry="2.5" transform="rotate(70,76,61)" opacity="0.6"/>
+            <ellipse cx="84" cy="61" rx="4" ry="2.5" transform="rotate(70,84,61)" opacity="0.6"/>
+          </g>
+          <!-- Roman numerals I, II, III etched on the face -->
+          <text x="34" y="58" font-family="Georgia,serif" font-size="8" fill="#707080" opacity="0.9" text-anchor="middle" letter-spacing="1">I</text>
+          <text x="60" y="58" font-family="Georgia,serif" font-size="8" fill="#707080" opacity="0.9" text-anchor="middle" letter-spacing="1">II</text>
+          <text x="86" y="58" font-family="Georgia,serif" font-size="8" fill="#707080" opacity="0.9" text-anchor="middle" letter-spacing="1">III</text>
+          <!-- Edge highlights -->
+          <ellipse cx="60" cy="48" rx="38" ry="12" fill="none" stroke="#55555f" stroke-width="1.2" opacity="0.6"/>
+          <path d="M 22 48 L 22 78" stroke="#4a4a54" stroke-width="1" opacity="0.4"/>
+          <path d="M 98 48 L 98 78" stroke="#4a4a54" stroke-width="1" opacity="0.4"/>
+          <!-- Subtle highlight on top face -->
+          <ellipse cx="48" cy="44" rx="14" ry="4" fill="#606070" opacity="0.15"/>
+        </svg>
+        <div class="ring-title">Ring of Focus</div>
+        <div class="ring-sub">Mind · Onyx</div>
+      </div>
+
+      <!-- Soul ring — gold band with celestial/scroll vine engravings -->
+      <div class="ring-card soul-ring">
+        <svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="soul-glow" x="-25%" y="-25%" width="150%" height="150%">
+              <feGaussianBlur stdDeviation="2.5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <radialGradient id="gold-face" cx="40%" cy="35%" r="70%">
+              <stop offset="0%" stop-color="#f4d060"/>
+              <stop offset="45%" stop-color="#c8963e"/>
+              <stop offset="100%" stop-color="#7a5818"/>
+            </radialGradient>
+            <linearGradient id="gold-band" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#d4a840"/>
+              <stop offset="50%" stop-color="#9a6c20"/>
+              <stop offset="100%" stop-color="#6a4810"/>
+            </linearGradient>
+          </defs>
+          <!-- Warm dark background -->
+          <circle cx="60" cy="60" r="56" fill="#1a1208" opacity="0.55"/>
+          <!-- Band underside -->
+          <ellipse cx="60" cy="78" rx="40" ry="13" fill="#7a5818"/>
+          <!-- Band side (front face) -->
+          <rect x="20" y="47" width="80" height="31" fill="url(#gold-band)" rx="1.5"/>
+          <!-- Top face of band -->
+          <ellipse cx="60" cy="47" rx="40" ry="13" fill="url(#gold-face)" filter="url(#soul-glow)"/>
+          <!-- Ring center hole - bottom -->
+          <ellipse cx="60" cy="78" rx="24" ry="7.5" fill="#1a1208"/>
+          <!-- Ring center hole - side -->
+          <rect x="36" y="47" width="48" height="31" fill="#1a1208"/>
+          <!-- Ring center hole - top -->
+          <ellipse cx="60" cy="47" rx="24" ry="7.5" fill="#120e04"/>
+          <!-- Engraved vine/scroll pattern around the band face -->
+          <g stroke="#e8c060" stroke-width="0.9" fill="none" opacity="0.75">
+            <!-- Central vine stem -->
+            <path d="M 24 62 Q 42 56 60 62 Q 78 68 96 62"/>
+            <!-- Vine curls left side -->
+            <path d="M 30 62 C 26 54 30 50 34 54 C 30 54 28 60 30 62"/>
+            <path d="M 40 58 C 38 50 42 46 45 50 C 41 50 39 56 40 58"/>
+            <!-- Vine curls center -->
+            <path d="M 56 62 C 54 52 58 48 62 52 C 58 52 56 58 56 62"/>
+            <path d="M 64 62 C 66 70 62 74 58 70 C 62 70 64 64 64 62"/>
+            <!-- Vine curls right side -->
+            <path d="M 76 64 C 78 72 74 76 70 72 C 74 72 76 66 76 64"/>
+            <path d="M 86 62 C 90 52 86 48 82 52 C 86 52 88 58 86 62"/>
+          </g>
+          <!-- Small star/celestial dots scattered on band -->
+          <g fill="#f0d070" opacity="0.7">
+            <circle cx="28" cy="55" r="1.2"/>
+            <circle cx="46" cy="70" r="1"/>
+            <circle cx="60" cy="53" r="1.3"/>
+            <circle cx="74" cy="70" r="1"/>
+            <circle cx="92" cy="55" r="1.2"/>
+            <circle cx="38" cy="60" r="0.8"/>
+            <circle cx="82" cy="62" r="0.8"/>
+          </g>
+          <!-- Thin edge detail lines -->
+          <ellipse cx="60" cy="47" rx="40" ry="13" fill="none" stroke="#e8c060" stroke-width="1.2" opacity="0.5"/>
+          <ellipse cx="60" cy="78" rx="40" ry="13" fill="none" stroke="#a07828" stroke-width="0.8" opacity="0.4"/>
+          <!-- Highlight gleam on top face -->
+          <ellipse cx="48" cy="43" rx="15" ry="4.5" fill="#f8e890" opacity="0.2"/>
+          <ellipse cx="44" cy="42" rx="7" ry="2" fill="#fff8d0" opacity="0.25"/>
+        </svg>
+        <div class="ring-title">Ring of Connection</div>
+        <div class="ring-sub">Soul · Gold tone</div>
+      </div>
+    </div>
+
+    <!-- Three rings shown together -->
+    <div class="combined-display">
+      <svg viewBox="0 0 210 90" width="210" height="90" xmlns="http://www.w3.org/2000/svg">
+        <defs><filter id="ring-glow" x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="2" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter></defs>
+        <!-- Three rings side by side -->
+        <circle cx="36" cy="45" r="28" fill="#b0aea6" filter="url(#ring-glow)"/>
+        <circle cx="36" cy="45" r="17" fill="#1a0808"/>
+        <circle cx="36" cy="45" r="28" fill="none" stroke="#c8c6c0" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="105" cy="45" r="28" fill="#1e1e24" filter="url(#ring-glow)"/>
+        <circle cx="105" cy="45" r="17" fill="#1a0808"/>
+        <circle cx="105" cy="45" r="28" fill="none" stroke="#55555f" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="174" cy="45" r="28" fill="#C8963E" filter="url(#ring-glow)"/>
+        <circle cx="174" cy="45" r="17" fill="#1a0808"/>
+        <circle cx="174" cy="45" r="28" fill="none" stroke="#E8B96A" stroke-width="1.5" opacity="0.4"/>
+      </svg>
+      <p>One of silver, for the body that did not break. One of deep onyx, for the mind that would not scatter. One of gold, for the soul that chose connection over isolation. Three rings. One truth. Carry them into the world and let them speak for what you survived.</p>
+    </div>
+  </div>
+
+  <!-- WAYS TO WEAR -->
+  <div class="reward-section">
+    <h2 class="section-title">Ways to Wear<small>The rings are yours. How you carry them into the world is yours to decide.</small></h2>
+    <div class="wear-grid">
+
+      <!-- Stacked on one finger -->
+      <div class="wear-card">
+        <svg viewBox="0 0 80 110" width="80" height="110" xmlns="http://www.w3.org/2000/svg">
+          <!-- Finger -->
+          <rect x="28" y="10" width="24" height="95" rx="12" fill="#5a3020" opacity="0.45"/>
+          <!-- Copper ring band (bottom) -->
+          <rect x="20" y="80" width="40" height="11" fill="#b0aea6" rx="1"/>
+          <ellipse cx="40" cy="80" rx="20" ry="5.5" fill="#c8c6c0"/>
+          <ellipse cx="40" cy="91" rx="20" ry="5.5" fill="#706e68" opacity="0.7"/>
+          <!-- Silver ring band (middle) -->
+          <rect x="20" y="65" width="40" height="11" fill="#1e1e24" rx="1"/>
+          <ellipse cx="40" cy="65" rx="20" ry="5.5" fill="#55555f"/>
+          <ellipse cx="40" cy="76" rx="20" ry="5.5" fill="#383840" opacity="0.7"/>
+          <!-- Gold ring band (top) -->
+          <rect x="20" y="50" width="40" height="11" fill="#C8963E" rx="1"/>
+          <ellipse cx="40" cy="50" rx="20" ry="5.5" fill="#E8B96A"/>
+          <ellipse cx="40" cy="61" rx="20" ry="5.5" fill="#8a6020" opacity="0.7"/>
+        </svg>
+        <strong>Stacked on one finger</strong>
+        <p>The classic Bearer display. All three together, one on top of the next.</p>
+      </div>
+
+      <!-- One ring per finger -->
+      <div class="wear-card">
+        <svg viewBox="0 0 80 110" width="80" height="110" xmlns="http://www.w3.org/2000/svg">
+          <!-- Three fingers -->
+          <rect x="5"  y="18" width="18" height="82" rx="9" fill="#5a3020" opacity="0.4"/>
+          <rect x="28" y="12" width="18" height="88" rx="9" fill="#5a3020" opacity="0.4"/>
+          <rect x="51" y="18" width="18" height="82" rx="9" fill="#5a3020" opacity="0.4"/>
+          <!-- Copper on first finger -->
+          <rect x="2"  y="62" width="24" height="9" fill="#b0aea6" rx="1"/>
+          <ellipse cx="14" cy="62" rx="12" ry="4.5" fill="#c8c6c0"/>
+          <!-- Silver on second finger -->
+          <rect x="25" y="56" width="24" height="9" fill="#1e1e24" rx="1"/>
+          <ellipse cx="37" cy="56" rx="12" ry="4.5" fill="#55555f"/>
+          <!-- Gold on third finger -->
+          <rect x="48" y="62" width="24" height="9" fill="#C8963E" rx="1"/>
+          <ellipse cx="60" cy="62" rx="12" ry="4.5" fill="#E8B96A"/>
+        </svg>
+        <strong>One ring per finger</strong>
+        <p>Wear only the rings you've earned. Progress displayed openly.</p>
+      </div>
+
+      <!-- On a cord as charms -->
+      <div class="wear-card">
+        <svg viewBox="0 0 80 110" width="80" height="110" xmlns="http://www.w3.org/2000/svg">
+          <!-- Cord loop at top -->
+          <path d="M 12 8 Q 40 16 68 8" fill="none" stroke="#4a2808" stroke-width="2"/>
+          <line x1="12" y1="8"  x2="12" y2="32" stroke="#4a2808" stroke-width="2"/>
+          <line x1="68" y1="8"  x2="68" y2="32" stroke="#4a2808" stroke-width="2"/>
+          <!-- Three rings hanging on cord threads -->
+          <line x1="25" y1="32" x2="25" y2="52" stroke="#4a2808" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="25" cy="64" r="12" fill="#b0aea6"/>
+          <circle cx="25" cy="64" r="7"  fill="#1a0808"/>
+          <line x1="40" y1="32" x2="40" y2="46" stroke="#4a2808" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="40" cy="58" r="12" fill="#1e1e24"/>
+          <circle cx="40" cy="58" r="7"  fill="#1a0808"/>
+          <line x1="55" y1="32" x2="55" y2="52" stroke="#4a2808" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="55" cy="64" r="12" fill="#C8963E"/>
+          <circle cx="55" cy="64" r="7"  fill="#1a0808"/>
+        </svg>
+        <strong>On a cord</strong>
+        <p>Thread the cord through each ring and wear them as a pendant cluster or necklace.</p>
+      </div>
+
+      <!-- On belt or kit -->
+      <div class="wear-card">
+        <svg viewBox="0 0 80 110" width="80" height="110" xmlns="http://www.w3.org/2000/svg">
+          <!-- Belt -->
+          <rect x="4" y="38" width="72" height="14" rx="3" fill="#3a2010" opacity="0.85"/>
+          <rect x="4" y="40" width="72" height="2" fill="#5a3020" opacity="0.5"/>
+          <!-- Rings clipped to belt via short loops -->
+          <line x1="20" y1="52" x2="20" y2="62" stroke="#5a3020" stroke-width="1.5"/>
+          <circle cx="20" cy="74" r="11" fill="#b0aea6"/>
+          <circle cx="20" cy="74" r="6.5" fill="#1a0808"/>
+          <line x1="40" y1="52" x2="40" y2="62" stroke="#5a3020" stroke-width="1.5"/>
+          <circle cx="40" cy="74" r="11" fill="#1e1e24"/>
+          <circle cx="40" cy="74" r="6.5" fill="#1a0808"/>
+          <line x1="60" y1="52" x2="60" y2="62" stroke="#5a3020" stroke-width="1.5"/>
+          <circle cx="60" cy="74" r="11" fill="#C8963E"/>
+          <circle cx="60" cy="74" r="6.5" fill="#1a0808"/>
+        </svg>
+        <strong>On a belt or sash</strong>
+        <p>Thread a loop through the band and clip to kit. Useful when wearing gloves.</p>
+      </div>
+
+    </div>
+    <p style="font-size:0.8rem;color:var(--text-dim);font-style:italic;margin-top:1rem;text-align:center;">
+      Standard band rings fit any finger. A cord threaded through the band turns any ring into a pendant charm.<br>
+      How you display your rings is part of your story in the Current.
+    </p>
+  </div>
+
+  <!-- BEARER OF THE CURRENT -->
+  <div class="reward-section">
+    <h2 class="section-title">Master of the Three Rings<small>The Trinity. Earned at the Grand Gathering, carried forever after.</small></h2>
+    <div class="bearer-display">
+      <!-- Bearer medallion SVG: sigil on a chain -->
+      <svg viewBox="0 0 100 130" width="100" height="130" xmlns="http://www.w3.org/2000/svg">
+        <defs><filter id="med-glow"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        <!-- Chain links -->
+        <g stroke="#C8963E" stroke-width="1.5" fill="none" opacity="0.7">
+          <ellipse cx="50" cy="8" rx="6" ry="3"/>
+          <ellipse cx="50" cy="14" rx="3" ry="5" transform="rotate(60,50,14)"/>
+          <ellipse cx="50" cy="20" rx="6" ry="3"/>
+          <ellipse cx="50" cy="26" rx="3" ry="5" transform="rotate(60,50,26)"/>
+        </g>
+        <!-- Medallion circle -->
+        <circle cx="50" cy="90" r="36" fill="#1a0808" stroke="#C8963E" stroke-width="2"/>
+        <circle cx="50" cy="90" r="33" fill="none" stroke="#C8963E" stroke-width="0.5" opacity="0.5"/>
+        <!-- Tiny knotwork ring on medallion -->
+        <circle cx="50" cy="90" r="29" fill="none" stroke="#C8963E" stroke-width="3.5" opacity="0.2"/>
+        <circle cx="50" cy="90" r="29" fill="none" stroke="#C8963E" stroke-width="1.5"
+                stroke-dasharray="5 5" opacity="0.7"/>
+        <!-- Mini vine infinity on medallion -->
+        <path d="M 50 90 C 49 86,46 82,42 83 C 37 84,35 88,36 91 C 37 94,40 97,44 96 C 47 95,50 92,50 90"
+              fill="none" stroke="#C8963E" stroke-width="1.8" stroke-linecap="round" filter="url(#med-glow)"/>
+        <line x1="49" y1="88.5" x2="51" y2="91.5" stroke="#1a0808" stroke-width="2.5"/>
+        <path d="M 50 90 C 51 86,54 82,58 83 C 63 84,65 88,64 91 C 63 94,60 97,56 96 C 53 95,50 92,50 90"
+              fill="none" stroke="#C8963E" stroke-width="1.8" stroke-linecap="round" filter="url(#med-glow)"/>
+        <!-- Chain loop top -->
+        <line x1="50" y1="29" x2="50" y2="54" stroke="#C8963E" stroke-width="1.5" opacity="0.5"/>
+        <circle cx="50" cy="54" r="3" fill="none" stroke="#C8963E" stroke-width="1.5"/>
+      </svg>
+      <div>
+        <h4>The Bearer Medallion</h4>
+        <p>When all three Rings are earned, the Keeper presents the Bearer with a pendant bearing the Keepers' sigil — the vine-infinity in its Celtic knotwork ring. This is the one piece of the reward system that does not vary. Every Bearer receives the same pendant. When others see it, they know what it means.</p>
+        <p style="margin-top:0.7rem;">Pendants can be sourced from custom makers on Etsy, cast in resin, or stamped in metal. Bearers will be rare enough that cost stays manageable — a handful total, not dozens.</p>
+        <p style="margin-top:0.7rem;">The Keeper's Beacon is lit for each new Bearer. The seeker's cord is retired in ceremony and returned to the Bearer as a keepsake of the journey. The Bearer is titled publicly and entered into the Trial Scroll as a permanent record.</p>
+        <p style="margin-top:0.7rem;color:var(--gold);font-style:italic;font-size:0.82rem;">"When I call you respond. When we move, we move as one."</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════ TRACKER PAGE -->
+<div id="page-tracker" class="page">
+  <h2 class="section-title">The Registry of Seekers<small>The Current remembers those who walk the path</small></h2>
+  <div class="tracker-controls">
+    <input type="text" id="seeker-search" placeholder="Search by character name…" oninput="filterTracker(this.value)">
+    <span id="keeper-badge" class="keeper-badge" style="display:none;">⚡ Keeper Mode Active</span>
+  </div>
+  <div id="tracker-content">
+    <div class="empty-state">No seekers registered yet. The Keeper must open the circle.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ LEADERBOARD PAGE -->
+<div id="page-leaderboard" class="page">
+
+  <!-- ── TRIAL LEADERBOARD ───────────────────────────────── -->
+  <div style="margin-bottom:2.5rem;">
+    <h2 class="section-title">Trial Leaderboard<small>Grand Proving — Body Pillar records</small></h2>
+    <div class="leaderboard" style="padding:1.2rem;background:rgba(184,115,51,0.06);border:1px solid rgba(184,115,51,0.25);border-radius:4px;">
+      <div class="leaderboard-tabs" id="page-lb-tabs">
+        <button class="lb-tab active" onclick="switchPageLb('plank',this)">⬤ The Plank</button>
+        <button class="lb-tab" onclick="switchPageLb('sprint',this)">⬤ The Foot Race</button>
+      </div>
+      <div id="page-lb-display"></div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:2.5rem;">
+    <h2 class="section-title">Shields of the Current<small>Entrusted Bearers — the faith's sworn protectors.</small></h2>
+    <div id="shields-grid" class="bearer-grid">
+      <div class="empty-state" style="grid-column:1/-1">No Shields yet. The faith grows.</div>
+    </div>
+  </div>
+  <div style="margin-bottom:2.5rem;">
+    <h2 class="section-title">Bearers of the Current<small>Those who carry all three Rings — the Trinity.</small></h2>
+    <div id="bearers-grid" class="bearer-grid">
+      <div class="empty-state" style="grid-column:1/-1">No Bearers yet. The Grand Gathering awaits.</div>
+    </div>
+  </div>
+  <div>
+    <h2 class="section-title">Seekers in Progress</h2>
+    <table class="prog-table">
+      <thead><tr><th>Name</th><th>House</th><th>Rings</th><th>Body</th><th>Mind</th><th>Soul</th></tr></thead>
+      <tbody id="prog-table-body">
+        <tr><td colspan="6" class="empty-state" style="text-align:center;padding:2rem;">No candidates yet.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════ ADMIN PAGE -->
+<div id="page-admin" class="page">
+  <div id="admin-login-panel" class="admin-login">
+    <svg viewBox="0 0 60 60" width="50" height="50" style="margin:0 auto 1rem;display:block;opacity:0.5;" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="30" cy="30" r="28" fill="none" stroke="#C8963E" stroke-width="1.5"/>
+      <path d="M 30 30 C 29 25,25 20,20 21 C 14 22,12 27,13 31 C 14 35,18 39,23 38 C 27 37,30 33,30 30" fill="none" stroke="#C8963E" stroke-width="2" stroke-linecap="round"/>
+      <line x1="29" y1="28.5" x2="31" y2="31.5" stroke="#0e0404" stroke-width="3"/>
+      <path d="M 30 30 C 31 25,35 20,40 21 C 46 22,48 27,47 31 C 46 35,42 39,37 38 C 33 37,30 33,30 30" fill="none" stroke="#C8963E" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <h2 class="section-title" style="text-align:center;border:none;">Keeper's Panel</h2>
+    <p>This panel is reserved for the Keeper of the Current.<br>Enter the Keeper's word to proceed.</p>
+    <input type="password" id="admin-pass" placeholder="Keeper's word…" onkeydown="if(event.key==='Enter')adminLogin()">
+    <button class="btn" style="width:100%;margin-top:0.3rem;" onclick="adminLogin()">Enter</button>
+  </div>
+
+  <div id="admin-panel" style="display:none;">
+    <h2 class="section-title">Keeper's Panel — Talia Emberborn<small>Verified. The circle is open.</small></h2>
+
+    <div class="admin-section">
+      <h3>Register a New Seeker</h3>
+      <div class="award-row">
+        <input type="text" id="newName" placeholder="Character name…" style="flex:1;min-width:120px;">
+        <input type="text" id="newHouse" placeholder="House / vocation…" style="flex:1;min-width:120px;">
+        <button class="btn" onclick="addCandidate()">+ Register</button>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <h3>Mark Trial Progress</h3>
+      <p style="font-size:0.78rem;color:var(--text-dim);margin-bottom:0.8rem;font-style:italic;">Check the boxes as each seeker completes a trial in your presence. Rings are awarded automatically when all three trials in a pillar are complete.</p>
+      <div id="admin-candidate-list"></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>Award a Ring</h3>
+      <div class="award-row">
+        <select id="award-candidate"><option value="">— Select candidate —</option></select>
+        <select id="award-ring">
+          <option value="">— Select ring —</option>
+          <option value="body">Ring of Endurance (Body)</option>
+          <option value="mind">Ring of Focus (Mind)</option>
+          <option value="soul">Ring of Connection (Soul)</option>
+        </select>
+        <input type="text" id="award-witness" placeholder="Witnessed by…" style="flex:1;min-width:120px;">
+        <button class="btn" onclick="awardRing()">Award Ring</button>
+      </div>
+    </div>
+    <div class="admin-section">
+      <h3>Leaderboard — Record a Time</h3>
+      <div class="award-row" style="flex-wrap:wrap;gap:0.5rem;">
+        <select id="lb-event" style="min-width:150px;">
+          <option value="plank">The Plank (hold time)</option>
+          <option value="sprint">The Foot Race (100m)</option>
+        </select>
+        <input type="text" id="lb-entry-name" placeholder="Character name…" style="flex:1;min-width:120px;">
+        <input type="text" id="lb-entry-time" placeholder="Time (e.g. 2:34 or 14.8s)…" style="flex:1;min-width:130px;">
+        <button class="btn" onclick="addLbEntry()">Record</button>
+      </div>
+      <div style="margin-top:0.7rem;font-size:0.75rem;color:var(--text-dim);">Plank: longer = better &nbsp;|&nbsp; Foot Race: shorter = better. Both are sorted automatically.</div>
+    </div>
+    <div class="admin-section">
+      <h3>Designate a Shield</h3>
+      <div class="award-row">
+        <select id="shield-candidate"><option value="">— Select Bearer —</option></select>
+        <button class="btn" onclick="designateShield()">Designate Shield</button>
+      </div>
+    </div>
+    <div class="admin-section">
+      <h3>Leaderboard — Edit / Remove Times</h3>
+      <div style="display:flex;gap:0.5rem;margin-bottom:0.7rem;">
+        <button class="lb-tab active" id="lb-edit-tab-plank" onclick="switchAdminLbTab('plank',this)">⬤ The Plank</button>
+        <button class="lb-tab" id="lb-edit-tab-sprint" onclick="switchAdminLbTab('sprint',this)">⬤ The Foot Race</button>
+      </div>
+      <div id="admin-lb-display"></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>Keeper's Log</h3>
+      <div class="admin-log" id="admin-log"></div>
+    </div>
+    <div class="admin-section">
+      <h3>Change Keeper's Word</h3>
+      <div class="award-row">
+        <input type="password" id="new-pass" placeholder="New word…">
+        <button class="btn" onclick="changePass()">Update</button>
+      </div>
+    </div>
+    <div style="margin-top:1rem;">
+      <button class="btn danger small" onclick="adminLogout()">Lock Panel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ─────────────────────────────────────────────────
+const STORE='kotc_v2';const PKEY='kotc_kpass';
+function load(){try{return JSON.parse(localStorage.getItem(STORE))||{candidates:[],log:[]};}catch{return{candidates:[],log:[]};}}
+function save(d){localStorage.setItem(STORE,JSON.stringify(d));}
+function getPass(){return localStorage.getItem(PKEY)||'current';}
+function setPass(p){localStorage.setItem(PKEY,p);}
+let data=load();let adminUnlocked=false;
+
+// ── NAV ───────────────────────────────────────────────────
+function showPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(id==='leaderboard')renderLeaderboard();
+  if(id==='tracker')renderTracker();
+  if(id==='admin'&&adminUnlocked)renderAdminPanel();
+}
+
+// ── TIER TOGGLE ───────────────────────────────────────────
+function toggleTier(h){h.classList.toggle('open');h.nextElementSibling.classList.toggle('open');}
+
+// ── TOAST ─────────────────────────────────────────────────
+function toast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ── TRACKER ───────────────────────────────────────────────
+const TIERS={
+  body:['b_t1','b_t2','b_t3'],
+  mind:['m_t1','m_t2','m_t3'],
+  soul:['s_t1','s_t2','s_t3']
+};
+const TLABELS={
+  b_t1:'I — The Fast & The Watch',b_t2:'II — The Unison (Sword Kata)',b_t3:'III — The Plank & The Foot Race ★',
+  m_t1:'I — The Dilemma / Recitation',m_t2:'II — The Vow of Silence',m_t3:'III — The Telling ★',
+  s_t1:'I — The Gift',s_t2:'II — The Service',s_t3:'III — Tea Ceremony & Gift of the Coin ★'
+};
+
+// ── GAMIFICATION ──────────────────────────────────────────
+function currentFlow(c){
+  return Math.round(Object.values(c.progress).filter(Boolean).length/9*100);
+}
+function seekerTitle(c){
+  if(c.shield)return'Shield of the Current';
+  const rings=[c.rings.body,c.rings.mind,c.rings.soul].filter(Boolean).length;
+  if(rings===3)return'Bearer of the Three Rings';
+  if(rings===2)return'Bearer of Two';
+  if(rings===1){
+    const which=c.rings.body?'Body':c.rings.mind?'Mind':'Soul';
+    return'Bearer of the '+which+' Ring';
+  }
+  const done=Object.values(c.progress).filter(Boolean).length;
+  if(done>=6)return'Deepening Seeker';
+  if(done>=3)return'Seeker of the Current';
+  if(done>=1)return'One Who Stirs';
+  return'Wanderer';
+}
+function nextTrialHint(c){
+  for(const pillar of['body','mind','soul']){
+    for(const key of TIERS[pillar]){
+      if(!c.progress[key])return TLABELS[key];
+    }
+  }
+  return null;
+}
+function pillarDone(c,p){return TIERS[p].filter(k=>c.progress[k]).length;}
+
+// ── TRACKER ───────────────────────────────────────────────
+let _trackerFilter='';
+function filterTracker(q){_trackerFilter=q.toLowerCase().trim();renderTracker();}
+
+function addCandidate(){
+  if(!adminUnlocked){toast('The circle is closed. Keeper must authenticate first.');return;}
+  const name=document.getElementById('newName').value.trim();
+  const house=document.getElementById('newHouse').value.trim();
+  if(!name){toast('Enter a character name first.');return;}
+  data.candidates.push({id:Date.now(),name,house,progress:{},rings:{body:false,mind:false,soul:false},shield:false,witnessNote:''});
+  save(data);
+  document.getElementById('newName').value='';
+  document.getElementById('newHouse').value='';
+  renderTracker();toast(`${name} has entered the Trial.`);
+  logAction(`Seeker registered: ${name}${house?' ('+house+')':''}`);
+}
+
+function renderTracker(){
+  const el=document.getElementById('tracker-content');
+  let list=data.candidates;
+  if(_trackerFilter)list=list.filter(c=>c.name.toLowerCase().includes(_trackerFilter)||(c.house||'').toLowerCase().includes(_trackerFilter));
+  if(!list.length){
+    el.innerHTML=_trackerFilter
+      ?`<div class="empty-state">No seeker found matching "<em>${_trackerFilter}</em>".</div>`
+      :'<div class="empty-state">No seekers registered yet. The Keeper must open the circle.</div>';
+    return;
+  }
+  el.innerHTML=list.map(c=>candidateCard(c)).join('');
+}
+
+function candidateCard(c){
+  const flow=currentFlow(c);
+  const title=seekerTitle(c);
+  const dots=['body','mind','soul'].map(r=>`<div class="rdot ${r} ${c.rings[r]?'earned':''}"></div>`).join('');
+  const pillars=['body','mind','soul'].map(r=>`<div class="pillar-status ${r}${c.rings[r]?' earned':''}">
+    <div class="ps-name">${r.charAt(0).toUpperCase()+r.slice(1)}</div>
+    <div class="ps-count">${pillarDone(c,r)}/${TIERS[r].length}</div>
+    ${c.rings[r]?`<div class="ps-ring">⬤ Ring Earned</div>`:''}
+  </div>`).join('');
+  const next=nextTrialHint(c);
+  const nextHtml=next?`<div class="next-hint">Path forward: <strong>${next}</strong></div>`:'<div class="next-hint" style="color:var(--gold-light);">All trials complete — the Current flows fully.</div>';
+  return`<div class="candidate-card${c.shield?' shield-card':''}">
+    <div class="candidate-header" onclick="toggleCand(this)">
+      <div style="flex:1">
+        <div class="candidate-name">${c.name}${c.shield?' 🛡':''}</div>
+        <div class="seeker-title">${title}</div>
+        <div class="candidate-house">${c.house||'No house listed'}</div>
+      </div>
+      <div class="ring-dots">${dots}</div>
+      <span style="color:var(--text-dim);font-size:0.8rem;flex-shrink:0;">▼</span>
+    </div>
+    <div class="candidate-body">
+      <div class="flow-meter-wrap">
+        <div class="flow-label">The Current flows</div>
+        <div class="flow-bar"><div class="flow-fill" style="width:${flow}%"></div></div>
+        <div class="flow-pct">${flow}%</div>
+      </div>
+      <div class="pillar-row">${pillars}</div>
+      ${nextHtml}
+      ${c.witnessNote?`<div class="witness-display">Witnessed: ${c.witnessNote}</div>`:''}
+    </div>
+  </div>`;
+}
+
+function toggleCand(h){h.nextElementSibling.classList.toggle('open');}
+
+function toggleTP(id,key,val){
+  if(!adminUnlocked){toast('The circle is closed. Keeper must authenticate.');return;}
+  const c=data.candidates.find(x=>x.id===id);if(!c)return;
+  c.progress[key]=val;
+  const wasEarned={body:c.rings.body,mind:c.rings.mind,soul:c.rings.soul};
+  autoRing(c);save(data);renderAdminPanel();renderTracker();
+  // Toast ring milestone
+  for(const pillar of['body','mind','soul']){
+    if(c.rings[pillar]&&!wasEarned[pillar]){
+      const rn={body:'Ring of Endurance',mind:'Ring of Focus',soul:'Ring of Connection'}[pillar];
+      toast(`⬤ ${c.name} has earned the ${rn}!`);
+      logAction(`Ring earned: ${c.name} — ${rn}`);
+    }
+  }
+}
+function autoRing(c){
+  ['body','mind','soul'].forEach(p=>{
+    if(TIERS[p].every(k=>c.progress[k]))c.rings[p]=true;
+  });
+  if(c.rings.body&&c.rings.mind&&c.rings.soul&&!c.shield){
+    // auto-shield could be done manually — don't auto-flag, just note it
+  }
+}
+function updateWN(id,v){
+  if(!adminUnlocked)return;
+  const c=data.candidates.find(x=>x.id===id);if(c){c.witnessNote=v;save(data);}
+}
+
+// ── LEADERBOARD ───────────────────────────────────────────
+function renderLeaderboard(){
+  // Trial times leaderboard
+  buildLbTable(_pageLbEv,'page-lb-display');
+  const shields=data.candidates.filter(c=>c.shield);
+  const bearers=data.candidates.filter(c=>!c.shield&&c.rings.body&&c.rings.mind&&c.rings.soul);
+  document.getElementById('shields-grid').innerHTML=shields.length
+    ?shields.map(c=>`<div class="shield-tile"><div style="font-size:1.4rem;margin-bottom:0.3rem;">🛡</div><div class="tile-name">${c.name}</div><div class="tile-house">${c.house||''}</div><div class="tile-rings">${rd(c)}</div><div class="tile-label">Shield of the Current</div></div>`).join('')
+    :'<div class="empty-state" style="grid-column:1/-1">No Shields yet.</div>';
+  document.getElementById('bearers-grid').innerHTML=bearers.length
+    ?bearers.map(c=>`<div class="bearer-tile"><div class="tile-name">${c.name}</div><div class="tile-house">${c.house||''}</div><div class="tile-rings">${rd(c)}</div><div class="tile-label">Master of the Three Rings</div></div>`).join('')
+    :'<div class="empty-state" style="grid-column:1/-1">No Bearers yet.</div>';
+  const tbody=document.getElementById('prog-table-body');
+  if(!data.candidates.length){tbody.innerHTML='<tr><td colspan="6" class="empty-state" style="text-align:center;padding:2rem;">No candidates yet.</td></tr>';return;}
+  tbody.innerHTML=data.candidates.map(c=>{
+    const tc=p=>TIERS[p].filter(k=>c.progress[k]).length;
+    return`<tr><td class="n-cell">${c.name}${c.shield?' 🛡':''}</td><td>${c.house||'—'}</td><td><div class="mini-rings">${mrd(c)}</div></td><td>${tc('body')}/${TIERS.body.length}</td><td>${tc('mind')}/${TIERS.mind.length}</td><td>${tc('soul')}/${TIERS.soul.length}</td></tr>`;
+  }).join('');
+}
+function rd(c){return['body','mind','soul'].map(r=>`<div class="rdot ${r} ${c.rings[r]?'earned':''}"></div>`).join('');}
+function mrd(c){return['body','mind','soul'].map(r=>`<div class="mr ${r} ${c.rings[r]?'earned':''}"></div>`).join('');}
+
+// ── ADMIN ─────────────────────────────────────────────────
+function adminLogin(){
+  if(document.getElementById('admin-pass').value===getPass()){
+    adminUnlocked=true;
+    document.getElementById('admin-login-panel').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    const badge=document.getElementById('keeper-badge');if(badge)badge.style.display='inline-flex';
+    renderAdminPanel();renderTracker();logAction('Keeper authenticated. Panel unlocked.');
+  }else{toast('Incorrect word. The circle does not open.');}
+}
+function adminLogout(){
+  adminUnlocked=false;
+  document.getElementById('admin-login-panel').style.display='block';
+  document.getElementById('admin-panel').style.display='none';
+  document.getElementById('admin-pass').value='';
+  const badge=document.getElementById('keeper-badge');if(badge)badge.style.display='none';
+  renderTracker();
+}
+function changePass(){const np=document.getElementById('new-pass').value.trim();if(!np)return;setPass(np);document.getElementById('new-pass').value='';toast("Keeper's word updated.");logAction('Password changed.');}
+function renderAdminPanel(){
+  // Dropdowns for ring award and shield designation
+  const opts=data.candidates.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('award-candidate').innerHTML='<option value="">— Select candidate —</option>'+opts;
+  const bOpts=data.candidates.filter(c=>c.rings.body&&c.rings.mind&&c.rings.soul&&!c.shield).map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('shield-candidate').innerHTML='<option value="">— Select Bearer —</option>'+bOpts;
+
+  // Per-seeker trial marking cards
+  const al=document.getElementById('admin-candidate-list');
+  if(!data.candidates.length){al.innerHTML='<p style="color:var(--text-dim);font-size:0.83rem;font-style:italic;">No seekers registered yet.</p>';}
+  else{
+    al.innerHTML=data.candidates.map(c=>{
+      const trialCols=['body','mind','soul'].map(p=>`
+        <div>
+          <div class="trial-col-head ${p}">${p.charAt(0).toUpperCase()+p.slice(1)}</div>
+          ${TIERS[p].map(k=>`<label class="trial-check${c.progress[k]?' done':''}">
+            <input type="checkbox"${c.progress[k]?' checked':''} onchange="toggleTP(${c.id},'${k}',this.checked)"> ${TLABELS[k]}
+          </label>`).join('')}
+        </div>`).join('');
+      return`<div class="admin-cand-card">
+        <div class="admin-cand-header">
+          <span class="cand-name">${c.name}${c.house?` <span class="cand-house">· ${c.house}</span>`:''}${c.shield?' 🛡':''}</span>
+          <div style="display:flex;gap:0.25rem;">${mrd(c)}</div>
+          <button class="btn danger small" onclick="removeCandidate(${c.id})">Remove</button>
+        </div>
+        <div class="trial-grid">${trialCols}</div>
+        <div class="witness-row">
+          <span>Notes:</span>
+          <input type="text" value="${c.witnessNote||''}" placeholder="Witnessed by, event, date…" onchange="updateWN(${c.id},this.value)">
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Leaderboard admin display
+  renderAdminLb(_adminLbEv);
+
+  // Keeper's log
+  const logEl=document.getElementById('admin-log');
+  if(logEl)logEl.innerHTML=(data.log||[]).map(l=>`<div class="log-entry"><span class="ts">${l.ts}</span><span class="action">${l.msg}</span></div>`).join('')||'<div class="log-entry"><span class="action">No log entries yet.</span></div>';
+}
+
+// Leaderboard admin tab + edit/delete
+let _adminLbEv='plank';
+function switchAdminLbTab(ev,btn){
+  document.querySelectorAll('#admin-panel .lb-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  _adminLbEv=ev;
+  renderAdminLb(ev);
+}
+function renderAdminLb(ev){
+  const el=document.getElementById('admin-lb-display');if(!el)return;
+  const lb=getLb();const entries=(lb[ev]||[]).slice();
+  if(!entries.length){el.innerHTML='<div style="color:var(--text-dim);font-size:0.8rem;font-style:italic;padding:0.4rem 0;">No times recorded yet.</div>';return;}
+  entries.sort((a,b)=>{const sa=parseSeconds(a.time),sb=parseSeconds(b.time);return ev==='plank'?sb-sa:sa-sb;});
+  const rows=entries.map((e,i)=>`<tr>
+    <td style="color:var(--text-dim)">${i+1}</td>
+    <td style="color:var(--text-light)">${e.name}</td>
+    <td style="color:var(--gold);font-variant-numeric:tabular-nums">${e.time}</td>
+    <td><button class="del-btn" onclick="deleteLbEntry('${ev}',${e.ts})">✕ Remove</button></td>
+  </tr>`).join('');
+  el.innerHTML=`<table class="lb-admin-table"><thead><tr><th>#</th><th>Name</th><th>Time</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+function deleteLbEntry(ev,ts){
+  const lb=getLb();
+  lb[ev]=(lb[ev]||[]).filter(e=>e.ts!==ts);
+  save(data);renderAdminLb(ev);buildLbTable(_pageLbEv,'page-lb-display');
+  toast('Entry removed.');logAction(`Leaderboard entry removed: ${ev}, ts=${ts}`);
+}
+function awardRing(){
+  const id=parseInt(document.getElementById('award-candidate').value);
+  const ring=document.getElementById('award-ring').value;
+  const wit=document.getElementById('award-witness').value.trim();
+  if(!id||!ring){toast('Select a candidate and a ring.');return;}
+  const c=data.candidates.find(x=>x.id===id);if(!c)return;
+  c.rings[ring]=true;TIERS[ring].forEach(t=>c.progress[t]=true);
+  if(wit)c.witnessNote=(c.witnessNote?c.witnessNote+'; ':'')+ring+' ring – '+wit;
+  save(data);renderAdminPanel();renderTracker();
+  const rn={body:'Ring of Endurance',mind:'Ring of Focus',soul:'Ring of Connection'}[ring];
+  toast(`${c.name} awarded the ${rn}.`);
+  logAction(`Ring awarded: ${c.name} — ${rn}${wit?' (witnessed: '+wit+')':''}`);
+}
+function designateShield(){
+  const id=parseInt(document.getElementById('shield-candidate').value);
+  if(!id){toast('Select a Bearer to designate.');return;}
+  const c=data.candidates.find(x=>x.id===id);if(!c)return;
+  c.shield=true;save(data);renderAdminPanel();
+  toast(`${c.name} designated as Shield of the Current.`);
+  logAction(`Shield designated: ${c.name}`);
+}
+function removeCandidate(id){
+  const c=data.candidates.find(x=>x.id===id);if(!c)return;
+  if(!confirm(`Remove ${c.name} from the Trial records?`))return;
+  data.candidates=data.candidates.filter(x=>x.id!==id);save(data);
+  renderAdminPanel();renderTracker();toast(`${c.name} removed.`);
+  logAction(`Candidate removed: ${c.name}`);
+}
+function logAction(msg){
+  const now=new Date();
+  const ts=now.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' '+now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+  data.log=data.log||[];data.log.unshift({ts,msg});
+  if(data.log.length>60)data.log=data.log.slice(0,60);
+  save(data);
+}
+
+renderTracker();
+
+// ── LEADERBOARD ───────────────────────────────────────────
+function getLb(){
+  if(!data.leaderboard)data.leaderboard={plank:[],sprint:[]};
+  return data.leaderboard;
+}
+
+function parseSeconds(t){
+  t=(t||'').toString().trim().replace(/s$/i,'');
+  if(t.indexOf(':')>-1){
+    const parts=t.split(':');
+    return parseFloat(parts[0])*60+parseFloat(parts[1]||0);
+  }
+  return parseFloat(t)||0;
+}
+
+function buildLbTable(ev,targetId){
+  const el=document.getElementById(targetId);
+  if(!el)return;
+  const lb=getLb();
+  const entries=(lb[ev]||[]).slice();
+  if(!entries.length){
+    el.innerHTML='<div style="color:var(--text-dim);font-size:0.83rem;padding:0.6rem 0;">No times recorded yet.</div>';
+    return;
+  }
+  entries.sort((a,b)=>{
+    const sa=parseSeconds(a.time),sb=parseSeconds(b.time);
+    return ev==='plank'?sb-sa:sa-sb;
+  });
+  const medals=['🥇','🥈','🥉'];
+  const rows=entries.map((e,i)=>`<tr>
+    <td style="${i<3?'color:var(--gold);font-weight:bold;':''}">${medals[i]||i+1}</td>
+    <td style="${i<3?'color:var(--text-light);':''}">${e.name}</td>
+    <td style="${i<3?'color:var(--gold);font-weight:bold;':''}">${e.time}</td>
+  </tr>`).join('');
+  el.innerHTML=`<table class="lb-table"><thead><tr><th>#</th><th>Bearer</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+// Tab on the Bearers & Shields page
+let _pageLbEv='plank';
+function switchPageLb(ev,btn){
+  document.querySelectorAll('#page-lb-tabs .lb-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  _pageLbEv=ev;
+  buildLbTable(ev,'page-lb-display');
+}
+
+function addLbEntry(){
+  if(!adminUnlocked){toast('The circle is closed. Keeper must authenticate.');return;}
+  const ev=document.getElementById('lb-event').value;
+  const name=document.getElementById('lb-entry-name').value.trim();
+  const time=document.getElementById('lb-entry-time').value.trim();
+  if(!name||!time){toast('Enter a name and time first.');return;}
+  const lb=getLb();
+  lb[ev]=lb[ev]||[];
+  lb[ev].push({name,time,ts:Date.now()});
+  save(data);
+  document.getElementById('lb-entry-name').value='';
+  document.getElementById('lb-entry-time').value='';
+  const label=ev==='plank'?'Plank':'Foot Race';
+  toast(`${name} recorded on the ${label} board — ${time}.`);
+  logAction(`Leaderboard (${label}): ${name} — ${time}`);
+  renderAdminLb(ev);
+  if(ev===_pageLbEv)buildLbTable(ev,'page-lb-display');
+}
+</script>
+</body>
+</html>

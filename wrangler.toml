@@ -1,0 +1,13 @@
+name = "keepers-of-the-current"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "public"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "keepers-current-db"
+database_id = "717869db-3de5-491d-bb46-c4310d1d20fa"
+
+[vars]
+KEEPER_NOTIFY_EMAIL = "desiree.rock@gmail.com"
+EMAIL_FROM = "Keepers of the Current <keeper@keepersofthecurrent.org>"
+SITE_URL = "http://localhost:8788"

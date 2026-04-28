@@ -1,0 +1,65 @@
+/* Keepers of the Current — design tokens (extracted verbatim from v1).
+   Phase 1 footprint. Full per-page styles land in Phase 4 cutover. */
+
+:root {
+  --gold:        #C8963E;
+  --gold-light:  #E8B96A;
+  --gold-dim:    #7a5a22;
+  --gold-faint:  rgba(200, 150, 62, 0.12);
+
+  --red-bg:    #0e0404;
+  --red-dark:  #1a0808;
+  --red-mid:   #2a0e0e;
+  --red-panel: rgba(42, 14, 14, 0.7);
+
+  --text-light: #f0dfc0;
+  --text-dim:   #907050;
+  --parchment:  #f5e9d0;
+
+  --border: rgba(200, 150, 62, 0.25);
+  --border-strong: rgba(200, 150, 62, 0.5);
+
+  --serif: Georgia, 'Times New Roman', serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--red-bg);
+  color: var(--text-light);
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.55;
+  min-height: 100vh;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at top, rgba(200, 150, 62, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at bottom, rgba(42, 14, 14, 0.6) 0%, transparent 70%),
+    var(--red-bg);
+}
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--gold-dim);
+  transition: color 0.15s, border-color 0.15s;
+}
+a:hover { color: var(--gold-light); border-color: var(--gold-light); }
+
+h1, h2, h3, h4 {
+  color: var(--gold);
+  font-weight: normal;
+  letter-spacing: 0.5px;
+  margin: 0 0 16px 0;
+}
+h1 { font-size: 28px; }
+h2 { font-size: 22px; }
+h3 { font-size: 18px; }
+
+p { margin: 0 0 14px 0; }
+
+::selection { background: var(--gold-faint); color: var(--gold-light); }
