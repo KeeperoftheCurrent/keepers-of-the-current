@@ -28,7 +28,6 @@
   <a href="/seeker.html" class="nav-cta">Register</a>
   <a href="/tracker.html">Trial Scroll</a>
   <a href="/lookup.html">My Standing</a>
-  <a href="/leaderboard.html">Bearers &amp; Shields</a>
   <a href="/rewards.html" class="active">Rewards</a>
 </nav>
 
@@ -242,7 +241,7 @@
     </p>
   </div>
 
-  <!-- BEARER OF THE CURRENT -->
+  <!-- MASTER OF THE THREE RINGS -->
   <div class="reward-section">
     <h2 class="section-title">Master of the Three Rings<small>The Trinity. Earned at the Grand Gathering, carried forever after.</small></h2>
     <div class="bearer-display">
@@ -279,6 +278,53 @@
         <p style="margin-top:0.7rem;">Pendants can be sourced from custom makers on Etsy, cast in resin, or stamped in metal. Bearers will be rare enough that cost stays manageable — a handful total, not dozens.</p>
         <p style="margin-top:0.7rem;">The Keeper's Beacon is lit for each new Bearer. The seeker's cord is retired in ceremony and returned to the Bearer as a keepsake of the journey. The Bearer is titled publicly and entered into the Trial Scroll as a permanent record.</p>
         <p style="margin-top:0.7rem;color:var(--gold);font-style:italic;font-size:0.82rem;">"When I call you respond. When we move, we move as one."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHIELD OF THE CURRENT -->
+  <div class="reward-section">
+    <h2 class="section-title">Shield of the Current<small>The Keeper's chosen. Not applied for. Not earned. Bestowed in silence.</small></h2>
+    <div class="bearer-display">
+
+      <!-- Shield SVG: heater shield bearing the vine-infinity sigil -->
+      <svg viewBox="0 0 100 120" width="100" height="120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="shield-glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Shield body -->
+        <path d="M 12 10 L 88 10 L 88 62 Q 88 88 50 112 Q 12 88 12 62 Z"
+              fill="#1a0808" stroke="#C8963E" stroke-width="2.5" filter="url(#shield-glow)"/>
+        <!-- Inner border -->
+        <path d="M 18 16 L 82 16 L 82 62 Q 82 84 50 106 Q 18 84 18 62 Z"
+              fill="none" stroke="#C8963E" stroke-width="0.8" opacity="0.4"/>
+        <!-- Vine-infinity sigil centered on shield -->
+        <!-- Left lobe -->
+        <path d="M 50 61 C 49 56,46 50,42 51 C 37 52,35 57,36 60 C 37 63,40 67,44 66 C 47 65,50 62,50 61"
+              fill="none" stroke="#C8963E" stroke-width="1.8" stroke-linecap="round" filter="url(#shield-glow)"/>
+        <!-- crossover cover -->
+        <line x1="49" y1="59.5" x2="51" y2="62.5" stroke="#1a0808" stroke-width="2.5"/>
+        <!-- Right lobe -->
+        <path d="M 50 61 C 51 56,54 50,58 51 C 63 52,65 57,64 60 C 63 63,60 67,56 66 C 53 65,50 62,50 61"
+              fill="none" stroke="#C8963E" stroke-width="1.8" stroke-linecap="round" filter="url(#shield-glow)"/>
+        <!-- Outer knotwork ring around sigil -->
+        <circle cx="50" cy="61" r="18" fill="none" stroke="#C8963E" stroke-width="1.2"
+                stroke-dasharray="4 4" opacity="0.6"/>
+        <!-- Small decoration at top of shield (boss) -->
+        <circle cx="50" cy="28" r="4" fill="none" stroke="#C8963E" stroke-width="1" opacity="0.5"/>
+        <circle cx="50" cy="28" r="1.5" fill="#C8963E" opacity="0.6"/>
+      </svg>
+
+      <div>
+        <h4>The Keeper's Chosen</h4>
+        <p>The Shield of the Current is not a reward that can be sought. It supersedes the Master's title — not because it requires more, but because it is a different thing entirely. Where the Master has proven themselves to the Current, the Shield has been <em>chosen by the Keeper</em> to serve it.</p>
+        <p style="margin-top:0.7rem;">The Keeper selects only from those who have already earned all three Rings. The bestowal is quiet — no public announcement, no trial to pass. The Keeper simply chooses, and the compact is made.</p>
+        <p style="margin-top:0.7rem;">A Shield is the Keeper's elite guard: trusted to protect her person, the faith's sacred objects, and the integrity of the Current itself wherever it is threatened. In exchange, the Keeper extends her own protection to the Shield on the field of battle — favoring them, watching for them, standing for them as they stand for her. It is a symbiotic bond, not a hierarchy of command.</p>
+        <p style="margin-top:0.7rem;">The physical mark of the Shield is an actual shield — a field-worthy prop bearing the sigil of the Keepers of the Current. It is given by the Keeper and is the only marker of the title. There is no ceremony. The shield speaks for itself.</p>
+        <p style="margin-top:0.7rem;color:var(--gold);font-style:italic;font-size:0.82rem;">"You do not ask to be chosen. You become someone who cannot be overlooked."</p>
       </div>
     </div>
   </div>

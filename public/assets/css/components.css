@@ -249,6 +249,44 @@ button.secondary:hover { border-color: var(--gold); color: var(--gold-light); }
 .italic { font-style: italic; }
 .center { text-align: center; }
 
+/* ── SITE HEADER (sigil + title above nav) ─────────────────────────────── */
+.site-header {
+  background: linear-gradient(180deg, #060101 0%, var(--red-dark) 100%);
+  border-bottom: 1px solid var(--border-bright);
+  padding: 0.6rem 1rem;
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+.header-sigil {
+  width: 52px; height: 52px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 12px rgba(200,150,62,0.55));
+}
+.header-text { flex: 1; min-width: 0; }
+.header-title {
+  font-size: clamp(0.85rem, 2.5vw, 1.15rem);
+  color: var(--gold-light);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.header-sub {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-top: 2px;
+}
+.header-sub a { color: inherit; border-bottom-color: rgba(200,150,62,0.3); }
+
 /* ── SITE-WIDE NAV ─────────────────────────────────────────────────────── */
 .site-nav {
   position: sticky;
