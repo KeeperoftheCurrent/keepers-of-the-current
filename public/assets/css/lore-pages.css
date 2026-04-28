@@ -75,24 +75,7 @@ body{
 }
 .header-sub a{color:inherit;border-bottom-color:rgba(200,150,62,0.3);}
 
-/* ── NAV ──────────────────────────────────────────────── */
-nav{
-  display:flex;justify-content:center;flex-wrap:wrap;
-  background:var(--red-dark);
-  border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:100;
-}
-nav button{
-  background:none;border:none;
-  color:var(--text-dim);
-  padding:0.75rem 1.1rem;
-  cursor:pointer;font-family:inherit;font-size:0.8rem;
-  letter-spacing:0.05em;text-transform:uppercase;
-  border-bottom:2px solid transparent;
-  transition:all 0.2s;
-}
-nav button:hover{color:var(--gold-light);}
-nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
+/* ── NAV — handled by components.css .site-nav ────────── */
 
 /* ── LAYOUT ───────────────────────────────────────────── */
 .page{display:none;padding:2rem 1rem 4rem;max-width:920px;margin:0 auto;}
@@ -700,8 +683,6 @@ nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
   .kata-dots,.kata-controls{justify-content:center;}
 }
 /* ── MOBILE IMPROVEMENTS ─────────────────────────────── */
-nav{display:flex;flex-wrap:wrap;justify-content:center;gap:0.4rem;padding:0.6rem 0.5rem;position:sticky;top:0;z-index:100;background:#1a1008;border-bottom:1px solid rgba(200,150,62,0.15);}
-nav button{flex:1 1 auto;min-width:100px;padding:0.65rem 0.5rem;font-size:0.78rem;}
 
 /* Quick-start panel */
 .quickstart{background:rgba(200,150,62,0.07);border:1px solid rgba(200,150,62,0.25);border-radius:4px;padding:1.2rem 1rem;margin:0 0 1.4rem;}

@@ -23,7 +23,7 @@
 </header>
 
 <nav class="site-nav" aria-label="Site navigation">
-  <a href="/">The Current</a>
+  <a href="/current.html">The Current</a>
   <a href="/trials.html" class="active">The Trials</a>
   <a href="/seeker.html" class="nav-cta">Register</a>
   <a href="/tracker.html">Trial Scroll</a>
@@ -339,7 +339,7 @@ updateUI();requestAnimationFrame(frame);
       </div>
       <!-- Leaderboard pointer -->
       <div style="margin-top:1.4rem;padding:0.9rem 1.1rem;background:rgba(184,115,51,0.06);border:1px solid rgba(184,115,51,0.2);border-radius:4px;font-size:0.83rem;color:var(--text-dim);">
-        Times are recorded by the Keeper and displayed on the <button onclick="showPage('leaderboard',document.querySelector('nav button:nth-child(5)'))" style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:inherit;font-family:inherit;text-decoration:underline;padding:0;">Bearers &amp; Shields</button> page.
+        Times are recorded by the Keeper and displayed on the <a href="/leaderboard.html" style="color:var(--gold);">Bearers &amp; Shields</a> page.
       </div>
 
       <div class="keeper-words">"You have borne the weight and kept the way."</div>
@@ -631,4 +631,24 @@ updateUI();requestAnimationFrame(frame);
 
 </div>
 
-</main></body></html>
+</main>
+<script>
+function toggleTier(header) {
+  const body = header.nextElementSibling;
+  const isOpen = header.classList.toggle('open');
+  body.classList.toggle('open', isOpen);
+  header.querySelector('.tier-chevron').style.transform = isOpen ? 'rotate(180deg)' : '';
+}
+// Open first tier of each pillar by default
+document.addEventListener('DOMContentLoaded', () => {
+  const firstHeaders = document.querySelectorAll('.tier-block:first-of-type .tier-header');
+  document.querySelectorAll('.tier-block').forEach((block, i) => {
+    // Open the first tier under each pillar section heading
+    const prev = block.previousElementSibling;
+    if (prev && prev.classList.contains('section-title')) {
+      toggleTier(block.querySelector('.tier-header'));
+    }
+  });
+});
+</script>
+</body></html>
