@@ -349,7 +349,7 @@ function trialRulesHtml(rings: ('body' | 'mind' | 'soul')[]): string {
     <p style="${RULE_DESC}">Maintain complete silence for a minimum 3-hour window in the active spaces of the event — no speech, no whispers, no gesture-communication. A Bearer carries a sealed note on your behalf: "I am in the Vow." A Bearer witnesses and attests at the window's end.</p>
     ${tip([
       'Tell people who matter to you before the window begins — they can carry context for you and prevent situations that force you to choose.',
-      'Find your Bearer before the window starts. They carry your note and can speak on your behalf when you are directly confronted.',
+      'A Bearer is a member of the faith who holds at least one Ring. Before your Vow begins, ask a Bearer to serve as your witness — they carry your sealed note and speak on your behalf when you are directly confronted. If no Bearer is present at the event, the Keeper herself witnesses.',
       'The hardest moments are the small ones: when someone asks a direct question and breaking would seem harmless, even kind. That is the exact moment the trial is being held. Hold.',
     ])}
   </div>
@@ -474,8 +474,10 @@ RING OF FOCUS — Mind · Wind
 
     Keeper's Counsel:
     → Tell people who matter to you before the window begins.
-    → Find your Bearer before the window starts — they carry your note and speak
-      on your behalf when you are directly confronted.
+    → A Bearer is a member of the faith who holds at least one Ring. Ask one to
+      serve as your witness — they carry your sealed note and speak on your behalf
+      when you are directly confronted. If no Bearer is present at the event, the
+      Keeper herself witnesses.
     → The hardest moments are the small ones: when breaking would seem harmless.
       That is the exact moment the trial is being held. Hold.
 
