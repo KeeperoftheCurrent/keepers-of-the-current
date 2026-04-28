@@ -10,13 +10,12 @@ let allSeekers = [];
 let activeTab = 'seekers';
 
 // ─── Hynafol 2026 calendar seed data ─────────────────────────────────────
+// IDs MUST match migration 0007 exactly — schedule windows are keyed to these.
 const HYNAFOL_2026 = [
-  { id: 'the_siege_2026',              name: 'The Siege',              kind: 'expedition',     starts_on: '2026-02-20', ends_on: '2026-02-22', active: false },
-  { id: 'the_trials_2026',             name: 'The Trials',             kind: 'expedition',     starts_on: '2026-03-27', ends_on: '2026-03-29', active: false },
-  { id: 'festival_of_champions_2026',  name: 'Festival of Champions',  kind: 'expedition',     starts_on: '2026-05-23', ends_on: '2026-05-26', active: false },
-  { id: 'a_courtly_night_2026',        name: 'A Courtly Night',        kind: 'expedition',     starts_on: '2026-09-12', ends_on: '2026-09-12', active: false },
-  { id: 'october_expedition_2026',     name: 'October Expedition',     kind: 'expedition',     starts_on: '2026-10-09', ends_on: '2026-10-11', active: false },
-  { id: 'grand_gathering_2026',        name: 'The Grand Gathering',    kind: 'grand_gathering', starts_on: '2026-11-08', ends_on: '2026-11-15', active: true  },
+  { id: 'festival_of_champions_2026', name: 'Festival of Champions', kind: 'expedition',      starts_on: '2026-05-22', ends_on: '2026-05-25', active: true },
+  { id: 'courtly_night_2026',         name: 'A Courtly Night',       kind: 'expedition',      starts_on: '2026-09-12', ends_on: '2026-09-12', active: true },
+  { id: 'october_expedition_2026',    name: 'October Expedition',    kind: 'expedition',      starts_on: '2026-10-09', ends_on: '2026-10-11', active: true },
+  { id: 'gg_2026',                    name: 'Grand Gathering 2026',  kind: 'grand_gathering', starts_on: '2026-11-08', ends_on: '2026-11-15', active: true },
 ];
 
 function showToast(msg, kind = 'info') {

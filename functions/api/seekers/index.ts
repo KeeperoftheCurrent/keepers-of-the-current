@@ -43,9 +43,43 @@ interface SeekerRow {
 
 interface CatalogRow {
   code: string;
+  pillar: string;
+  tier: number;
   bookable: number;
+  gg_only: number;
   duration_minutes: number | null;
   buffer_minutes: number;
+  tier_aggregation: string;
+}
+
+// Returns true if the seeker has passed every requirement for the given
+// pillar + tier, respecting tier_aggregation ('all' vs 'any').
+async function isTierCompleted(
+  env: Env,
+  seekerId: string,
+  pillar: string,
+  tier: number
+): Promise<boolean> {
+  interface TierRow { code: string; tier_aggregation: string; }
+  const tierCodes = await queryAll<TierRow>(
+    env,
+    `SELECT code, tier_aggregation FROM trial_catalog WHERE pillar = ? AND tier = ?`,
+    pillar,
+    tier
+  );
+  if (tierCodes.length === 0) return true; // no catalog codes = nothing to check
+  const agg = tierCodes[0].tier_aggregation;
+  const codes = tierCodes.map((r) => r.code);
+  const ph = codes.map(() => '?').join(',');
+  const done = await queryAll<{ trial_code: string }>(
+    env,
+    `SELECT trial_code FROM trial_events
+      WHERE seeker_id = ? AND trial_code IN (${ph})
+        AND voided_at IS NULL AND outcome = 'passed'`,
+    seekerId,
+    ...codes
+  );
+  return agg === 'any' ? done.length >= 1 : done.length >= codes.length;
 }
 
 interface WindowRow {
@@ -152,6 +186,15 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
   );
   if (!event) return jsonResponse({ ok: false, error: 'Unknown event.' }, 422);
 
+  // Look up existing seeker early — needed for tier-prerequisite checks below.
+  // New seekers (null) have no completions, so any Tier > 1 booking is rejected.
+  const emailNormalized = normalizeEmail(input.email);
+  const existingSeeker = await queryFirst<SeekerRow>(
+    env,
+    `SELECT id, name, email FROM seekers WHERE email_normalized = ? LIMIT 1`,
+    emailNormalized
+  );
+
   // Validate each requested booking against catalog + windows + existing bookings.
   let catalogByCode = new Map<string, CatalogRow>();
   let windows: WindowRow[] = [];
@@ -162,7 +205,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     const placeholders = codes.map(() => '?').join(',');
     const catalogRows = await queryAll<CatalogRow>(
       env,
-      `SELECT code, bookable, duration_minutes, buffer_minutes
+      `SELECT code, pillar, tier, bookable, gg_only, duration_minutes, buffer_minutes, tier_aggregation
          FROM trial_catalog WHERE code IN (${placeholders})`,
       ...codes
     );
@@ -191,6 +234,42 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
       if (!cat.bookable || !cat.duration_minutes) {
         return jsonResponse({ ok: false, error: 'not_bookable', detail: `${b.trial_code} is not bookable`, index: i }, 422);
       }
+
+      // Grand Gathering requirement — Tier 3 trials (and any gg_only trial) may
+      // only be booked at a Grand Gathering event.
+      if (cat.gg_only && event.kind !== 'grand_gathering') {
+        return jsonResponse(
+          {
+            ok: false, error: 'gg_only',
+            detail: `${b.trial_code} may only be attempted at a Grand Gathering.`,
+            trial_code: b.trial_code, index: i,
+          },
+          422
+        );
+      }
+
+      // Tier prerequisite — every tier below this one must be completed for
+      // this pillar before the seeker may book a higher tier.
+      if (cat.tier > 1) {
+        const seekerIdForCheck = existingSeeker?.id ?? null;
+        for (let prevTier = 1; prevTier < cat.tier; prevTier++) {
+          const met = seekerIdForCheck
+            ? await isTierCompleted(env, seekerIdForCheck, cat.pillar, prevTier)
+            : false; // brand-new seeker has no completions
+          if (!met) {
+            const pillarLabel = cat.pillar.charAt(0).toUpperCase() + cat.pillar.slice(1);
+            return jsonResponse(
+              {
+                ok: false, error: 'tier_locked',
+                detail: `${pillarLabel} Tier ${prevTier} must be completed before booking Tier ${cat.tier}. Speak with the Keeper to record your completion first.`,
+                trial_code: b.trial_code, index: i,
+              },
+              422
+            );
+          }
+        }
+      }
+
       const end_at = addMinutes(b.start_at, cat.duration_minutes);
       const buffer_until = addMinutes(end_at, cat.buffer_minutes);
 
@@ -232,18 +311,12 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
   // All checks passed — write the seeker, registration, and bookings.
   const now = Math.floor(Date.now() / 1000);
   const submittedAtIso = new Date(now * 1000).toISOString();
-  const emailNormalized = normalizeEmail(input.email);
   const ringsJson = JSON.stringify(input.rings_pursued);
 
-  const existing = await queryFirst<SeekerRow>(
-    env,
-    `SELECT id, name, email FROM seekers WHERE email_normalized = ? LIMIT 1`,
-    emailNormalized
-  );
-
+  // existingSeeker was already looked up above for prerequisite checks.
   let seekerId: string;
-  if (existing) {
-    seekerId = existing.id;
+  if (existingSeeker) {
+    seekerId = existingSeeker.id;
     await exec(
       env,
       `UPDATE seekers SET name = ?, email = ?, house = ?, rings_pursued = ? WHERE id = ?`,
