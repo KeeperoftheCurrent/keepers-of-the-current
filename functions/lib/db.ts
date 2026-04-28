@@ -44,3 +44,29 @@ export async function exec(
     : env.DB.prepare(sql);
   return await stmt.run();
 }
+
+// Audit log writer for admin-side mutations. Routes wrap their writes via
+// this so the action shows up in admin_log without each handler having to
+// remember to log it.
+export interface AuditLogEntry {
+  actor_email: string;
+  action: string;
+  target_type?: string | null;
+  target_id?: string | null;
+  detail?: Record<string, unknown> | null;
+}
+
+export async function audit(env: Env, entry: AuditLogEntry): Promise<void> {
+  await exec(
+    env,
+    `INSERT INTO admin_log (id, ts, actor_email, action, target_type, target_id, detail)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    crypto.randomUUID(),
+    Math.floor(Date.now() / 1000),
+    entry.actor_email,
+    entry.action,
+    entry.target_type ?? null,
+    entry.target_id ?? null,
+    entry.detail ? JSON.stringify(entry.detail) : null
+  );
+}

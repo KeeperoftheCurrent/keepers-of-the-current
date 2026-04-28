@@ -6,8 +6,34 @@
 <title>Find My Standing — Keepers of the Current</title>
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="stylesheet" href="/assets/css/components.css">
+<style>
+  .pillar-block { margin-bottom: 16px; padding: 12px 16px; background: var(--red-dark); border: 1px solid var(--border); border-radius: 3px; }
+  .pillar-block .pillar-name { color: var(--gold); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+  .pillar-block .pillar-stat { color: var(--text-light); font-size: 18px; margin-top: 4px; }
+  .ring-row { display: flex; gap: 18px; justify-content: center; margin: 18px 0; }
+  .ring-disc { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold-dim); display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  .ring-disc.held { border-color: var(--gold); box-shadow: 0 0 12px var(--gold-faint); }
+  .ring-disc .ring-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+  .ring-disc.held .ring-label { color: var(--gold-light); }
+  .title-banner { text-align: center; padding: 14px; margin: 16px 0; background: var(--gold-faint); border: 1px solid var(--gold); border-radius: 3px; color: var(--gold-light); font-style: italic; }
+</style>
 </head>
 <body>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <a href="/" class="nav-brand" aria-label="Keepers of the Current — Home">
+    <img src="/assets/img/sigil.png" alt="">
+    <span class="brand-name">Keepers of the Current</span>
+  </a>
+  <a href="/current.html">The Current</a>
+  <a href="/trials.html">The Trials</a>
+  <a href="/seeker.html" class="nav-cta">Register</a>
+  <a href="/tracker.html">Trial Scroll</a>
+  <a href="/lookup.html" class="active">My Standing</a>
+  <a href="/leaderboard.html">Bearers &amp; Shields</a>
+  <a href="/rewards.html">Rewards</a>
+</nav>
+
 
 <main class="page-shell">
 
@@ -17,17 +43,65 @@
     <div class="subtitle">"The Keeper sees what the Scroll records."</div>
   </header>
 
-  <section class="panel success-block">
-    <div class="seal">⌛</div>
-    <h2>The Scroll is being prepared</h2>
-    <p>Standing-lookup will open here once the trial tracker has been raised.</p>
-    <p class="muted italic">If you've recently registered, your name is safely recorded — your confirmation email confirms it.</p>
-    <p class="muted" style="margin-top:24px;">
-      <a href="/">← Return to the threshold</a>
+  <section id="form-wrap">
+    <div class="panel">
+      <h2>Look up your standing</h2>
+      <p class="muted">Enter the name and email you used to register. The Scroll will reveal your standing in the Trial of the Three Rings.</p>
+
+      <div id="errors" hidden></div>
+
+      <form id="lookup-form" novalidate>
+        <label class="field">
+          <span class="label-text">Your name</span>
+          <input type="text" name="name" maxlength="100" required autocomplete="name">
+        </label>
+        <label class="field">
+          <span class="label-text">Email</span>
+          <input type="email" name="email" maxlength="200" required autocomplete="email">
+        </label>
+        <button class="primary" type="submit">Reveal my standing</button>
+      </form>
+    </div>
+
+    <p class="center muted italic" style="font-size:14px;">
+      Not yet a seeker? <a href="/seeker.html">Mark your name in the Scroll →</a>
     </p>
+  </section>
+
+  <section id="result" class="panel" hidden>
+    <h2 id="result-name"></h2>
+    <p class="muted" id="result-house"></p>
+
+    <div id="result-titles"></div>
+
+    <div class="ring-row" id="result-rings"></div>
+
+    <h3 style="margin-top:24px;">Pillar progress</h3>
+    <div id="result-pillars"></div>
+
+    <h3 style="margin-top:24px;">Registrations</h3>
+    <ul id="result-registrations"></ul>
+
+    <p class="center" style="margin-top:24px;">
+      <button class="secondary" id="lookup-again">Look up another</button>
+    </p>
+  </section>
+
+  <section id="not-found" class="panel" hidden>
+    <div class="success-block">
+      <div class="seal">·</div>
+      <h2>No standing found</h2>
+      <p class="muted">No record matches that name and email. If you've recently registered, check that the spelling matches your seeker form exactly.</p>
+      <p class="muted" style="margin-top:24px;">
+        <button class="secondary" id="not-found-again">Try again</button>
+      </p>
+    </div>
   </section>
 
 </main>
 
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="/assets/js/lookup.js"></script>
 </body>
 </html>

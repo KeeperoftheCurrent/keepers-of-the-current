@@ -44,57 +44,43 @@ body{
 
 /* ── HEADER ───────────────────────────────────────────── */
 .site-header{
-  background:linear-gradient(180deg,#060101 0%,var(--red-dark) 60%,var(--red-mid) 100%);
+  background:linear-gradient(180deg,#060101 0%,var(--red-dark) 100%);
   border-bottom:1px solid var(--border-bright);
-  padding:2.5rem 1rem 1.8rem;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
+  padding:0.6rem 1rem;
 }
-.site-header::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse at 50% 0%,rgba(200,150,62,0.18) 0%,transparent 65%);
-  pointer-events:none;
+.header-inner{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  max-width:920px;
+  margin:0 auto;
 }
 .header-sigil{
-  display:block;
-  width:160px;height:160px;
+  width:52px;height:52px;
   object-fit:contain;
-  padding:10px;
-  margin:0 auto 0.6rem;
-  filter:drop-shadow(0 0 22px rgba(200,150,62,0.65));
+  flex-shrink:0;
+  filter:drop-shadow(0 0 12px rgba(200,150,62,0.55));
 }
-.header-title-img{
-  display:block;
-  max-width:520px;width:92%;
-  margin:0 auto 0.3rem;
-  border-radius:4px;
-  filter:drop-shadow(0 2px 16px rgba(0,0,0,0.7));
+.header-text{
+  flex:1;min-width:0;
 }
-.site-header h1{
-  font-size:clamp(0.95rem,2.8vw,1.55rem);
+.header-title{
+  font-size:clamp(0.85rem,2.5vw,1.15rem);
   color:var(--gold-light);
-  letter-spacing:0.18em;
+  letter-spacing:0.14em;
   text-transform:uppercase;
-  text-shadow:0 0 20px rgba(200,150,62,0.35);
-  margin-bottom:0.25rem;
-  font-weight:normal;
   font-style:italic;
-  opacity:0.85;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
-.site-header .religion-name{
-  font-size:0.85rem;color:var(--text-dim);
-  font-style:italic;letter-spacing:0.08em;
-  margin-bottom:1rem;
+.header-sub{
+  font-size:0.72rem;
+  color:var(--text-dim);
+  font-style:italic;
+  margin-top:2px;
 }
-.doctrine-banner{
-  max-width:560px;margin:0 auto;
-  font-size:0.82rem;color:var(--parchment-dim);
-  font-style:italic;line-height:1.85;
-  border-top:1px solid var(--border);
-  padding-top:1rem;
-}
-.doctrine-banner strong{color:var(--gold-light);font-style:normal;}
+.header-sub a{color:inherit;border-bottom-color:rgba(200,150,62,0.3);}
 
 /* ── NAV ──────────────────────────────────────────────── */
 nav{
@@ -357,14 +343,15 @@ nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
   border-left:2px solid var(--gold-dim);
 }
 .titles-row{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:1rem;margin-top:1.5rem;
+  display:grid;grid-template-columns:1fr;
+  gap:1.4rem;margin-top:1.5rem;
 }
 .title-card{
   background:var(--gold-faint);border:1px solid var(--gold-dim);
-  border-radius:4px;padding:1.2rem;text-align:center;
+  border-radius:4px;padding:1.4rem;text-align:center;
 }
-.title-card .title-name{font-size:0.95rem;color:var(--gold);margin-bottom:0.4rem;letter-spacing:0.04em;}
+.title-card .title-img{display:block;margin:0 auto 0.9rem;filter:drop-shadow(0 0 10px rgba(200,150,62,0.45));}
+.title-card .title-name{font-size:1rem;color:var(--gold);margin-bottom:0.5rem;letter-spacing:0.06em;font-style:italic;}
 .title-card p{font-size:0.8rem;color:var(--text-dim);line-height:1.65;}
 
 /* ── REWARDS PAGE ─────────────────────────────────────── */
@@ -751,11 +738,28 @@ details.lore-section .lore-body{padding-bottom:1rem;}
   .kata-anim-inner{flex-direction:column;}
   .kata-info{max-width:100%;text-align:center;}
   .kata-dots,.kata-controls{justify-content:center;}
-  .site-header h1{font-size:1.4rem;}
   .page{padding:1rem 0.75rem 3rem;}
   .titles-row{grid-template-columns:1fr;}
   .ring-card{padding:1rem;}
   .section-title{font-size:0.9rem;}
+}
+
+/* ── EXTERNAL NAV LINKS ──────────────────────────────────── */
+nav a.nav-ext{
+  display:inline-block;
+  background:none;border:none;
+  color:var(--text-dim);
+  padding:0.75rem 1.1rem;
+  cursor:pointer;font-family:inherit;font-size:0.8rem;
+  letter-spacing:0.05em;text-transform:uppercase;
+  border-bottom:2px solid transparent;
+  transition:all 0.2s;
+  text-decoration:none;
+}
+nav a.nav-ext:hover{color:var(--gold-light);border-bottom:2px solid var(--gold);}
+nav a.nav-cta-ext{
+  color:var(--gold);
+  font-weight:bold;
 }
 </style>
 </head>
@@ -764,23 +768,23 @@ details.lore-section .lore-body{padding-bottom:1rem;}
 
 <!-- ══════════════════════════════════════════════ HEADER -->
 <header class="site-header">
-  <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil"/>
-  <img class="header-title-img" src="/assets/img/title.jpg" alt="Keepers of the Current"/>
-  <h1>Trial of the Three Rings</h1>
-  <p class="religion-name"><a href="https://hynafol.com" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(200,150,62,0.4);">Hynafol</a></p>
-  <div class="doctrine-banner">
-    "Most people live against the Current. They <strong>isolate</strong> when connection would help.<br>
-    They <strong>consume</strong> when creation would ground them. They <strong>force</strong> when alignment would carry them.<br>
-    The Trial of the Three Rings is the path back — not through belief, but through <strong>practice</strong>."
+  <div class="header-inner">
+    <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil"/>
+    <div class="header-text">
+      <div class="header-title">Keepers of the Current</div>
+      <div class="header-sub">Trial of the Three Rings &nbsp;·&nbsp; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
+    </div>
   </div>
 </header>
 
 <nav>
-  <button onclick="showPage('lore',this)">The Current</button>
   <button class="active" onclick="showPage('trials',this)">The Trials</button>
-  <button onclick="showPage('rewards',this)">Rewards</button>
+  <a href="/seeker.html" class="nav-ext nav-cta-ext">Register</a>
+  <a href="/lookup.html" class="nav-ext">My Standing</a>
   <button onclick="showPage('tracker',this)">Trial Tracker</button>
   <button onclick="showPage('leaderboard',this)">Bearers &amp; Shields</button>
+  <button onclick="showPage('rewards',this)">Rewards</button>
+  <button onclick="showPage('lore',this)">The Current</button>
   <button onclick="showPage('admin',this)">Keeper's Panel</button>
 </nav>
 
@@ -800,71 +804,6 @@ details.lore-section .lore-body{padding-bottom:1rem;}
     <p>Those who walk in its presence have described it as warmth behind the sternum, a hum at the edge of hearing, a weight behind the eyes that is somehow also lightness. It does not grant power over others. It grants something quieter and more profound — the understanding that you are never truly alone. Every soul who walks with the Current adds to your own, and you to theirs. We are all connected. That connection is the foundation of everything the Keepers believe, and the greatest strength there is.</p>
     <div class="lore-pull">"The Current flows toward unity. It does not force. It waits — patient as water finding cracks in stone — for the soul willing to move with it rather than against it."</div>
     <p>The Current looks for balance in all things. Those who isolate when connection would help them are moving against it. Those who consume when creation would ground them are moving against it. Those who force when alignment would carry them — against it. Most people live this way without ever knowing it. The Keepers exist to show another way.</p>
-  </div>
-
-  <!-- The Four Elements -->
-  <div class="lore-body-section">
-    </div></details><details class="lore-section"><summary><span class="sum-title">The Four Elements<span class="sum-sub">The pillars of the human self, as the Current understands them</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
-    <p>The faith recognizes four elemental forces, each corresponding to a dimension of what it means to be fully alive. The first three — Earth, Wind, and Water — govern the three Pillars that all Keepers are called to develop. Fire is different. Fire does not govern one Pillar. Fire emerges when all three are mastered and moving together.</p>
-    <div class="lore-elements-grid">
-      <div class="lore-element-card earth">
-        <div class="el-icon">
-          <!-- Mountain peaks with geological strata -->
-          <svg width="50" height="42" viewBox="0 0 54 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 41 L18 12 L33 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M22 41 L37 5 L52 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
-            <line x1="30" y1="22" x2="44" y2="22" stroke="#b0aea6" stroke-width="1.1" opacity="0.5"/>
-            <line x1="27" y1="31" x2="47" y2="31" stroke="#b0aea6" stroke-width="1.1" opacity="0.4"/>
-            <line x1="2" y1="41" x2="52" y2="41" stroke="#b0aea6" stroke-width="1.5" opacity="0.35"/>
-          </svg>
-        </div>
-        <div class="el-name">Earth</div>
-        <div class="el-pillar">Ring of Endurance · Body</div>
-        <p>The ground that holds the self in place. Not rigidity — rootedness. Earth does not yield to every wind, but neither is it stone unmoved by rain. The body that endures is the body that can serve something beyond itself.</p>
-      </div>
-      <div class="lore-element-card wind">
-        <div class="el-icon">
-          <!-- Three flowing wind currents -->
-          <svg width="50" height="40" viewBox="0 0 54 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 10 C11 5 19 16 27 10 C35 4 43 13 51 8" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
-            <path d="M3 21 C11 16 20 27 28 21 C36 15 44 23 51 20" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
-            <path d="M10 33 C17 28 24 38 32 33 C40 28 47 34 51 32" stroke="#b0aea6" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
-          </svg>
-        </div>
-        <div class="el-name">Wind</div>
-        <div class="el-pillar">Ring of Focus · Mind</div>
-        <p>Invisible, pervasive, shaping everything it touches. The mind that is still enough to notice the wind can begin to move with it. Wind carries things across great distances — so does thought, when it is clear and honest and unhurried.</p>
-      </div>
-      <div class="lore-element-card water">
-        <div class="el-icon">
-          <!-- Water droplet falling into ripples -->
-          <svg width="44" height="50" viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M24 3 Q31 13 31 21 Q31 30 24 30 Q17 30 17 21 Q17 13 24 3 Z" stroke="#C8963E" stroke-width="2"/>
-            <ellipse cx="24" cy="38" rx="7" ry="3" stroke="#C8963E" stroke-width="1.5" opacity="0.75"/>
-            <ellipse cx="24" cy="40" rx="13" ry="5" stroke="#C8963E" stroke-width="1.2" opacity="0.5"/>
-            <ellipse cx="24" cy="43" rx="20" ry="7" stroke="#C8963E" stroke-width="1" opacity="0.3"/>
-          </svg>
-        </div>
-        <div class="el-name">Water</div>
-        <div class="el-pillar">Ring of Connection · Soul</div>
-        <p>Water that never leaves its vessel stagnates. The soul element is the one most easily forgotten — it requires another. Connection cannot be performed alone. Water finds its way into everything, given time and the willingness to seek cracks rather than force doors.</p>
-      </div>
-      <div class="lore-element-card fire">
-        <div class="el-icon">
-          <!-- Wild split flame with inner tongues -->
-          <svg width="36" height="50" viewBox="0 0 44 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 52 C13 43 7 33 10 20 C12 13 16 7 22 3 C28 7 32 13 34 20 C37 33 31 43 22 52 Z" stroke="#e06040" stroke-width="2"/>
-            <path d="M17 44 C13 37 11 27 15 17 C17 11 19 8 22 5" stroke="#e06040" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
-            <path d="M27 44 C31 37 33 27 29 17 C27 11 25 8 22 5" stroke="#e06040" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
-            <circle cx="22" cy="32" r="3" fill="#e06040" opacity="0.35"/>
-          </svg>
-        </div>
-        <div class="el-name">Fire</div>
-        <div class="el-pillar">The Final Element · All Three Rings</div>
-        <p>Fire is not earned through any single trial. It is what becomes possible when Earth, Wind, and Water stop being three separate practices and forge into one nature. The Current does not give fire — it recognizes it.</p>
-      </div>
-    </div>
-
   </div>
 
   <!-- Core Beliefs -->
@@ -939,7 +878,7 @@ details.lore-section .lore-body{padding-bottom:1rem;}
       <div class="qs-step"><strong>2. Complete Trials</strong>Three pillars — Body, Mind, Soul — three tiers each.</div>
       <div class="qs-step"><strong>3. Earn Your Rings</strong>One ring per pillar. All three makes you a Master.</div>
     </div>
-    <a class="qs-register" onclick="showPage('tracker',document.querySelector('nav button:nth-child(4)'))">✦ Register as a Seeker ✦</a>
+    <a class="qs-register" href="/seeker.html">✦ Register as a Seeker ✦</a>
   </div>
 
   <div class="lore-intro">
@@ -1476,15 +1415,54 @@ updateUI();requestAnimationFrame(frame);
   <h2 class="section-title">Titles Earned</h2>
   <div class="titles-row">
     <div class="title-card">
+      <svg viewBox="0 0 80 100" width="80" height="100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs><filter id="mglow2"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <!-- Chain links -->
+  <g stroke="#C8963E" stroke-width="1.4" fill="none" opacity="0.7">
+    <ellipse cx="40" cy="6"  rx="5" ry="2.5"/>
+    <ellipse cx="40" cy="11" rx="2.5" ry="4" transform="rotate(55,40,11)"/>
+    <ellipse cx="40" cy="17" rx="5" ry="2.5"/>
+    <ellipse cx="40" cy="22" rx="2.5" ry="4" transform="rotate(55,40,22)"/>
+  </g>
+  <!-- Drop line -->
+  <line x1="40" y1="26" x2="40" y2="38" stroke="#C8963E" stroke-width="1.2" opacity="0.5"/>
+  <circle cx="40" cy="38" r="2.5" fill="none" stroke="#C8963E" stroke-width="1.2"/>
+  <!-- Medallion -->
+  <circle cx="40" cy="74" r="30" fill="#1a0808" stroke="#C8963E" stroke-width="2.2"/>
+  <circle cx="40" cy="74" r="27" fill="none" stroke="#C8963E" stroke-width="0.5" opacity="0.5"/>
+  <circle cx="40" cy="74" r="24" fill="none" stroke="#C8963E" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>
+  <!-- Vine-infinity sigil (lemniscate with Celtic crossover) -->
+  <path d="M40 74 C39 69,35 62,28 63 C20 64,16 71,18 77 C20 83,26 87,33 85 C38 83,40 78,40 74"
+        fill="none" stroke="#C8963E" stroke-width="2.2" stroke-linecap="round" filter="url(#mglow2)"/>
+  <line x1="37" y1="72" x2="43" y2="76" stroke="#1a0808" stroke-width="4"/>
+  <path d="M40 74 C41 69,45 62,52 63 C60 64,64 71,62 77 C60 83,54 87,47 85 C42 83,40 78,40 74"
+        fill="none" stroke="#C8963E" stroke-width="2.2" stroke-linecap="round" filter="url(#mglow2)"/>
+</svg>
       <div class="title-name">Master of the Three Rings</div>
-      <p>All three Rings earned. The Trinity. Earth, wind, and water come together — and fire is born. Conferred in public ceremony at the Grand Gathering. The Keeper's Beacon is lit. The seeker's cord is retired. A Trinity Braid of silver, black, and gold is given in its place.</p>
+      <p>All three Rings earned. The Trinity. Earth, wind, and water come together — and fire is born. Conferred in public ceremony at the Grand Gathering. The Keeper's Beacon is lit. The seeker's cord is retired. A Trinity Braid of silver, black, and gold is given in its place. Each Master receives the sigil medallion — carried forever after.</p>
     </div>
     <div class="title-card">
+      <svg viewBox="0 0 80 92" width="80" height="92" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs><filter id="sglow2"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <!-- Shield body -->
+  <path d="M6 8 L74 8 L74 50 Q74 74 40 90 Q6 74 6 50 Z" fill="#1a0808" stroke="#C8963E" stroke-width="2.2"/>
+  <!-- Inner border -->
+  <path d="M12 14 L68 14 L68 50 Q68 70 40 84 Q12 70 12 50 Z" fill="none" stroke="#C8963E" stroke-width="0.6" opacity="0.5"/>
+  <!-- Heraldic cross dividers -->
+  <line x1="40" y1="14" x2="40" y2="84" stroke="#C8963E" stroke-width="0.5" opacity="0.25"/>
+  <line x1="12" y1="42" x2="68" y2="42" stroke="#C8963E" stroke-width="0.5" opacity="0.25"/>
+  <!-- Vine-infinity sigil centred on shield -->
+  <path d="M40 50 C39 44,34 37,26 38 C17 39,13 47,16 54 C19 61,26 65,34 62 C38 60,40 55,40 50"
+        fill="none" stroke="#C8963E" stroke-width="2.4" stroke-linecap="round" filter="url(#sglow2)"/>
+  <line x1="36" y1="47" x2="44" y2="53" stroke="#1a0808" stroke-width="4.5"/>
+  <path d="M40 50 C41 44,46 37,54 38 C63 39,67 47,64 54 C61 61,54 65,46 62 C42 60,40 55,40 50"
+        fill="none" stroke="#C8963E" stroke-width="2.4" stroke-linecap="round" filter="url(#sglow2)"/>
+</svg>
       <div class="title-name">Shield of the Current</div>
       <p>Entrusted, not applied for. The Shield of the Current is the highest honour the Keeper can bestow — not a recognition of completion, but of character. There is no application. No trial that earns it. The Keeper chooses, and her choice is never casual.</p>
       <p>The Shields of the Current are the most elite circle within the faith — souls whose loyalty and integrity have been witnessed across years, not moments. To be named a Shield is to be placed in an order of people the Keeper would trust with anything the Current holds sacred. They are few, and always will be. When you meet one, you know.</p>
       <p>To accept the honour is to speak the Oath of Loyalty before the Current itself — a vow that binds as long as the title is carried. The Keeper then assigns a personal quest, shaped to the soul she has chosen.</p>
-      <p>Those who complete their quest receive a shield bearing the Keeper's sigil — the infinite knot that never ends, the vine that holds what fire cannot burn. It is carried into the field. It is real. Those who bear it have been trusted with the Current's deepest work, and did not break under it. The title and the shield are announced at the Grand Gathering, in public ceremony, before the full circle.</p>
+      <p>Those who complete their quest receive a physical shield bearing the Keeper's sigil — the infinite knot that never ends, the vine that holds what fire cannot burn. It is carried into the field. It is real. The title and the shield are announced at the Grand Gathering, in public ceremony, before the full circle.</p>
     </div>
   </div>
 
@@ -1733,7 +1711,7 @@ updateUI();requestAnimationFrame(frame);
         <circle cx="50" cy="54" r="3" fill="none" stroke="#C8963E" stroke-width="1.5"/>
       </svg>
       <div>
-        <h4>The Bearer Medallion</h4>
+        <h4>Master of the Three Rings</h4>
         <p>When all three Rings are earned, the Keeper presents the Bearer with a pendant bearing the Keepers' sigil — the vine-infinity in its Celtic knotwork ring. This is the one piece of the reward system that does not vary. Every Bearer receives the same pendant. When others see it, they know what it means.</p>
         <p style="margin-top:0.7rem;">Pendants can be sourced from custom makers on Etsy, cast in resin, or stamped in metal. Bearers will be rare enough that cost stays manageable — a handful total, not dozens.</p>
         <p style="margin-top:0.7rem;">The Keeper's Beacon is lit for each new Bearer. The seeker's cord is retired in ceremony and returned to the Bearer as a keepsake of the journey. The Bearer is titled publicly and entered into the Trial Scroll as a permanent record.</p>
@@ -1906,6 +1884,16 @@ function showPage(id,btn){
   if(id==='tracker')renderTracker();
   if(id==='admin'&&adminUnlocked)renderAdminPanel();
 }
+// ── HASH ROUTING ─────────────────────────────────────────
+(function(){
+  const map={lore:'lore',trials:'trials',rewards:'rewards',tracker:'tracker',leaderboard:'leaderboard'};
+  const h=(location.hash||'').replace('#','');
+  if(map[h]){
+    const btn=document.querySelector(`nav button[onclick*="showPage('${map[h]}"]`);
+    showPage(map[h],btn);
+  }
+})();
+
 
 // ── TIER TOGGLE ───────────────────────────────────────────
 function toggleTier(h){h.classList.toggle('open');h.nextElementSibling.classList.toggle('open');}

@@ -3,24 +3,24 @@
 .page-shell {
   max-width: 720px;
   margin: 0 auto;
-  padding: 48px 24px 96px;
+  padding: 28px 20px 72px;
 }
 
 .page-header {
   text-align: center;
-  margin-bottom: 36px;
+  margin-bottom: 24px;
 }
 
 .page-header img.sigil {
-  width: 84px;
+  width: 52px;
   height: auto;
   opacity: 0.9;
   display: block;
-  margin: 0 auto 12px;
+  margin: 0 auto 10px;
 }
 
 .page-header .title {
-  font-size: 24px;
+  font-size: 20px;
   color: var(--gold);
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -248,3 +248,82 @@ button.secondary:hover { border-color: var(--gold); color: var(--gold-light); }
 .muted { color: var(--text-dim); }
 .italic { font-style: italic; }
 .center { text-align: center; }
+
+/* ── SITE-WIDE NAV ─────────────────────────────────────────────────────── */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+  background: var(--red-dark);
+  border-bottom: 1px solid var(--border);
+  padding: 0 8px;
+}
+
+/* Brand mark — left side of the nav bar */
+.site-nav .nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 10px 6px 4px;
+  margin-right: auto;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  flex-shrink: 0;
+}
+
+.site-nav .nav-brand img {
+  width: 26px;
+  height: 26px;
+  opacity: 0.88;
+}
+
+.site-nav .nav-brand .brand-name {
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  white-space: nowrap;
+}
+
+.site-nav .nav-brand:hover .brand-name { color: var(--gold-light); }
+
+/* Nav links */
+.site-nav a:not(.nav-brand) {
+  display: inline-block;
+  padding: 10px 12px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.site-nav a:not(.nav-brand):hover {
+  color: var(--gold-light);
+  border-color: var(--gold);
+}
+
+.site-nav a.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+.site-nav a.nav-cta {
+  color: var(--gold);
+}
+
+@media (max-width: 600px) {
+  .site-nav .nav-brand .brand-name { display: none; }
+  .site-nav a:not(.nav-brand) { padding: 9px 9px; font-size: 11px; }
+}
+
+@media (max-width: 360px) {
+  .site-nav a:not(.nav-brand) { padding: 8px 7px; font-size: 10px; }
+}

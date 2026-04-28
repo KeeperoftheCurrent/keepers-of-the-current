@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trial Tracker — Keepers of the Current</title>
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<style>
+  .seeker-card { display: grid; grid-template-columns: 1fr auto; gap: 18px; padding: 14px 16px; background: var(--red-dark); border: 1px solid var(--border); border-radius: 3px; margin-bottom: 10px; align-items: center; }
+  .seeker-card .name { color: var(--gold-light); font-size: 17px; }
+  .seeker-card .house { color: var(--text-dim); font-size: 13px; font-style: italic; }
+  .seeker-card .titles { margin-top: 6px; display: flex; flex-direction: column; gap: 3px; }
+  .seeker-card .title-badge { font-size: 12px; letter-spacing: 0.4px; }
+  .seeker-card .master-badge { color: var(--gold-light); }
+  .seeker-card .shield-badge { color: var(--text-dim); }
+  .seeker-card .pillar-counts { display: flex; gap: 12px; font-size: 13px; }
+  .seeker-card .pillar-counts span { color: var(--text-dim); }
+  .seeker-card .pillar-counts strong { color: var(--gold-light); }
+  .seeker-card .rings-mini { display: flex; gap: 4px; margin-left: auto; }
+  .ring-mini { width: 12px; height: 12px; border-radius: 50%; border: 1px solid var(--gold-dim); }
+  .ring-mini.body.held { background: #b56a3a; border-color: #b56a3a; }
+  .ring-mini.mind.held { background: #1a1a1a; border-color: #555; }
+  .ring-mini.soul.held { background: var(--gold); border-color: var(--gold-light); }
+  @media (max-width: 600px) {
+    .seeker-card { grid-template-columns: 1fr; gap: 8px; }
+    .seeker-card .rings-mini { margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <a href="/" class="nav-brand" aria-label="Keepers of the Current — Home">
+    <img src="/assets/img/sigil.png" alt="">
+    <span class="brand-name">Keepers of the Current</span>
+  </a>
+  <a href="/current.html">The Current</a>
+  <a href="/trials.html">The Trials</a>
+  <a href="/seeker.html" class="nav-cta">Register</a>
+  <a href="/tracker.html" class="active">Trial Scroll</a>
+  <a href="/lookup.html">My Standing</a>
+  <a href="/leaderboard.html">Bearers &amp; Shields</a>
+  <a href="/rewards.html">Rewards</a>
+</nav>
+
+
+<main class="page-shell">
+  <header class="page-header">
+    <img src="/assets/img/sigil.png" alt="" class="sigil">
+    <div class="title">The Trial Scroll</div>
+    <div class="subtitle">"The Current remembers."</div>
+  </header>
+
+  <section class="panel">
+    <h2>Bearers & Seekers</h2>
+    <p class="muted">All who have entered their name in the Trial Scroll. Pillar counts show tiers complete; the rings to the right show conferred Rings of the Current.</p>
+    <div id="seekers-list">
+      <p class="muted center">Loading the Scroll…</p>
+    </div>
+  </section>
+
+  <p class="center muted italic" style="font-size:14px;">
+    <a href="/seeker.html">Become a Seeker →</a> &nbsp;·&nbsp;
+    <a href="/lookup.html">Find your standing →</a> &nbsp;·&nbsp;
+    <a href="/leaderboard.html">Bearers & Shields →</a>
+  </p>
+</main>
+
+<script type="module">
+  import { api } from '/assets/js/api.js';
+  const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+
+  const { ok, body } = await api('GET', '/api/public/tracker');
+  const wrap = document.getElementById('seekers-list');
+  if (!ok) { wrap.innerHTML = '<p class="muted center">Could not load the Scroll right now.</p>'; }
+  else if (!body.seekers || body.seekers.length === 0) {
+    wrap.innerHTML = '<p class="muted center italic">The Scroll is yet unwritten.</p>';
+  } else {
+    wrap.innerHTML = body.seekers.map((s) => {
+      const titleParts = [];
+      if (s.master_of_three_rings) titleParts.push('<div class="title-badge master-badge">★ Master of the Three Rings</div>');
+      if (s.shield) titleParts.push('<div class="title-badge shield-badge">🛡 Shield of the Current</div>');
+      const titlesHtml = titleParts.length ? `<div class="titles">${titleParts.join('')}</div>` : '';
+      return `<div class="seeker-card">
+        <div>
+          <div class="name">${escapeHtml(s.name)}</div>
+          ${s.house ? `<div class="house">of House ${escapeHtml(s.house)}</div>` : ''}
+          ${titlesHtml}
+          <div class="pillar-counts" style="margin-top:6px;">
+            <span>Body <strong>${s.pillar_counts.body.complete}/${s.pillar_counts.body.total}</strong></span>
+            <span>Mind <strong>${s.pillar_counts.mind.complete}/${s.pillar_counts.mind.total}</strong></span>
+            <span>Soul <strong>${s.pillar_counts.soul.complete}/${s.pillar_counts.soul.total}</strong></span>
+          </div>
+        </div>
+        <div class="rings-mini">
+          <span class="ring-mini body ${s.rings.body ? 'held' : ''}" title="Body"></span>
+          <span class="ring-mini mind ${s.rings.mind ? 'held' : ''}" title="Mind"></span>
+          <span class="ring-mini soul ${s.rings.soul ? 'held' : ''}" title="Soul"></span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+</script>
+
+</body>
+</html>

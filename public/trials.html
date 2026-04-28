@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Trials — Keepers of the Current</title>
+<meta name="description" content="The Trial of the Three Rings — Body, Mind, Soul. Nine stages.">
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/lore-pages.css">
+</head>
+<body>
+<div id="toast"></div>
+
+<header class="site-header">
+  <div class="header-inner">
+    <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil"/>
+    <div class="header-text">
+      <div class="header-title">Keepers of the Current</div>
+      <div class="header-sub">Trial of the Three Rings &nbsp;·&nbsp; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
+    </div>
+  </div>
+</header>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <a href="/">The Current</a>
+  <a href="/trials.html" class="active">The Trials</a>
+  <a href="/seeker.html" class="nav-cta">Register</a>
+  <a href="/tracker.html">Trial Scroll</a>
+  <a href="/lookup.html">My Standing</a>
+  <a href="/leaderboard.html">Bearers &amp; Shields</a>
+  <a href="/rewards.html">Rewards</a>
+</nav>
+
+<main class="page active">
+
+  <div class="quickstart">
+    <h3>How it Works</h3>
+    <div class="qs-steps">
+      <div class="qs-step"><strong>1. Register</strong>Add your name to the Trial Scroll to begin.</div>
+      <div class="qs-step"><strong>2. Complete Trials</strong>Three pillars — Body, Mind, Soul — three tiers each.</div>
+      <div class="qs-step"><strong>3. Earn Your Rings</strong>One ring per pillar. All three makes you a Master.</div>
+    </div>
+    <a class="qs-register" href="/seeker.html">✦ Register as a Seeker ✦</a>
+  </div>
+
+  <div class="lore-intro">
+    <blockquote>
+      The Trial of the Three Rings is not a test of worthiness.<br>
+      It is a test of <strong>practice</strong>. Alignment comes not through belief, but through doing.<br>
+      Walk one path or all three. Each Pillar stands alone.<br>Together they form something whole.
+    </blockquote>
+  </div>
+
+  <div class="event-gate-banner">
+    <div class="gate-item">
+      <div class="gate-tier">Tier I</div>
+      <div class="gate-rule">Any event — begin where you are</div>
+    </div>
+    <div class="gate-item">
+      <div class="gate-tier">Tier II</div>
+      <div class="gate-rule">A subsequent event after Tier I</div>
+    </div>
+    <div class="gate-item">
+      <div class="gate-tier">Tier III</div>
+      <div class="gate-rule">Grand Gathering only · once per year</div>
+    </div>
+  </div>
+
+  <div class="pillar-intro-grid">
+    <div class="pillar-intro-card body">
+      <div class="pillar-symbol">
+        <!-- Mountain peaks with geological strata — Earth -->
+        <svg width="52" height="44" viewBox="0 0 54 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 41 L18 12 L33 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M22 41 L37 5 L52 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
+          <line x1="30" y1="22" x2="44" y2="22" stroke="#b0aea6" stroke-width="1.1" opacity="0.5"/>
+          <line x1="27" y1="31" x2="47" y2="31" stroke="#b0aea6" stroke-width="1.1" opacity="0.4"/>
+          <line x1="2" y1="41" x2="52" y2="41" stroke="#b0aea6" stroke-width="1.5" opacity="0.35"/>
+        </svg>
+      </div>
+      <div class="ring-name-large">Ring of Endurance</div>
+      <h3>Body · Earth</h3>
+      <p>The body is not a vessel for the Current — it is the Current moving. Endurance, presence, weight. The ground that holds the self in place.</p>
+    </div>
+    <div class="pillar-intro-card mind">
+      <div class="pillar-symbol">
+        <!-- Three flowing wind currents — Wind -->
+        <svg width="52" height="40" viewBox="0 0 54 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 10 C11 5 19 16 27 10 C35 4 43 13 51 8" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
+          <path d="M3 21 C11 16 20 27 28 21 C36 15 44 23 51 20" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
+          <path d="M10 33 C17 28 24 38 32 33 C40 28 47 34 51 32" stroke="#b0aea6" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+        </svg>
+      </div>
+      <div class="ring-name-large">Ring of Focus</div>
+      <h3>Mind · Wind</h3>
+      <p>Creation is alignment. Consumption is drift. Intellectual discipline, focus under pressure, honest reasoning. The mind that moves with clarity and intention.</p>
+    </div>
+    <div class="pillar-intro-card soul">
+      <div class="pillar-symbol">
+        <!-- Water droplet falling into ripples — Water -->
+        <svg width="46" height="52" viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 3 Q31 13 31 21 Q31 30 24 30 Q17 30 17 21 Q17 13 24 3 Z" stroke="#C8963E" stroke-width="2"/>
+          <ellipse cx="24" cy="38" rx="7" ry="3" stroke="#C8963E" stroke-width="1.5" opacity="0.75"/>
+          <ellipse cx="24" cy="40" rx="13" ry="5" stroke="#C8963E" stroke-width="1.2" opacity="0.5"/>
+          <ellipse cx="24" cy="43" rx="20" ry="7" stroke="#C8963E" stroke-width="1" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="ring-name-large">Ring of Connection</div>
+      <h3>Soul · Water</h3>
+      <p>The Current flows where genuine souls gather in true connection. Openness, service, moving toward what is not yet known. You cannot earn this one alone.</p>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <h2 class="section-title">Ring of Endurance<small>Body Pillar · Earth</small></h2>
+
+  <div class="tier-block body">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">I</div>
+      <div class="tier-header-text">
+        <h4>Tier I — Awakening of Flesh</h4>
+        <div class="epigraph">"The body must first be known before it can be mastered."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">Before the body can be trained to move with the Current, it must first learn that it can be asked to wait — and that it will not break. The Current flows through all living things, but most people never feel it because their bodies are too full of noise — food, movement, distraction, comfort. <em>The Fast empties the vessel. The Watch steadies it.</em> Together they are the first conversation between the candidate and their own flesh. The element of the Body is Earth. Earth does not announce itself. It holds.</p>
+      <div class="task-item">
+        <div class="task-name">⬤ The Fast</div>
+        <p>The candidate abstains from food and drink (water excepted; health needs respected) for a minimum of 4 hours at the event — window established with the Keeper in advance. The Fast must be witnessed. At its end, the Keeper or a Bearer releases the candidate with the words:</p>
+        <div class="keeper-words">"The body has spoken. Now let the Current speak through it."</div>
+        <p style="margin-top:0.6rem;">The Fast is not punishment. It is subtraction. When we strip away what the body expects, what remains is the body itself — present, honest, alive.</p>
+      </div>
+      <div class="task-item" style="margin-top:1rem;">
+        <div class="task-name">⬤ The Watch</div>
+        <p>The candidate stands unarmed guard at a sacred location or protecting a designated person for a minimum of 1 hour. They may not leave their post without formal dismissal from the Keeper or their charge. They may not speak unless spoken to. Passers-by may interact. The candidate holds.</p>
+        <p>The Watch is not waiting. It is choosing, moment by moment, to stay — when boredom comes, when distraction comes, when the body wants to move and cannot. <em>The body learns its first discipline: remaining.</em></p>
+      </div>
+      <div class="task-rule">Complete both tasks to pass Tier I of Body. · Any event.</div>
+    </div>
+  </div>
+
+  <div class="tier-block body">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">II</div>
+      <div class="tier-header-text">
+        <h4>Tier II — The Unison</h4>
+        <div class="epigraph">"One body in discipline is strength. Many bodies in unison — that is the Current."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">The body that has learned to be still must now learn to move with others. Not alongside — <em>with</em>. The Unison Kata is a weapon sequence performed in perfect synchronization with a group. No one leads once it begins. Every movement belongs to everyone. If one breaks rhythm, all break rhythm. The Current is not a solo act — and neither is this.</p>
+      <div class="task-item">
+        <div class="task-name">⬤ The Unison Kata</div>
+        <p>The Keeper teaches the weapon kata to the candidate in private — footwork, strikes, guards, and transitions — nine named movements to be performed with a weapon of their choice. The candidate practices alone until they know it without thought. At a subsequent event, they perform it in unison with a minimum of <strong style="color:var(--text-light)">two other participants</strong> who have also learned it. All three begin together. All three move together. All three end together.</p>
+        <p><strong style="color:var(--text-light)">I. The Ready</strong> — weapons sheathed or held at rest, feet shoulder-width, one breath of stillness before the group begins<br>
+        <strong style="color:var(--text-light)">II. The Draw</strong> — weapon raised from rest to a two-handed guard at chest height<br>
+        <strong style="color:var(--text-light)">III. The High Guard</strong> — weapon lifted overhead, arms extended, weight balanced<br>
+        <strong style="color:var(--text-light)">IV. The Strike</strong> — a controlled downward sweep from high guard to low, stopping short, weight forward<br>
+        <strong style="color:var(--text-light)">V. The Low Guard</strong> — weapon pulled to the low flank, hips rotated, opposite shoulder forward<br>
+        <strong style="color:var(--text-light)">VI. The Thrust</strong> — weapon extended directly forward, arm fully locked, held for three counts<br>
+        <strong style="color:var(--text-light)">VII. The Sweep</strong> — a wide horizontal arc from right to left, weapon parallel to the ground<br>
+        <strong style="color:var(--text-light)">VIII. The Parry</strong> — weapon angled diagonally across the body, deflecting position, weight back<br>
+        <strong style="color:var(--text-light)">IX. The Return</strong> — weapon drawn back to center, both hands at sternum, point down — the group stills together</p>
+        <p style="margin-top:0.6rem;">The test is not skill. The Keeper has seen the kata performed by trained fighters who failed, and untrained candidates who passed. What she is judging is whether the group moves as one thing. <em>A beat off is visible. An ego is visible. The Keeper will wait for the group to earn the right to perform it.</em></p>
+
+        <!-- ══ KATA ANIMATOR ══ -->
+        <div class="kata-animator">
+          <p class="kata-anim-label">The Unison Kata — Movement Reference</p>
+          <div class="kata-anim-inner">
+            <canvas id="kataCanvas" width="200" height="280"></canvas>
+            <div class="kata-info">
+              <span id="kataElemBadge" class="kata-elem-badge"></span>
+              <div id="kataPoseName" class="kata-pose-name"></div>
+              <div id="kataPoseDesc" class="kata-pose-desc"></div>
+              <div id="kataDots" class="kata-dots"></div>
+              <div class="kata-controls">
+                <button id="kataPauseBtn" class="kata-btn" onclick="kataTogglePause()">⏸</button>
+                <button class="kata-btn" onclick="kataStep(-1)">←</button>
+                <button class="kata-btn" onclick="kataStep(1)">→</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <script>
+(function(){
+const CV=document.getElementById('kataCanvas'),CX=CV.getContext('2d');
+const W=200,H=280;
+const UA=36,FA=30,TH=58,SH=60;
+function lerp(a,b,t){return a+(b-a)*t;}
+function ease(t){return t<0.5?2*t*t:1-2*(1-t)*(1-t);}
+function N(f,t,len){const dx=t[0]-f[0],dy=t[1]-f[1],d=Math.sqrt(dx*dx+dy*dy)||1;return[f[0]+dx/d*len,f[1]+dy/d*len];}
+function build(p){
+  const ls=p.ls,rs=p.rs,hip=[100,142];
+  const le=N(ls,p.le,UA), lh=N(le,p.lh,FA);
+  const re=N(rs,p.re,UA), rh=N(re,p.rh,FA);
+  const lk=N(hip,p.lk,TH), lf=N(lk,p.lf,SH);
+  const rk=N(hip,p.rk,TH), rf=N(rk,p.rf,SH);
+  return{head:[100,26],ls,rs,hip,le,lh,re,rh,lk,lf,rk,rf};
+}
+function lerpHints(a,b,t){
+  const K=['ls','rs','le','lh','re','rh','lk','lf','rk','rf'];
+  const o={ec:a.ec.map((v,i)=>lerp(v,b.ec[i],t))};
+  for(const k of K)o[k]=[lerp(a[k][0],b[k][0],t),lerp(a[k][1],b[k][1],t)];
+  return o;
+}
+/* Sword kata poses — two-handed weapon grip, weight shifting through stances */
+const POSES=[
+ {name:'I — The Ready',   elem:'Weapon at rest',ec:[139,96,64],
+  desc:'Feet shoulder-width. Weapon held at rest. One breath of stillness before the group begins.',
+  ls:[78,72],rs:[122,72], le:[72,108],lh:[68,136], re:[128,108],rh:[132,136],
+  lk:[78,198],lf:[64,256], rk:[122,198],rf:[136,256]},
+ {name:'II — The Draw',   elem:'Weapon raised',ec:[139,96,64],
+  desc:'Weapon drawn from rest to two-handed guard at chest height.',
+  ls:[78,72],rs:[122,72], le:[68,88],lh:[78,62], re:[132,78],rh:[118,58],
+  lk:[78,198],lf:[64,256], rk:[122,198],rf:[136,256]},
+ {name:'III — High Guard', elem:'Overhead guard',ec:[139,110,40],
+  desc:'Weapon lifted overhead, arms extended, weight balanced across both feet.',
+  ls:[78,72],rs:[122,72], le:[60,48],lh:[52,22], re:[140,48],rh:[148,22],
+  lk:[78,198],lf:[64,256], rk:[122,198],rf:[136,256]},
+ {name:'IV — The Strike',  elem:'Downward sweep',ec:[180,80,40],
+  desc:'Controlled downward sweep from high guard to low. Weight forward. Stop short.',
+  ls:[82,74],rs:[118,74], le:[68,60],lh:[62,34], re:[134,106],rh:[148,130],
+  lk:[72,194],lf:[52,252], rk:[128,200],rf:[146,256]},
+ {name:'V — Low Guard',   elem:'Flank guard',ec:[139,96,64],
+  desc:'Weapon pulled to the low flank. Hips rotated, opposite shoulder forward.',
+  ls:[84,74],rs:[116,74], le:[112,102],lh:[136,118], re:[102,110],rh:[96,138],
+  lk:[76,196],lf:[58,252], rk:[124,200],rf:[140,256]},
+ {name:'VI — The Thrust',  elem:'Full extension',ec:[180,80,40],
+  desc:'Weapon extended directly forward, arm fully locked. Held for three counts.',
+  ls:[80,72],rs:[120,72], le:[58,70],lh:[30,68], re:[132,70],rh:[160,68],
+  lk:[78,198],lf:[64,256], rk:[122,198],rf:[136,256]},
+ {name:'VII — The Sweep',  elem:'Horizontal arc',ec:[90,130,60],
+  desc:'Wide horizontal arc from right to left, weapon parallel to ground.',
+  ls:[78,72],rs:[122,72], le:[148,64],lh:[176,54], re:[108,80],rh:[82,74],
+  lk:[76,196],lf:[60,254], rk:[124,200],rf:[140,256]},
+ {name:'VIII — The Parry', elem:'Deflecting guard',ec:[90,130,60],
+  desc:'Weapon angled diagonally across the body, deflecting position. Weight back.',
+  ls:[80,72],rs:[120,72], le:[68,56],lh:[52,36], re:[136,96],rh:[152,116],
+  lk:[82,200],lf:[70,258], rk:[118,196],rf:[130,252]},
+ {name:'IX — The Return',  elem:'All together — still',ec:[200,150,62],
+  desc:'Weapon drawn to center, both hands at sternum, point down. The group stills as one.',
+  ls:[80,72],rs:[120,72], le:[84,98],lh:[97,112], re:[116,98],rh:[103,112],
+  lk:[80,198],lf:[68,256], rk:[120,198],rf:[132,256]},
+];
+function drawBg(ec){
+  const g=CX.createRadialGradient(W/2,H*0.38,18,W/2,H*0.38,W*0.78);
+  g.addColorStop(0,`rgba(${ec[0]},${ec[1]},${ec[2]},0.22)`);
+  g.addColorStop(1,'rgba(0,0,0,0)');
+  CX.fillStyle=g;CX.fillRect(0,0,W,H);
+}
+function drawFigure(j){
+  const gold='200,150,62';
+  CX.strokeStyle=`rgb(${gold})`;CX.lineCap='round';CX.lineJoin='round';
+  CX.shadowColor=`rgba(${gold},0.55)`;CX.shadowBlur=10;CX.lineWidth=3;
+  const shmp=[(j.ls[0]+j.rs[0])/2,(j.ls[1]+j.rs[1])/2];
+  const S=[[j.ls,j.rs],[j.ls,j.le],[j.le,j.lh],[j.rs,j.re],[j.re,j.rh],
+    [shmp,j.hip],[j.hip,j.lk],[j.lk,j.lf],[j.hip,j.rk],[j.rk,j.rf]];
+  for(const[a,b]of S){CX.beginPath();CX.moveTo(a[0],a[1]);CX.lineTo(b[0],b[1]);CX.stroke();}
+  /* Draw weapon — line from rh extending in the direction of the strike */
+  const wx=j.rh[0]+(j.rh[0]-j.re[0])*1.4, wy=j.rh[1]+(j.rh[1]-j.re[1])*1.4;
+  CX.lineWidth=2;CX.shadowBlur=18;
+  CX.strokeStyle=`rgba(${gold},0.7)`;
+  CX.beginPath();CX.moveTo(j.lh[0],j.lh[1]);CX.lineTo(wx,wy);CX.stroke();
+  CX.strokeStyle=`rgb(${gold})`;CX.lineWidth=3;CX.shadowBlur=10;
+  CX.beginPath();CX.moveTo(j.head[0],j.head[1]+18);CX.lineTo(shmp[0],shmp[1]);CX.stroke();
+  CX.lineWidth=2.5;CX.shadowBlur=14;
+  CX.beginPath();CX.arc(j.head[0],j.head[1],18,0,Math.PI*2);CX.stroke();
+}
+let idx=0,fe=0,lastTs=null,paused=false;
+const HOLD=3,TRANS=0.9;
+function frame(ts){
+  if(lastTs===null)lastTs=ts;
+  const dt=Math.min((ts-lastTs)/1000,0.1);lastTs=ts;
+  if(!paused)fe+=dt;
+  CX.clearRect(0,0,W,H);
+  const cur=POSES[idx],nxt=POSES[(idx+1)%POSES.length];
+  if(fe<HOLD){
+    drawBg(cur.ec);drawFigure(build(cur));
+  } else if(fe<HOLD+TRANS){
+    const h=lerpHints(cur,nxt,ease((fe-HOLD)/TRANS));
+    drawBg(h.ec);drawFigure(build(h));
+  } else {
+    fe=0;idx=(idx+1)%POSES.length;updateUI();
+    drawBg(POSES[idx].ec);drawFigure(build(POSES[idx]));
+  }
+  requestAnimationFrame(frame);
+}
+function updateUI(){
+  const p=POSES[idx];
+  document.getElementById('kataElemBadge').textContent=p.elem;
+  document.getElementById('kataPoseName').textContent=p.name;
+  document.getElementById('kataPoseDesc').textContent=p.desc;
+  const dd=document.getElementById('kataDots');dd.innerHTML='';
+  POSES.forEach((_,i)=>{const d=document.createElement('span');d.className='kata-dot'+(i===idx?' active':'');dd.appendChild(d);});
+}
+window.kataTogglePause=function(){paused=!paused;document.getElementById('kataPauseBtn').textContent=paused?'▶':'⏸';};
+window.kataStep=function(d){
+  paused=true;document.getElementById('kataPauseBtn').textContent='▶';
+  idx=(idx+d+POSES.length)%POSES.length;fe=0;
+  const p=POSES[idx];
+  CX.clearRect(0,0,W,H);drawBg(p.ec);drawFigure(build(p));updateUI();
+};
+updateUI();requestAnimationFrame(frame);
+})();
+        </script>
+
+      </div>
+      <div class="task-rule">Complete The Unison Kata with a group of three or more to pass Tier II of Body. · Taught by the Keeper, performed at a subsequent event.</div>
+    </div>
+  </div>
+
+  <div class="tier-block body">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">III</div>
+      <div class="tier-header-text">
+        <h4>Tier III — The Grand Proving</h4>
+        <div class="epigraph">"The body must obey purpose across a full day of consequence."</div>
+      </div>
+      <div class="tier-badge-tag">Grand Gathering</div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">The Grand Proving spans the Grand Gathering. Earth endures not for a moment but across time — the Burden is carried across a full day, while The Plank and The Foot Race may be completed on any day of the Gathering. All three must be done before the closing ceremony. The body's proof is witnessed and recorded.</p>
+      <div class="task-item">
+        <div class="task-name">⬤ The Burden</div>
+        <p>On a designated day, the Keeper places the holy relic of the faith into the candidate's keeping. From that moment until the final bell of that day, the candidate is responsible for it — they may not set it down, transfer it, or ask for relief.</p>
+        <p>The only exception: when the Keeper herself requires the relic for her own use, she takes it. When she is finished, the candidate reclaims it and resumes the Burden. This is not relief — it is the Keeper exercising her authority, as is always her right. Surrendering it to anyone else is a failure; the tier resets to the next Grand Gathering.</p>
+      </div>
+      <div class="task-item" style="margin-top:1rem;">
+        <div class="task-name">⬤ The Plank</div>
+        <p>At any point during the Grand Gathering, the candidate assumes a plank position before witnesses and a timekeeper. They hold until they cannot. Their time is recorded on the <strong style="color:var(--gold-light)">Trial Leaderboard</strong>. Completing the challenge earns the tier — not the rank. But the result is public, and the body's proof is witnessed by all.</p>
+      </div>
+      <div class="task-item" style="margin-top:1rem;">
+        <div class="task-name">⬤ The Foot Race</div>
+        <p>100 meters, timed, at any point during the Grand Gathering. The candidate runs alone or alongside others attempting the same. Their time is recorded on the <strong style="color:var(--gold-light)">Trial Leaderboard</strong>. The Foot Race is not about being fastest — it is the moment of full release, when the body gives everything without calculation.</p>
+      </div>
+      <!-- Leaderboard pointer -->
+      <div style="margin-top:1.4rem;padding:0.9rem 1.1rem;background:rgba(184,115,51,0.06);border:1px solid rgba(184,115,51,0.2);border-radius:4px;font-size:0.83rem;color:var(--text-dim);">
+        Times are recorded by the Keeper and displayed on the <button onclick="showPage('leaderboard',document.querySelector('nav button:nth-child(5)'))" style="background:none;border:none;color:var(--gold);cursor:pointer;font-size:inherit;font-family:inherit;text-decoration:underline;padding:0;">Bearers &amp; Shields</button> page.
+      </div>
+
+      <div class="keeper-words">"You have borne the weight and kept the way."</div>
+      <div class="task-rule">Complete all three components during the Grand Gathering to earn the Ring of Endurance ⬤</div>
+    </div>
+  </div>
+
+  <div class="ornament"><span>◆</span></div>
+
+  <!-- MIND -->
+  <h2 class="section-title">Ring of Focus<small>Mind Pillar · Wind</small></h2>
+
+  <div class="tier-block mind">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">I</div>
+      <div class="tier-header-text">
+        <h4>Tier I — Awakening of Thought</h4>
+        <div class="epigraph">"Before the mind may lead, it must prove it can sit with a question that has no clean answer."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">The element of the Mind is Wind — invisible, pervasive, shaping everything it touches. The mind that reaches for easy answers is a mind that has never truly encountered difficulty. Tier I does not ask for knowledge of the faith, nor for cleverness, nor for a correct answer. It asks for something rarer: the willingness to reason honestly when certainty is not available. The question need not touch the Current at all. <em>What the Keeper is judging is the quality of the mind encountering difficulty.</em></p>
+      <div class="task-item">
+        <div class="task-name">◆ The Dilemma</div>
+        <p>The Keeper presents the candidate with a moral or philosophical question — an ethical knot with no clean resolution. It may concern anything: loyalty versus truth, mercy versus justice, the individual against the many. No research is permitted, no consultation with others. The candidate reasons aloud, honestly, following their thought wherever it leads.</p>
+        <p>The Keeper judges whether what she hears is a mind genuinely at work — or a mind managing its appearance. <em>Truth in the reasoning matters more than elegance in the conclusion.</em></p>
+      </div>
+      <div class="task-divider">— or —</div>
+      <div class="task-item">
+        <div class="task-name">◆ The Recitation</div>
+        <p>The candidate memorizes a passage of their own choosing — a teaching, a prayer, a philosophical text, a verse composed in their own hand — and delivers it to the Keeper without reference. The Keeper judges whether the delivery is genuine, not merely whether the words are exact.</p>
+        <p><em>What the candidate chooses to memorise reveals something. The Keeper notices.</em></p>
+      </div>
+      <div class="task-rule">Complete one task to pass Tier I of Mind. · Any event.</div>
+    </div>
+  </div>
+
+  <div class="tier-block mind">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">II</div>
+      <div class="tier-header-text">
+        <h4>Tier II — Discipline of Thought</h4>
+        <div class="epigraph">"An ungoverned mind speaks first. A disciplined mind listens."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">Wind makes noise constantly. The discipline of wind is in choosing — when to blow and when to still, when to carry a voice forward and when to hold it. The mind that has proven it can encounter a true question must now prove it can govern itself: choosing silence when silence is called for, reason when reason is demanded. The Vow of Silence is not emptiness. It is the practice of choosing, moment to moment, <em>not</em> to speak while the world around you does.</p>
+      <div class="task-item">
+        <div class="task-name">◆ The Vow of Silence</div>
+        <p>The candidate maintains complete silence for a minimum three-hour window chosen by the Keeper — in the active spaces of the event. No speech, no whispers, no gesture-communication. A Bearer carries a small sealed note on the candidate's behalf that reads only <em>"I am in the Vow."</em> The candidate may present this note if directly confronted, then must re-pocket it immediately.</p>
+        <p>Other players will interact with them, ask questions, require responses. The candidate finds other ways to be present. A Bearer witnesses and attests at the window's end. <em>The discipline is not in the silence itself — it is in holding it when breaking would be so easy, so natural, so seemingly harmless.</em></p>
+      </div>
+      <div class="task-rule">Complete The Vow of Silence to pass Tier II of Mind. · Subsequent event after Tier I.</div>
+    </div>
+  </div>
+
+  <div class="tier-block mind">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">III</div>
+      <div class="tier-header-text">
+        <h4>Tier III — Proof of Focus</h4>
+        <div class="epigraph">"When thought is tested by many voices, or by none at all, only focus endures."</div>
+      </div>
+      <div class="tier-badge-tag">Grand Gathering</div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">Wind carries what it has gathered across great distances and deposits it somewhere new. The final proof of a disciplined mind is not that it can hold knowledge — it is that it can <em>move</em> knowledge into another. To teach is to discover the boundaries of your own understanding. To withstand questioning from a full panel is to discover whether that understanding holds its shape under pressure. The Keeper guides the candidate toward the path that will test them most honestly. <em>Keeper's recommendation governs.</em></p>
+      <div class="task-item">
+        <div class="task-name">◆ The Telling <span style="font-size:0.72rem;color:var(--text-dim);font-style:italic;">(Tested by presence and honest witness)</span></div>
+        <p>The candidate organizes and hosts a gathering of their own making — a real event, arranged and led by them — to which they invite at least <strong style="color:var(--text-light)">two people who are not current members of the faith</strong>. The candidate is the host, the one who set the table. The gathering does not need to be a ritual or a ceremony. It simply must be real, and it must belong to the candidate.</p>
+        <p>At the gathering, the candidate speaks honestly and without script about three things: what the Current is and what they believe, why they joined this faith, and why they are doing these trials. Not a performance. Not a recruitment pitch. A person, speaking truthfully to other people about something that matters to them.</p>
+        <p>The Keeper does not attend. The candidate reports back afterward — not what was said, but what it cost them. <em>Focus is easy in silence. The proof of true focus is whether the mind holds its shape when it has to speak what it knows out loud, to strangers, who did not ask.</em></p>
+        <div class="keeper-words">"The Current does not hoard itself. Neither may you."</div>
+      </div>
+      <div class="task-rule">Complete The Telling to earn the Ring of Focus ◆ · Grand Gathering only.</div>
+    </div>
+  </div>
+
+  <div class="ornament"><span>✦</span></div>
+
+  <!-- SOUL -->
+  <h2 class="section-title">Ring of Connection<small>Soul Pillar · Water</small></h2>
+
+  <div class="tier-block soul">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">I</div>
+      <div class="tier-header-text">
+        <h4>Tier I — Awakening of Connection</h4>
+        <div class="epigraph">"The soul cannot grow while hidden."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">The element of the Soul is Water. Water does not wait to be invited — it finds the low places and fills them. It moves toward what is open and rests in what holds it. The soul of a person living against the Current is a sealed vessel — full of itself, going nowhere. The first task of Tier I is the simplest and the most frightening: <em>move first. Step toward a stranger. Begin.</em> Both tasks require the same thing: the willingness to let another person matter.</p>
+      <div class="task-item">
+        <div class="task-name">✦ The Approach</div>
+        <p>The candidate initiates and sustains a meaningful conversation with a stranger at the event — someone they have never spoken to before. They must learn the stranger's name, house, and something true and personal about them.</p>
+        <p>After, they return to the Keeper and recount what they learned — not as a report, but as an introduction: <em>"I met someone today. Here is who they are."</em></p>
+      </div>
+      <div class="task-divider">— or —</div>
+      <div class="task-item">
+        <div class="task-name">✦ The Gift</div>
+        <p>The candidate makes something by hand — a small object, a written piece, something crafted with their own effort — and gives it to a stranger at the event. Not a friend. Not someone they know. A person they have never spoken to, chosen because something about that person called for it.</p>
+        <p>They do not explain the trial. They do not seek thanks or ask for anything in return. They give the gift and let it go. They return to the Keeper and describe the stranger — who they were, why they chose them, what it felt like to give without knowing what would be received.</p>
+        <p><em>The soul that can move toward a stranger with open hands — not asking, not performing, simply giving — has already begun to understand the Current.</em></p>
+      </div>
+      <div class="task-rule">Complete one task to pass Tier I of Soul. · Any event.</div>
+    </div>
+  </div>
+
+  <div class="tier-block soul">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">II</div>
+      <div class="tier-header-text">
+        <h4>Tier II — Discipline of Connection</h4>
+        <div class="epigraph">"The soul is shaped not by what it protects itself from, but by what it allows to touch it."</div>
+      </div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">Water that never leaves its vessel stagnates. The soul that moves only toward the familiar and the already-known is not flowing — it is pooling. Tier II asks the candidate to move toward something harder than a stranger: a <em>difference</em>. The Service asks for effort without signature — to show up for something that is not yours, and leave no mark except the act itself.</p>
+      <div class="task-item">
+        <div class="task-name">✦ The Service</div>
+        <p>The candidate assists in preparing or facilitating a ritual, gathering, or event task that belongs entirely to someone else — another faith's ceremony, a Court's event, a stranger's quest. They serve on that person's terms, without seeking recognition, without steering it toward their own faith, without personal benefit of any kind.</p>
+        <p>The beneficiary — not the Keeper — witnesses and attests. <em>Service without audience is still service. The Current sees it.</em></p>
+      </div>
+      <div class="task-rule">Complete The Service to pass Tier II of Soul. · Subsequent event after Tier I.</div>
+    </div>
+  </div>
+
+  <div class="tier-block soul">
+    <div class="tier-header" onclick="toggleTier(this)">
+      <div class="tier-num">III</div>
+      <div class="tier-header-text">
+        <h4>Tier III — Proof of Connection</h4>
+        <div class="epigraph">"The Current cannot flow through a hidden thing. The final proof of the soul is not privacy — it is revelation."</div>
+      </div>
+      <div class="tier-badge-tag">Grand Gathering</div>
+      <div class="tier-chevron">▼</div>
+    </div>
+    <div class="tier-body">
+      <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.75;margin-bottom:1.2rem;">Water that flows over ground long enough changes the landscape. The final tier of the Soul pillar asks not what the candidate has done — but what it has cost them, and what it has opened. The Keeper wants to see the changed landscape. Two parts. Both required.</p>
+      <div class="task-item">
+        <div class="task-name">✦ Part One — The Tea Ceremony</div>
+        <p>The candidate arranges a private meeting with the Keeper — just the two of them, away from the gathering. Tea is prepared and shared. There is no audience. There are no witnesses. What is said here belongs to the room.</p>
+        <p>The Keeper does not test the candidate. She sits with them. She asks. And the candidate gives an honest accounting — what this trial has cost them, what it has changed in them, what broke open and what hardened, who they are now that they were not before. This is not a speech. It is a conversation between two people who have traveled some of the same road.</p>
+        <p><em>The Keeper has heard many polished answers in her time. She will wait, quietly, for as long as the truth takes to arrive. The tea helps.</em></p>
+      </div>
+      <div class="task-item" style="margin-top:1rem;">
+        <div class="task-name">✦ Part Two — The Gift of the Coin</div>
+        <p>The candidate has brought someone to the Current — not through pressure, not through recruitment, but through the quality of their own presence over the course of this trial. That person is ready. The final act belongs to the candidate.</p>
+        <p>The candidate designs and hosts a ceremony of their own making — public, witnessed, in front of others at the event. It does not need to be a formal ritual. It simply must be real and must happen in the open. At the ceremony's heart, the candidate offers the Coin of the Keepers to the new member with their own hands and their own words.</p>
+        <p><strong style="color:var(--text-light)">The new member must formally register their religion with the Keeper before this part is considered complete.</strong> The coin does not pass until that step is done. The ceremony is the candidate's gift to someone they drew toward the Current — and to the faith itself.</p>
+        <div class="keeper-words">"You did not come alone. You never do. That is the Current."</div>
+      </div>
+      <div class="task-rule">Complete both parts to earn the Ring of Connection ✦ · Grand Gathering only.</div>
+    </div>
+  </div>
+
+  <div class="ornament"><span>⬤ ◆ ✦</span></div>
+
+  <h2 class="section-title">The Four Elements<small>Earth · Wind · Water · Fire</small></h2>
+  <div style="background:rgba(200,150,62,0.05);border:1px solid var(--border);border-radius:4px;padding:1.4rem;margin-bottom:2rem;">
+    <p style="font-size:0.83rem;color:var(--text-dim);line-height:1.85;text-align:center;font-style:italic;">The Current moves through all things — but not through all things the same way.<br>Each pillar is a face of the same eternal flow.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:1.2rem;">
+      <div style="text-align:center;padding:0.8rem;">
+        <div style="display:flex;justify-content:center;align-items:center;height:52px;margin-bottom:0.5rem;">
+          <!-- Mountain peaks with strata -->
+          <svg width="50" height="42" viewBox="0 0 54 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 41 L18 12 L33 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M22 41 L37 5 L52 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
+            <line x1="30" y1="22" x2="44" y2="22" stroke="#b0aea6" stroke-width="1.1" opacity="0.5"/>
+            <line x1="27" y1="31" x2="47" y2="31" stroke="#b0aea6" stroke-width="1.1" opacity="0.4"/>
+            <line x1="2" y1="41" x2="52" y2="41" stroke="#b0aea6" stroke-width="1.5" opacity="0.35"/>
+          </svg>
+        </div>
+        <div style="font-size:0.8rem;color:var(--silver);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Earth · Body</div>
+        <div style="font-size:0.78rem;color:var(--text-dim);font-style:italic;">Foundation. The body that holds still, endures weight, and roots itself so that all else may move.</div>
+      </div>
+      <div style="text-align:center;padding:0.8rem;">
+        <div style="display:flex;justify-content:center;align-items:center;height:52px;margin-bottom:0.5rem;">
+          <!-- Three flowing wind currents -->
+          <svg width="50" height="40" viewBox="0 0 54 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 10 C11 5 19 16 27 10 C35 4 43 13 51 8" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
+            <path d="M3 21 C11 16 20 27 28 21 C36 15 44 23 51 20" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
+            <path d="M10 33 C17 28 24 38 32 33 C40 28 47 34 51 32" stroke="#b0aea6" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
+          </svg>
+        </div>
+        <div style="font-size:0.8rem;color:var(--onyx-text);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Wind · Mind</div>
+        <div style="font-size:0.78rem;color:var(--text-dim);font-style:italic;">Thought. Invisible, pervasive, capable of great force or great stillness.</div>
+      </div>
+      <div style="text-align:center;padding:0.8rem;">
+        <div style="display:flex;justify-content:center;align-items:center;height:52px;margin-bottom:0.5rem;">
+          <!-- Water droplet falling into ripples -->
+          <svg width="44" height="50" viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 3 Q31 13 31 21 Q31 30 24 30 Q17 30 17 21 Q17 13 24 3 Z" stroke="#C8963E" stroke-width="2"/>
+            <ellipse cx="24" cy="38" rx="7" ry="3" stroke="#C8963E" stroke-width="1.5" opacity="0.75"/>
+            <ellipse cx="24" cy="40" rx="13" ry="5" stroke="#C8963E" stroke-width="1.2" opacity="0.5"/>
+            <ellipse cx="24" cy="43" rx="20" ry="7" stroke="#C8963E" stroke-width="1" opacity="0.3"/>
+          </svg>
+        </div>
+        <div style="font-size:0.8rem;color:var(--soul-gold);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Water · Soul</div>
+        <div style="font-size:0.78rem;color:var(--text-dim);font-style:italic;">Connection. The Current is water — it finds its way toward what is open and fills what is hollow.</div>
+      </div>
+      <div style="text-align:center;padding:0.8rem;">
+        <div style="display:flex;justify-content:center;align-items:center;height:52px;margin-bottom:0.5rem;">
+          <!-- Wild split flame with inner tongues -->
+          <svg width="36" height="50" viewBox="0 0 44 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 52 C13 43 7 33 10 20 C12 13 16 7 22 3 C28 7 32 13 34 20 C37 33 31 43 22 52 Z" stroke="#e06040" stroke-width="2"/>
+            <path d="M17 44 C13 37 11 27 15 17 C17 11 19 8 22 5" stroke="#e06040" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+            <path d="M27 44 C31 37 33 27 29 17 C27 11 25 8 22 5" stroke="#e06040" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
+            <circle cx="22" cy="32" r="3" fill="#e06040" opacity="0.35"/>
+          </svg>
+        </div>
+        <div style="font-size:0.8rem;color:#e06040;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.3rem;">Fire · Master of the Three Rings</div>
+        <div style="font-size:0.78rem;color:var(--text-dim);font-style:italic;">The fourth element is not earned alone. It is kindled — born when earth, wind, and water come together in one person.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Forging + Ceremony of Becoming -->
+  <div style="margin-bottom:2rem;padding:1.4rem;border:1px solid rgba(220,90,50,0.35);border-radius:4px;background:rgba(180,60,40,0.07);">
+    <h2 class="section-title" style="margin-bottom:1rem;">The Forging<small>What fire actually is</small></h2>
+    <p style="font-size:0.84rem;color:var(--text-dim);line-height:1.85;margin-bottom:0.8rem;">The three rings are earned separately. Body is tested in the flesh — endurance, presence, the willingness to carry. Mind is tested in honest thought — creation, clarity, the discipline not to drift. Soul is tested in the space between people — genuine connection, given without expectation. Each ring changes something. But the three rings together do something the three rings separately cannot: they forge.</p>
+    <p style="font-size:0.84rem;color:var(--text-dim);line-height:1.85;margin-bottom:0.8rem;">Forging is not mastery of three things. It is the moment those three things stop being things and become a single nature. When the body no longer fights the mind. When the mind no longer resists the soul. When all three move as one current rather than three separate streams — the fourth element unlocks. Not because it was hidden. Because it could not have existed before.</p>
+    <div class="lore-pull" style="margin:1rem 0;border-color:rgba(220,90,50,0.4);">"You do not reach for fire. You make yourself ready, and fire comes. The Current always finds the soul who has truly prepared a place for it."</div>
+    <h2 class="section-title" style="margin-top:1.6rem;margin-bottom:1rem;">The Ceremony of Becoming<small>Master of the Three Rings</small></h2>
+    <p style="font-size:0.84rem;color:var(--text-dim);line-height:1.85;margin-bottom:0.8rem;">When a member earns all three rings, they are invited to the Ceremony of Becoming — the formal recognition of what has changed. It is not a graduation. It is a witnessing. The faith holds that the moment all three rings rest together on a single hand for the first time, something in the structure of that soul has permanently shifted. The ceremony exists to name that shift aloud, in the presence of others, so it cannot be forgotten.</p>
+    <p style="font-size:0.84rem;color:var(--text-dim);line-height:1.85;margin-bottom:0.8rem;">The new Master of the Three Rings kneels before the High Priestess. She does not speak credentials or count completed trials. She speaks only what she has witnessed in this soul — what the Current has shown her across the time she has known them. Then, drawing on the Emberborn fire that runs in her line, she anoints the new Master: a touch to the brow, to both hands, and above the heart. Three points. Body. Mind. Soul.</p>
+    <p style="font-size:0.84rem;color:var(--text-dim);line-height:1.85;">The fire does not burn. Those who have received it describe it as <em>recognition</em> — as if something inside them had been seen fully for the first time and confirmed. The Keeper's fire does not give them their fire. No one can give it to them. What it does is tell the Current: <em>this one is ready</em>. The new Master rises wearing all three rings. From that moment, they move differently. The Current runs closer to the surface.</p>
+  </div>
+
+  <h2 class="section-title">Titles Earned</h2>
+  <div class="titles-row">
+    <div class="title-card">
+      <svg viewBox="0 0 80 100" width="80" height="100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs><filter id="mglow2"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <!-- Chain links -->
+  <g stroke="#C8963E" stroke-width="1.4" fill="none" opacity="0.7">
+    <ellipse cx="40" cy="6"  rx="5" ry="2.5"/>
+    <ellipse cx="40" cy="11" rx="2.5" ry="4" transform="rotate(55,40,11)"/>
+    <ellipse cx="40" cy="17" rx="5" ry="2.5"/>
+    <ellipse cx="40" cy="22" rx="2.5" ry="4" transform="rotate(55,40,22)"/>
+  </g>
+  <!-- Drop line -->
+  <line x1="40" y1="26" x2="40" y2="38" stroke="#C8963E" stroke-width="1.2" opacity="0.5"/>
+  <circle cx="40" cy="38" r="2.5" fill="none" stroke="#C8963E" stroke-width="1.2"/>
+  <!-- Medallion -->
+  <circle cx="40" cy="74" r="30" fill="#1a0808" stroke="#C8963E" stroke-width="2.2"/>
+  <circle cx="40" cy="74" r="27" fill="none" stroke="#C8963E" stroke-width="0.5" opacity="0.5"/>
+  <circle cx="40" cy="74" r="24" fill="none" stroke="#C8963E" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>
+  <!-- Vine-infinity sigil (lemniscate with Celtic crossover) -->
+  <path d="M40 74 C39 69,35 62,28 63 C20 64,16 71,18 77 C20 83,26 87,33 85 C38 83,40 78,40 74"
+        fill="none" stroke="#C8963E" stroke-width="2.2" stroke-linecap="round" filter="url(#mglow2)"/>
+  <line x1="37" y1="72" x2="43" y2="76" stroke="#1a0808" stroke-width="4"/>
+  <path d="M40 74 C41 69,45 62,52 63 C60 64,64 71,62 77 C60 83,54 87,47 85 C42 83,40 78,40 74"
+        fill="none" stroke="#C8963E" stroke-width="2.2" stroke-linecap="round" filter="url(#mglow2)"/>
+</svg>
+      <div class="title-name">Master of the Three Rings</div>
+      <p>All three Rings earned. The Trinity. Earth, wind, and water come together — and fire is born. Conferred in public ceremony at the Grand Gathering. The Keeper's Beacon is lit. The seeker's cord is retired. A Trinity Braid of silver, black, and gold is given in its place. Each Master receives the sigil medallion — carried forever after.</p>
+    </div>
+    <div class="title-card">
+      <svg viewBox="0 0 80 92" width="80" height="92" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs><filter id="sglow2"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <!-- Shield body -->
+  <path d="M6 8 L74 8 L74 50 Q74 74 40 90 Q6 74 6 50 Z" fill="#1a0808" stroke="#C8963E" stroke-width="2.2"/>
+  <!-- Inner border -->
+  <path d="M12 14 L68 14 L68 50 Q68 70 40 84 Q12 70 12 50 Z" fill="none" stroke="#C8963E" stroke-width="0.6" opacity="0.5"/>
+  <!-- Heraldic cross dividers -->
+  <line x1="40" y1="14" x2="40" y2="84" stroke="#C8963E" stroke-width="0.5" opacity="0.25"/>
+  <line x1="12" y1="42" x2="68" y2="42" stroke="#C8963E" stroke-width="0.5" opacity="0.25"/>
+  <!-- Vine-infinity sigil centred on shield -->
+  <path d="M40 50 C39 44,34 37,26 38 C17 39,13 47,16 54 C19 61,26 65,34 62 C38 60,40 55,40 50"
+        fill="none" stroke="#C8963E" stroke-width="2.4" stroke-linecap="round" filter="url(#sglow2)"/>
+  <line x1="36" y1="47" x2="44" y2="53" stroke="#1a0808" stroke-width="4.5"/>
+  <path d="M40 50 C41 44,46 37,54 38 C63 39,67 47,64 54 C61 61,54 65,46 62 C42 60,40 55,40 50"
+        fill="none" stroke="#C8963E" stroke-width="2.4" stroke-linecap="round" filter="url(#sglow2)"/>
+</svg>
+      <div class="title-name">Shield of the Current</div>
+      <p>Entrusted, not applied for. The Shield of the Current is the highest honour the Keeper can bestow — not a recognition of completion, but of character. There is no application. No trial that earns it. The Keeper chooses, and her choice is never casual.</p>
+      <p>The Shields of the Current are the most elite circle within the faith — souls whose loyalty and integrity have been witnessed across years, not moments. To be named a Shield is to be placed in an order of people the Keeper would trust with anything the Current holds sacred. They are few, and always will be. When you meet one, you know.</p>
+      <p>To accept the honour is to speak the Oath of Loyalty before the Current itself — a vow that binds as long as the title is carried. The Keeper then assigns a personal quest, shaped to the soul she has chosen.</p>
+      <p>Those who complete their quest receive a physical shield bearing the Keeper's sigil — the infinite knot that never ends, the vine that holds what fire cannot burn. It is carried into the field. It is real. The title and the shield are announced at the Grand Gathering, in public ceremony, before the full circle.</p>
+    </div>
+  </div>
+
+</div>
+
+</main></body></html>
