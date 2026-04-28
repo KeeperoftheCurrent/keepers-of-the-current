@@ -1,0 +1,9 @@
+# Copy this file to .dev.vars (which is gitignored) and fill in real values.
+# .dev.vars is loaded by `wrangler pages dev` automatically.
+
+# Resend API key from https://resend.com/api-keys
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxx
+
+# Cloudflare Access (only needed for Phase 2+; Phase 1 admin endpoints don't exist yet)
+CF_ACCESS_AUD=
+CF_ACCESS_TEAM_DOMAIN=

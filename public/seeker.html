@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Become a Seeker — Keepers of the Current</title>
+<meta name="description" content="Enter your name in the Trial Scroll of the Keepers of the Current.">
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+</head>
+<body>
+
+<main class="page-shell">
+
+  <header class="page-header">
+    <img src="/assets/img/sigil.png" alt="" class="sigil">
+    <div class="title">Enter the Trial Scroll</div>
+    <div class="subtitle">"The Current flows where genuine souls gather in true connection."</div>
+  </header>
+
+  <section id="form-wrap">
+    <div class="panel">
+      <h2>Mark your name</h2>
+      <p class="muted">Tell the Keeper who you are, what you seek, and where you intend to begin. A confirmation will reach you by post once your name is set in the Scroll.</p>
+
+      <div id="errors" hidden></div>
+
+      <form id="intake-form" novalidate>
+        <label class="field">
+          <span class="label-text">Your name</span>
+          <input type="text" name="name" maxlength="100" required autocomplete="name">
+        </label>
+
+        <label class="field">
+          <span class="label-text">Email</span>
+          <input type="email" name="email" maxlength="200" required autocomplete="email">
+          <span class="help">Your confirmation will be sent here. Used later to look up your standing.</span>
+        </label>
+
+        <label class="field">
+          <span class="label-text">House or affiliation <span class="muted">(optional)</span></span>
+          <input type="text" name="house" maxlength="100" autocomplete="off">
+        </label>
+
+        <div class="field">
+          <span class="label-text">Rings I intend to pursue</span>
+          <div class="checkbox-row" role="group" aria-label="Rings to pursue">
+            <label>
+              <input type="checkbox" name="rings_pursued" value="body">
+              <span class="ring-name">Body — Endurance</span>
+            </label>
+            <label>
+              <input type="checkbox" name="rings_pursued" value="mind">
+              <span class="ring-name">Mind — Focus</span>
+            </label>
+            <label>
+              <input type="checkbox" name="rings_pursued" value="soul">
+              <span class="ring-name">Soul — Connection</span>
+            </label>
+          </div>
+          <span class="help">Choose one or all three. Within each pillar, tiers must be completed in order — Tier I first, then II, then III.</span>
+        </div>
+
+        <label class="field">
+          <span class="label-text">First gathering</span>
+          <select name="event_id" id="event_id" required>
+            <option value="">— loading the Hynafol calendar —</option>
+          </select>
+          <span class="help">★ Grand Gathering is the trial debut and the only place the Body's third tier may be attempted.</span>
+        </label>
+
+        <label class="field">
+          <span class="label-text">Preferred day at that gathering <span class="muted">(optional)</span></span>
+          <input type="date" name="preferred_date">
+          <span class="help">Leave blank if any day works.</span>
+        </label>
+
+        <label class="field">
+          <span class="label-text">Preferred time of day <span class="muted">(optional)</span></span>
+          <select name="preferred_time">
+            <option value="no_preference">No preference</option>
+            <option value="morning">Morning (before noon)</option>
+            <option value="afternoon">Afternoon (noon – 4pm)</option>
+            <option value="evening">Evening (after 4pm)</option>
+          </select>
+          <span class="help">The Keeper will do her best to accommodate your preference.</span>
+        </label>
+
+        <button class="primary" id="submit-btn" type="submit">Mark me in the Scroll</button>
+      </form>
+    </div>
+
+    <p class="center muted italic" style="font-size:14px;">
+      Already a seeker? <a href="/lookup.html">Find your standing →</a>
+    </p>
+  </section>
+
+  <section id="success" class="panel success-block" hidden>
+    <div class="seal">⊙</div>
+    <h2>The Current acknowledges you</h2>
+    <p>Your name is set in the Trial Scroll, <strong id="success-name">seeker</strong>.</p>
+    <p>A confirmation has been sent to your inbox. The Keeper has been notified.</p>
+    <p class="italic">"When we move, we move as one."</p>
+    <p class="muted" style="margin-top:24px;">
+      <a href="/lookup.html">Check your standing →</a>
+    </p>
+  </section>
+
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="/assets/js/seeker.js"></script>
+</body>
+</html>
