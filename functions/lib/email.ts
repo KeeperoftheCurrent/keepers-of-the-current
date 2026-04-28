@@ -26,6 +26,8 @@ interface SeekerEmailContext {
   preferred_time: string | null;
   submitted_at_iso: string;
   bookings?: { trial_code: string; start_at: string; end_at: string }[];
+  // Notification-only trials the seeker flagged (no slot needed — just a heads-up).
+  trial_intentions?: string[];
 }
 
 export async function sendBothEmails(env: Env, ctx: SeekerEmailContext): Promise<{
@@ -169,6 +171,14 @@ async function sendAdminNotification(env: Env, c: SeekerEmailContext): Promise<v
   const adminUrl = `${env.SITE_URL}/admin.html`;
   const ringsCsv = c.rings_pursued.join(', ');
 
+  const bookingsText = c.bookings && c.bookings.length > 0
+    ? c.bookings.map((b) => `  • ${TRIAL_DISPLAY_NAMES[b.trial_code] ?? b.trial_code} — ${b.start_at}`).join('\n')
+    : '  (none booked)';
+
+  const intentionsText = c.trial_intentions && c.trial_intentions.length > 0
+    ? c.trial_intentions.map((code) => `  • ${TRIAL_DISPLAY_NAMES[code] ?? code}`).join('\n')
+    : '  (none flagged)';
+
   const text = `A new seeker has entered the Trial.
 
 Name:           ${c.name}
@@ -176,9 +186,13 @@ House:          ${c.house ?? '—'}
 Email:          ${c.email}
 Rings pursued:  ${ringsCsv}
 Event:          ${c.event_name}
-Preferred date: ${c.preferred_date ?? '—'}
-Preferred time: ${c.preferred_time ?? '—'}
 Submitted:      ${c.submitted_at_iso}
+
+BOOKED TRIAL SLOTS (need your calendar):
+${bookingsText}
+
+TRIALS THEY PLAN TO ATTEMPT (no slot — they'll find you):
+${intentionsText}
 
 Open the panel: ${adminUrl}`;
 
@@ -230,7 +244,7 @@ function fmtEventDates(starts: string | null, ends: string | null): string {
 /** Map trial catalog codes → human-readable names for email display */
 const TRIAL_DISPLAY_NAMES: Record<string, string> = {
   'b_t1':                    'Body I — Awakening of Flesh (The Fast + The Watch)',
-  'b_t2':                    'Body II — The Form (The Unison Kata)',
+  'b_t2':                    'Body II — The Unison',
   'b_t3_burden':             'Body III — The Burden',
   'b_t3_plank':              'Body III — The Plank',
   'b_t3_foot_race':          'Body III — The Foot Race',
@@ -240,6 +254,8 @@ const TRIAL_DISPLAY_NAMES: Record<string, string> = {
   'm_t2':                    'Mind II — Vow of Silence',
   'm_t3':                    'Mind III — The Telling',
   's_t1':                    'Soul I — Awakening of Connection',
+  's_t1_approach':           'Soul I — The Approach',
+  's_t1_gift':               'Soul I — The Gift',
   's_t2':                    'Soul II — The Service',
   's_t3_testament':          'Soul III — The Tea Ceremony',
   's_t3_final_introduction': 'Soul III — Gift of the Coin',

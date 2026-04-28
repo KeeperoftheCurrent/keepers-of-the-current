@@ -65,6 +65,16 @@ interface BookingInput {
   start_at: string;
 }
 
+// trial_intentions: notification-only trial codes the seeker flagged (no slot).
+// Not stored in DB; included in the admin email so the Keeper knows to expect them.
+function parseTrialIntentions(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((v) => typeof v === 'string' && v.trim().length > 0)
+    .map((v) => (v as string).trim())
+    .slice(0, 20); // reasonable cap
+}
+
 const ISODATETIME = /^\d{4}-\d{2}-\d{2}T([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
 
 function addMinutes(iso: string, minutes: number): string {
@@ -117,6 +127,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     return jsonResponse({ ok: false, error: bookingsParsed.error }, 422);
   }
   const requestedBookings: BookingInput[] = bookingsParsed;
+  const trialIntentions: string[] = parseTrialIntentions((raw as Record<string, unknown>).trial_intentions);
 
   // Confirm event
   const event = await queryFirst<EventRow>(
@@ -275,6 +286,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
           start_at: b.start_at,
           end_at: b.end_at,
         })),
+        trial_intentions: trialIntentions,
       });
       const final = status.seeker === 'sent' && status.admin === 'sent' ? 'sent' : 'failed';
       try {
