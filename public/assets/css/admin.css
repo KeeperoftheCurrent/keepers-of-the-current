@@ -11,7 +11,15 @@
   border-bottom: 1px solid var(--border);
   flex-wrap: wrap;
 }
-.admin-brand { display: flex; align-items: center; gap: 12px; }
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  border-bottom: none;
+  transition: opacity 0.15s;
+}
+.admin-brand:hover { opacity: 0.82; border-bottom: none; }
 .brand-sigil { width: 40px; height: 40px; }
 .brand-title { color: var(--gold); font-size: 18px; letter-spacing: 1px; text-transform: uppercase; }
 .brand-sub { color: var(--text-dim); font-size: 12px; font-style: italic; }
@@ -241,6 +249,39 @@ input[type="search"]:focus { outline: none; border-color: var(--gold); }
   white-space: pre-wrap;
   max-width: 400px;
 }
+
+/* ─── Seed banner ──────────────────────────────────────────────────── */
+.seed-banner {
+  margin-top: 16px;
+  padding: 18px 20px;
+  background: var(--red-dark);
+  border: 1px dashed var(--gold-dim);
+  border-radius: 3px;
+}
+.seed-banner-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.seed-banner-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.5;
+}
+
+/* ─── Auth banner ───────��──────────────────────────────────────────── */
+.auth-banner {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(42, 14, 14, 0.9);
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+}
+.auth-banner-inner { font-size: 14px; }
+.auth-banner-inner strong { color: var(--gold); font-size: 16px; }
+.auth-banner-inner p { margin: 10px 0 14px; color: var(--text-light); }
 
 @media (max-width: 768px) {
   .admin-header { gap: 12px; padding: 12px 16px; }

@@ -5,10 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Keepers of the Current</title>
 <meta name="description" content="The Keepers of the Current — Trial Scroll, lore, and the Trial of the Three Rings.">
+<script>
+  /* Desktop users get the full lore landing. Mobile stays here. */
+  if (window.matchMedia && window.matchMedia('(min-width: 768px)').matches) {
+    window.location.replace('/current.html');
+  }
+</script>
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="stylesheet" href="/assets/css/components.css">
 <style>
-  /* Phase 1 landing — most lore pages still live in /legacy/v1.html. */
   .cta-row {
     display: flex;
     gap: 16px;
@@ -47,11 +52,17 @@
 </head>
 <body>
 
+<header class="site-header">
+  <div class="header-inner">
+    <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil"/>
+    <div class="header-text">
+      <div class="header-title">Keepers of the Current</div>
+      <div class="header-sub">Trial of the Three Rings &nbsp;·&nbsp; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
+    </div>
+  </div>
+</header>
+
 <nav class="site-nav" aria-label="Site navigation">
-  <a href="/" class="nav-brand" aria-label="Keepers of the Current — Home">
-    <img src="/assets/img/sigil.png" alt="">
-    <span class="brand-name">Keepers of the Current</span>
-  </a>
   <a href="/current.html">The Current</a>
   <a href="/trials.html">The Trials</a>
   <a href="/seeker.html" class="nav-cta">Register</a>
@@ -60,18 +71,12 @@
   <a href="/rewards.html">Rewards</a>
 </nav>
 
-
 <main class="page-shell">
-
-  <header class="page-header">
-    <img src="/assets/img/sigil.png" alt="" class="sigil">
-    <div class="title">Keepers of the Current</div>
-    <div class="subtitle">"When we move, we move as one."</div>
-  </header>
 
   <section class="panel">
     <h2>The Trial of the Three Rings</h2>
-    <p>Three pillars — <strong>Body</strong>, <strong>Mind</strong>, <strong>Soul</strong> — three tiers each. Nine stages in all. Those who pass all three earn the title <strong>Master of the Three Rings</strong>.</p>
+    <p>Three pillars — <strong>Body</strong>, <strong>Mind</strong>, <strong>Soul</strong> — three tiers each. Nine stages in all. Those who pass all three earn the title <strong>Bearer of the Current</strong>.</p>
+    <p style="color:var(--text-dim); font-style:italic; font-size:14px;">"When we move, we move as one."</p>
 
     <div class="cta-row">
       <a href="/seeker.html">
@@ -86,7 +91,6 @@
         <span class="cta-title">The Trial Scroll →</span>
         <span class="cta-sub">all who walk the path</span>
       </a>
-
       <a href="/current.html">
         <span class="cta-title">The Current →</span>
         <span class="cta-sub">lore, faith &amp; the wider belief</span>

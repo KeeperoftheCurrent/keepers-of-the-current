@@ -9,6 +9,16 @@ let allEvents = [];
 let allSeekers = [];
 let activeTab = 'seekers';
 
+// ─── Hynafol 2026 calendar seed data ─────────────────────────────────────
+const HYNAFOL_2026 = [
+  { id: 'the_siege_2026',              name: 'The Siege',              kind: 'expedition',     starts_on: '2026-02-20', ends_on: '2026-02-22', active: false },
+  { id: 'the_trials_2026',             name: 'The Trials',             kind: 'expedition',     starts_on: '2026-03-27', ends_on: '2026-03-29', active: false },
+  { id: 'festival_of_champions_2026',  name: 'Festival of Champions',  kind: 'expedition',     starts_on: '2026-05-23', ends_on: '2026-05-26', active: false },
+  { id: 'a_courtly_night_2026',        name: 'A Courtly Night',        kind: 'expedition',     starts_on: '2026-09-12', ends_on: '2026-09-12', active: false },
+  { id: 'october_expedition_2026',     name: 'October Expedition',     kind: 'expedition',     starts_on: '2026-10-09', ends_on: '2026-10-11', active: false },
+  { id: 'grand_gathering_2026',        name: 'The Grand Gathering',    kind: 'grand_gathering', starts_on: '2026-11-08', ends_on: '2026-11-15', active: true  },
+];
+
 function showToast(msg, kind = 'info') {
   const t = $('#toast');
   t.textContent = msg;
@@ -445,9 +455,25 @@ function renderWindowsList() {
 // ─── events ───────────────────────────────────────────────────────────
 async function loadEventsTab(silent = false) {
   const { ok, body } = await api('GET', '/api/admin/events');
-  if (!ok) { if (!silent) showToast('Could not load events', 'error'); return; }
+  if (!ok) {
+    if (body?.authRequired) {
+      if (!silent) showAuthBanner();
+      return;
+    }
+    if (!silent) showToast('Could not load events', 'error');
+    return;
+  }
   allEvents = body.events || [];
   if (silent) return;
+
+  renderEventsTable();
+}
+
+function renderEventsTable() {
+  // Remove any previous seed banner
+  const prev = $('#seed-banner');
+  if (prev) prev.remove();
+
   $('#events-table tbody').innerHTML = allEvents.map((e) => `
     <tr data-id="${escapeHtml(e.id)}">
       <td>${escapeHtml(e.name)}</td>
@@ -460,6 +486,58 @@ async function loadEventsTab(silent = false) {
   $$('#events-table button[data-edit]').forEach((b) => {
     b.addEventListener('click', (e) => { e.stopPropagation(); openEventEditModal(b.dataset.edit); });
   });
+
+  // If empty, offer one-click seed of the 2026 Hynafol calendar
+  if (allEvents.length === 0) {
+    const banner = document.createElement('div');
+    banner.id = 'seed-banner';
+    banner.className = 'seed-banner';
+    banner.innerHTML = `
+      <div class="seed-banner-inner">
+        <div class="seed-banner-text">
+          <strong style="color:var(--gold)">No events yet.</strong>
+          The Hynafol 2026 calendar is ready to load — six events from The Siege through The Grand Gathering.
+        </div>
+        <button class="primary" id="seed-calendar-btn">⚡ Seed Hynafol 2026 Calendar</button>
+      </div>
+    `;
+    $('#events-table').closest('.card').appendChild(banner);
+    $('#seed-calendar-btn').addEventListener('click', seedHynafolCalendar);
+  }
+}
+
+async function seedHynafolCalendar() {
+  const btn = $('#seed-calendar-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Seeding…'; }
+  let added = 0, failed = 0;
+  for (const ev of HYNAFOL_2026) {
+    const r = await api('POST', '/api/admin/events', ev);
+    if (r.ok) added++; else failed++;
+  }
+  if (failed === 0) {
+    showToast(`✓ Hynafol 2026 calendar seeded — ${added} events added`);
+  } else {
+    showToast(`${added} added, ${failed} failed (some may already exist)`, failed === HYNAFOL_2026.length ? 'error' : 'info');
+  }
+  allEvents = [];
+  await loadEventsTab();
+}
+
+function showAuthBanner() {
+  const main = $('#admin-auth-banner');
+  if (main) return; // already shown
+  const banner = document.createElement('div');
+  banner.id = 'admin-auth-banner';
+  banner.className = 'auth-banner';
+  banner.innerHTML = `
+    <div class="auth-banner-inner">
+      <strong>⚡ Authentication required</strong>
+      <p>You need to log in via Cloudflare Access to use the Keeper's Panel.
+         Open <a href="/admin.html" target="_blank">/admin.html</a> directly in your browser — it will redirect you to the login page.</p>
+      <button class="secondary" onclick="window.location.reload()">Reload &amp; try again</button>
+    </div>
+  `;
+  document.querySelector('.admin-main').prepend(banner);
 }
 
 function openNewEventModal() {
