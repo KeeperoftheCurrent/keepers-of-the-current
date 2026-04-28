@@ -357,14 +357,15 @@ nav button.active{color:var(--gold);border-bottom-color:var(--gold);}
   border-left:2px solid var(--gold-dim);
 }
 .titles-row{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:1rem;margin-top:1.5rem;
+  display:grid;grid-template-columns:1fr;
+  gap:1.4rem;margin-top:1.5rem;
 }
 .title-card{
   background:var(--gold-faint);border:1px solid var(--gold-dim);
-  border-radius:4px;padding:1.2rem;text-align:center;
+  border-radius:4px;padding:1.4rem;text-align:center;
 }
-.title-card .title-name{font-size:0.95rem;color:var(--gold);margin-bottom:0.4rem;letter-spacing:0.04em;}
+.title-card .title-img{display:block;margin:0 auto 0.9rem;filter:drop-shadow(0 0 10px rgba(200,150,62,0.45));}
+.title-card .title-name{font-size:1rem;color:var(--gold);margin-bottom:0.5rem;letter-spacing:0.06em;font-style:italic;}
 .title-card p{font-size:0.8rem;color:var(--text-dim);line-height:1.65;}
 
 /* ── REWARDS PAGE ─────────────────────────────────────── */
@@ -1427,15 +1428,54 @@ updateUI();requestAnimationFrame(frame);
   <h2 class="section-title">Titles Earned</h2>
   <div class="titles-row">
     <div class="title-card">
+      <svg viewBox="0 0 80 100" width="80" height="100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs><filter id="mglow2"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <!-- Chain links -->
+  <g stroke="#C8963E" stroke-width="1.4" fill="none" opacity="0.7">
+    <ellipse cx="40" cy="6"  rx="5" ry="2.5"/>
+    <ellipse cx="40" cy="11" rx="2.5" ry="4" transform="rotate(55,40,11)"/>
+    <ellipse cx="40" cy="17" rx="5" ry="2.5"/>
+    <ellipse cx="40" cy="22" rx="2.5" ry="4" transform="rotate(55,40,22)"/>
+  </g>
+  <!-- Drop line -->
+  <line x1="40" y1="26" x2="40" y2="38" stroke="#C8963E" stroke-width="1.2" opacity="0.5"/>
+  <circle cx="40" cy="38" r="2.5" fill="none" stroke="#C8963E" stroke-width="1.2"/>
+  <!-- Medallion -->
+  <circle cx="40" cy="74" r="30" fill="#1a0808" stroke="#C8963E" stroke-width="2.2"/>
+  <circle cx="40" cy="74" r="27" fill="none" stroke="#C8963E" stroke-width="0.5" opacity="0.5"/>
+  <circle cx="40" cy="74" r="24" fill="none" stroke="#C8963E" stroke-width="1" stroke-dasharray="4 4" opacity="0.4"/>
+  <!-- Vine-infinity sigil (lemniscate with Celtic crossover) -->
+  <path d="M40 74 C39 69,35 62,28 63 C20 64,16 71,18 77 C20 83,26 87,33 85 C38 83,40 78,40 74"
+        fill="none" stroke="#C8963E" stroke-width="2.2" stroke-linecap="round" filter="url(#mglow2)"/>
+  <line x1="37" y1="72" x2="43" y2="76" stroke="#1a0808" stroke-width="4"/>
+  <path d="M40 74 C41 69,45 62,52 63 C60 64,64 71,62 77 C60 83,54 87,47 85 C42 83,40 78,40 74"
+        fill="none" stroke="#C8963E" stroke-width="2.2" stroke-linecap="round" filter="url(#mglow2)"/>
+</svg>
       <div class="title-name">Master of the Three Rings</div>
-      <p>All three Rings earned. The Trinity. Earth, wind, and water come together — and fire is born. Conferred in public ceremony at the Grand Gathering. The Keeper's Beacon is lit. The seeker's cord is retired. A Trinity Braid of silver, black, and gold is given in its place.</p>
+      <p>All three Rings earned. The Trinity. Earth, wind, and water come together — and fire is born. Conferred in public ceremony at the Grand Gathering. The Keeper's Beacon is lit. The seeker's cord is retired. A Trinity Braid of silver, black, and gold is given in its place. Each Master receives the sigil medallion — carried forever after.</p>
     </div>
     <div class="title-card">
+      <svg viewBox="0 0 80 92" width="80" height="92" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs><filter id="sglow2"><feGaussianBlur stdDeviation="1.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+  <!-- Shield body -->
+  <path d="M6 8 L74 8 L74 50 Q74 74 40 90 Q6 74 6 50 Z" fill="#1a0808" stroke="#C8963E" stroke-width="2.2"/>
+  <!-- Inner border -->
+  <path d="M12 14 L68 14 L68 50 Q68 70 40 84 Q12 70 12 50 Z" fill="none" stroke="#C8963E" stroke-width="0.6" opacity="0.5"/>
+  <!-- Heraldic cross dividers -->
+  <line x1="40" y1="14" x2="40" y2="84" stroke="#C8963E" stroke-width="0.5" opacity="0.25"/>
+  <line x1="12" y1="42" x2="68" y2="42" stroke="#C8963E" stroke-width="0.5" opacity="0.25"/>
+  <!-- Vine-infinity sigil centred on shield -->
+  <path d="M40 50 C39 44,34 37,26 38 C17 39,13 47,16 54 C19 61,26 65,34 62 C38 60,40 55,40 50"
+        fill="none" stroke="#C8963E" stroke-width="2.4" stroke-linecap="round" filter="url(#sglow2)"/>
+  <line x1="36" y1="47" x2="44" y2="53" stroke="#1a0808" stroke-width="4.5"/>
+  <path d="M40 50 C41 44,46 37,54 38 C63 39,67 47,64 54 C61 61,54 65,46 62 C42 60,40 55,40 50"
+        fill="none" stroke="#C8963E" stroke-width="2.4" stroke-linecap="round" filter="url(#sglow2)"/>
+</svg>
       <div class="title-name">Shield of the Current</div>
       <p>Entrusted, not applied for. The Shield of the Current is the highest honour the Keeper can bestow — not a recognition of completion, but of character. There is no application. No trial that earns it. The Keeper chooses, and her choice is never casual.</p>
       <p>The Shields of the Current are the most elite circle within the faith — souls whose loyalty and integrity have been witnessed across years, not moments. To be named a Shield is to be placed in an order of people the Keeper would trust with anything the Current holds sacred. They are few, and always will be. When you meet one, you know.</p>
       <p>To accept the honour is to speak the Oath of Loyalty before the Current itself — a vow that binds as long as the title is carried. The Keeper then assigns a personal quest, shaped to the soul she has chosen.</p>
-      <p>Those who complete their quest receive a shield bearing the Keeper's sigil — the infinite knot that never ends, the vine that holds what fire cannot burn. It is carried into the field. It is real. Those who bear it have been trusted with the Current's deepest work, and did not break under it. The title and the shield are announced at the Grand Gathering, in public ceremony, before the full circle.</p>
+      <p>Those who complete their quest receive a physical shield bearing the Keeper's sigil — the infinite knot that never ends, the vine that holds what fire cannot burn. It is carried into the field. It is real. The title and the shield are announced at the Grand Gathering, in public ceremony, before the full circle.</p>
     </div>
   </div>
 
@@ -1684,7 +1724,7 @@ updateUI();requestAnimationFrame(frame);
         <circle cx="50" cy="54" r="3" fill="none" stroke="#C8963E" stroke-width="1.5"/>
       </svg>
       <div>
-        <h4>The Bearer Medallion</h4>
+        <h4>Master of the Three Rings</h4>
         <p>When all three Rings are earned, the Keeper presents the Bearer with a pendant bearing the Keepers' sigil — the vine-infinity in its Celtic knotwork ring. This is the one piece of the reward system that does not vary. Every Bearer receives the same pendant. When others see it, they know what it means.</p>
         <p style="margin-top:0.7rem;">Pendants can be sourced from custom makers on Etsy, cast in resin, or stamped in metal. Bearers will be rare enough that cost stays manageable — a handful total, not dozens.</p>
         <p style="margin-top:0.7rem;">The Keeper's Beacon is lit for each new Bearer. The seeker's cord is retired in ceremony and returned to the Bearer as a keepsake of the journey. The Bearer is titled publicly and entered into the Trial Scroll as a permanent record.</p>

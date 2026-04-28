@@ -27,8 +27,8 @@ function renderResult(seeker) {
   $('#result-house').textContent = seeker.house ? `of House ${seeker.house}` : '';
 
   const titles = [];
-  if (seeker.shield) titles.push(`<div class="title-banner">🛡 Shield of the Current</div>`);
-  if (seeker.master_of_three_rings) titles.push(`<div class="title-banner">★ Master of the Three Rings</div>`);
+  if (seeker.master_of_three_rings) titles.push(`<div class="title-banner" style="margin-bottom:8px;">★ Master of the Three Rings</div>`);
+  if (seeker.shield) titles.push(`<div class="title-banner" style="background:rgba(176,174,166,0.08);border-color:var(--text-dim);color:var(--text-dim);">🛡 Shield of the Current</div>`);
   $('#result-titles').innerHTML = titles.join('');
 
   $('#result-rings').innerHTML = ['body', 'mind', 'soul'].map((p) => {

@@ -10,7 +10,10 @@
   .seeker-card { display: grid; grid-template-columns: 1fr auto; gap: 18px; padding: 14px 16px; background: var(--red-dark); border: 1px solid var(--border); border-radius: 3px; margin-bottom: 10px; align-items: center; }
   .seeker-card .name { color: var(--gold-light); font-size: 17px; }
   .seeker-card .house { color: var(--text-dim); font-size: 13px; font-style: italic; }
-  .seeker-card .titles { color: var(--gold); font-size: 13px; margin-top: 4px; }
+  .seeker-card .titles { margin-top: 6px; display: flex; flex-direction: column; gap: 3px; }
+  .seeker-card .title-badge { font-size: 12px; letter-spacing: 0.4px; }
+  .seeker-card .master-badge { color: var(--gold-light); }
+  .seeker-card .shield-badge { color: var(--text-dim); }
   .seeker-card .pillar-counts { display: flex; gap: 12px; font-size: 13px; }
   .seeker-card .pillar-counts span { color: var(--text-dim); }
   .seeker-card .pillar-counts strong { color: var(--gold-light); }
@@ -70,10 +73,10 @@
     wrap.innerHTML = '<p class="muted center italic">The Scroll is yet unwritten.</p>';
   } else {
     wrap.innerHTML = body.seekers.map((s) => {
-      const titles = [];
-      if (s.shield) titles.push('🛡 Shield of the Current');
-      if (s.master_of_three_rings) titles.push('★ Master of the Three Rings');
-      const titlesHtml = titles.length ? `<div class="titles">${titles.join(' · ')}</div>` : '';
+      const titleParts = [];
+      if (s.master_of_three_rings) titleParts.push('<div class="title-badge master-badge">★ Master of the Three Rings</div>');
+      if (s.shield) titleParts.push('<div class="title-badge shield-badge">🛡 Shield of the Current</div>');
+      const titlesHtml = titleParts.length ? `<div class="titles">${titleParts.join('')}</div>` : '';
       return `<div class="seeker-card">
         <div>
           <div class="name">${escapeHtml(s.name)}</div>
