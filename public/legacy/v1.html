@@ -757,6 +757,20 @@ details.lore-section .lore-body{padding-bottom:1rem;}
   .ring-card{padding:1rem;}
   .section-title{font-size:0.9rem;}
 }
+
+/* ── EXTERNAL NAV LINKS ──────────────────────────────────── */
+nav a.nav-ext{
+  display:inline-block;
+  background:none;border:none;
+  color:var(--gold);
+  padding:0.75rem 1.1rem;
+  cursor:pointer;font-family:inherit;font-size:0.8rem;
+  letter-spacing:0.05em;text-transform:uppercase;
+  border-bottom:2px solid transparent;
+  transition:all 0.2s;
+  text-decoration:none;
+}
+nav a.nav-ext:hover{color:var(--gold-light);border-bottom:2px solid var(--gold);}
 </style>
 </head>
 <body>
@@ -782,6 +796,8 @@ details.lore-section .lore-body{padding-bottom:1rem;}
   <button onclick="showPage('tracker',this)">Trial Tracker</button>
   <button onclick="showPage('leaderboard',this)">Bearers &amp; Shields</button>
   <button onclick="showPage('admin',this)">Keeper's Panel</button>
+  <a href="/seeker.html" class="nav-ext">Register</a>
+  <a href="/lookup.html" class="nav-ext">My Standing</a>
 </nav>
 
 <!-- ══════════════════════════════════════════ LORE PAGE -->
@@ -800,71 +816,6 @@ details.lore-section .lore-body{padding-bottom:1rem;}
     <p>Those who walk in its presence have described it as warmth behind the sternum, a hum at the edge of hearing, a weight behind the eyes that is somehow also lightness. It does not grant power over others. It grants something quieter and more profound — the understanding that you are never truly alone. Every soul who walks with the Current adds to your own, and you to theirs. We are all connected. That connection is the foundation of everything the Keepers believe, and the greatest strength there is.</p>
     <div class="lore-pull">"The Current flows toward unity. It does not force. It waits — patient as water finding cracks in stone — for the soul willing to move with it rather than against it."</div>
     <p>The Current looks for balance in all things. Those who isolate when connection would help them are moving against it. Those who consume when creation would ground them are moving against it. Those who force when alignment would carry them — against it. Most people live this way without ever knowing it. The Keepers exist to show another way.</p>
-  </div>
-
-  <!-- The Four Elements -->
-  <div class="lore-body-section">
-    </div></details><details class="lore-section"><summary><span class="sum-title">The Four Elements<span class="sum-sub">The pillars of the human self, as the Current understands them</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
-    <p>The faith recognizes four elemental forces, each corresponding to a dimension of what it means to be fully alive. The first three — Earth, Wind, and Water — govern the three Pillars that all Keepers are called to develop. Fire is different. Fire does not govern one Pillar. Fire emerges when all three are mastered and moving together.</p>
-    <div class="lore-elements-grid">
-      <div class="lore-element-card earth">
-        <div class="el-icon">
-          <!-- Mountain peaks with geological strata -->
-          <svg width="50" height="42" viewBox="0 0 54 46" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 41 L18 12 L33 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M22 41 L37 5 L52 41" stroke="#b0aea6" stroke-width="2" stroke-linejoin="round"/>
-            <line x1="30" y1="22" x2="44" y2="22" stroke="#b0aea6" stroke-width="1.1" opacity="0.5"/>
-            <line x1="27" y1="31" x2="47" y2="31" stroke="#b0aea6" stroke-width="1.1" opacity="0.4"/>
-            <line x1="2" y1="41" x2="52" y2="41" stroke="#b0aea6" stroke-width="1.5" opacity="0.35"/>
-          </svg>
-        </div>
-        <div class="el-name">Earth</div>
-        <div class="el-pillar">Ring of Endurance · Body</div>
-        <p>The ground that holds the self in place. Not rigidity — rootedness. Earth does not yield to every wind, but neither is it stone unmoved by rain. The body that endures is the body that can serve something beyond itself.</p>
-      </div>
-      <div class="lore-element-card wind">
-        <div class="el-icon">
-          <!-- Three flowing wind currents -->
-          <svg width="50" height="40" viewBox="0 0 54 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 10 C11 5 19 16 27 10 C35 4 43 13 51 8" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
-            <path d="M3 21 C11 16 20 27 28 21 C36 15 44 23 51 20" stroke="#b0aea6" stroke-width="2" stroke-linecap="round"/>
-            <path d="M10 33 C17 28 24 38 32 33 C40 28 47 34 51 32" stroke="#b0aea6" stroke-width="1.5" stroke-linecap="round" opacity="0.55"/>
-          </svg>
-        </div>
-        <div class="el-name">Wind</div>
-        <div class="el-pillar">Ring of Focus · Mind</div>
-        <p>Invisible, pervasive, shaping everything it touches. The mind that is still enough to notice the wind can begin to move with it. Wind carries things across great distances — so does thought, when it is clear and honest and unhurried.</p>
-      </div>
-      <div class="lore-element-card water">
-        <div class="el-icon">
-          <!-- Water droplet falling into ripples -->
-          <svg width="44" height="50" viewBox="0 0 48 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M24 3 Q31 13 31 21 Q31 30 24 30 Q17 30 17 21 Q17 13 24 3 Z" stroke="#C8963E" stroke-width="2"/>
-            <ellipse cx="24" cy="38" rx="7" ry="3" stroke="#C8963E" stroke-width="1.5" opacity="0.75"/>
-            <ellipse cx="24" cy="40" rx="13" ry="5" stroke="#C8963E" stroke-width="1.2" opacity="0.5"/>
-            <ellipse cx="24" cy="43" rx="20" ry="7" stroke="#C8963E" stroke-width="1" opacity="0.3"/>
-          </svg>
-        </div>
-        <div class="el-name">Water</div>
-        <div class="el-pillar">Ring of Connection · Soul</div>
-        <p>Water that never leaves its vessel stagnates. The soul element is the one most easily forgotten — it requires another. Connection cannot be performed alone. Water finds its way into everything, given time and the willingness to seek cracks rather than force doors.</p>
-      </div>
-      <div class="lore-element-card fire">
-        <div class="el-icon">
-          <!-- Wild split flame with inner tongues -->
-          <svg width="36" height="50" viewBox="0 0 44 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 52 C13 43 7 33 10 20 C12 13 16 7 22 3 C28 7 32 13 34 20 C37 33 31 43 22 52 Z" stroke="#e06040" stroke-width="2"/>
-            <path d="M17 44 C13 37 11 27 15 17 C17 11 19 8 22 5" stroke="#e06040" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
-            <path d="M27 44 C31 37 33 27 29 17 C27 11 25 8 22 5" stroke="#e06040" stroke-width="1.2" stroke-linecap="round" opacity="0.55"/>
-            <circle cx="22" cy="32" r="3" fill="#e06040" opacity="0.35"/>
-          </svg>
-        </div>
-        <div class="el-name">Fire</div>
-        <div class="el-pillar">The Final Element · All Three Rings</div>
-        <p>Fire is not earned through any single trial. It is what becomes possible when Earth, Wind, and Water stop being three separate practices and forge into one nature. The Current does not give fire — it recognizes it.</p>
-      </div>
-    </div>
-
   </div>
 
   <!-- Core Beliefs -->
@@ -939,7 +890,7 @@ details.lore-section .lore-body{padding-bottom:1rem;}
       <div class="qs-step"><strong>2. Complete Trials</strong>Three pillars — Body, Mind, Soul — three tiers each.</div>
       <div class="qs-step"><strong>3. Earn Your Rings</strong>One ring per pillar. All three makes you a Master.</div>
     </div>
-    <a class="qs-register" onclick="showPage('tracker',document.querySelector('nav button:nth-child(4)'))">✦ Register as a Seeker ✦</a>
+    <a class="qs-register" href="/seeker.html">✦ Register as a Seeker ✦</a>
   </div>
 
   <div class="lore-intro">
@@ -1906,6 +1857,16 @@ function showPage(id,btn){
   if(id==='tracker')renderTracker();
   if(id==='admin'&&adminUnlocked)renderAdminPanel();
 }
+// ── HASH ROUTING ─────────────────────────────────────────
+(function(){
+  const map={lore:'lore',trials:'trials',rewards:'rewards',tracker:'tracker',leaderboard:'leaderboard'};
+  const h=(location.hash||'').replace('#','');
+  if(map[h]){
+    const btn=document.querySelector(`nav button[onclick*="showPage('${map[h]}"]`);
+    showPage(map[h],btn);
+  }
+})();
+
 
 // ── TIER TOGGLE ───────────────────────────────────────────
 function toggleTier(h){h.classList.toggle('open');h.nextElementSibling.classList.toggle('open');}

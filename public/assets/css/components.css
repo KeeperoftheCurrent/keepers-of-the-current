@@ -248,3 +248,47 @@ button.secondary:hover { border-color: var(--gold); color: var(--gold-light); }
 .muted { color: var(--text-dim); }
 .italic { font-style: italic; }
 .center { text-align: center; }
+
+/* ── SITE-WIDE NAV ─────────────────────────────────────────────────────── */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  background: var(--red-dark);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-nav a {
+  display: inline-block;
+  padding: 10px 14px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.site-nav a:hover {
+  color: var(--gold-light);
+  border-color: var(--gold);
+}
+
+.site-nav a.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+.site-nav a.nav-cta {
+  color: var(--gold);
+}
+
+@media (max-width: 480px) {
+  .site-nav a { padding: 9px 10px; font-size: 11px; }
+}
