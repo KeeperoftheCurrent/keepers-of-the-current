@@ -1,0 +1,12 @@
+-- Migration 0010 — add preferred_time column to registrations.
+--
+-- Bug discovered during the audit: functions/api/seekers/index.ts INSERTs into
+-- registrations.preferred_time, and lookup/schedule endpoints SELECT it, but
+-- the column was never added to the schema. Real seeker submissions have been
+-- silently failing with "table registrations has no column named preferred_time".
+--
+-- Backfill is NULL — the new clock-time model uses bookings + trial_intentions
+-- per-trial, so registration-level preferred_time is unused going forward, but
+-- the column needs to exist for the existing SQL to parse.
+
+ALTER TABLE registrations ADD COLUMN preferred_time TEXT;

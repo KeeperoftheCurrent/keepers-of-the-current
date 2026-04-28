@@ -342,10 +342,14 @@ function showSuccess(name, bookings, intentions) {
   }
 
   if (intentions && intentions.length > 0) {
-    const lines = intentions.map((code) => {
+    const lines = intentions.map((it) => {
+      // intentions are { code, preferred_time? } objects — not bare strings.
+      const code = typeof it === 'string' ? it : it.code;
+      const pref = typeof it === 'string' ? null : it.preferred_time;
       const trial = TRIAL_CATALOG.find((t) => t.code === code);
       const label = trial ? `${trial.short} — ${trial.name}` : code;
-      return `<li>${escapeHtml(label)}</li>`;
+      const timeNote = pref ? ` (you'd prefer ${pref})` : '';
+      return `<li>${escapeHtml(label)}${escapeHtml(timeNote)}</li>`;
     }).join('');
     parts.push(`<p>The Keeper has been notified you plan to attempt:</p><ul style="text-align:left;display:inline-block;margin:0 auto;">${lines}</ul>`);
   }
