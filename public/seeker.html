@@ -7,6 +7,38 @@
 <meta name="description" content="Enter your name in the Trial Scroll of the Keepers of the Current.">
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="stylesheet" href="/assets/css/components.css">
+<style>
+  .trial-row {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    background: var(--red-dark);
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .trial-row.selected { border-color: var(--gold); background: var(--gold-faint); }
+  .trial-row label.head {
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+  }
+  .trial-row .trial-name { color: var(--gold-light); font-size: 15px; }
+  .trial-row .trial-meta { color: var(--text-dim); font-size: 12px; }
+  .trial-row .slot-picker {
+    margin-top: 10px;
+    padding-left: 26px;
+    display: none;
+  }
+  .trial-row.selected .slot-picker { display: block; }
+  .trial-row .slot-picker select { width: 100%; }
+  .trial-row .full-msg {
+    margin-top: 6px;
+    color: #c45a5a;
+    font-size: 13px;
+    font-style: italic;
+  }
+  .pillar-group { margin-bottom: 14px; }
+  .pillar-group h4 { color: var(--gold); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+</style>
 </head>
 <body>
 
@@ -69,22 +101,11 @@
           <span class="help">★ Grand Gathering is the trial debut and the only place the Body's third tier may be attempted.</span>
         </label>
 
-        <label class="field">
-          <span class="label-text">Preferred day at that gathering <span class="muted">(optional)</span></span>
-          <input type="date" name="preferred_date">
-          <span class="help">Leave blank if any day works.</span>
-        </label>
-
-        <label class="field">
-          <span class="label-text">Preferred time of day <span class="muted">(optional)</span></span>
-          <select name="preferred_time">
-            <option value="no_preference">No preference</option>
-            <option value="morning">Morning (before noon)</option>
-            <option value="afternoon">Afternoon (noon – 4pm)</option>
-            <option value="evening">Evening (after 4pm)</option>
-          </select>
-          <span class="help">The Keeper will do her best to accommodate your preference.</span>
-        </label>
+        <div class="field" id="trials-section" hidden>
+          <span class="label-text">Book specific trial times <span class="muted">(optional)</span></span>
+          <span class="help" style="margin-bottom:10px;">Pick the trial(s) you want to attempt at this gathering and choose a time slot. You can also skip this and arrange times with the Keeper at the event.</span>
+          <div id="trials-list"></div>
+        </div>
 
         <button class="primary" id="submit-btn" type="submit">Mark me in the Scroll</button>
       </form>
@@ -99,6 +120,7 @@
     <div class="seal">⊙</div>
     <h2>The Current acknowledges you</h2>
     <p>Your name is set in the Trial Scroll, <strong id="success-name">seeker</strong>.</p>
+    <div id="success-bookings"></div>
     <p>A confirmation has been sent to your inbox. The Keeper has been notified.</p>
     <p class="italic">"When we move, we move as one."</p>
     <p class="muted" style="margin-top:24px;">

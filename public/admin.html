@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keeper's Panel — Keepers of the Current</title>
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="stylesheet" href="/assets/css/components.css">
+<link rel="stylesheet" href="/assets/css/admin.css">
+</head>
+<body class="admin-body">
+
+<header class="admin-header">
+  <div class="admin-brand">
+    <img src="/assets/img/sigil.png" alt="" class="brand-sigil">
+    <div>
+      <div class="brand-title">Keeper's Panel</div>
+      <div class="brand-sub">Keepers of the Current — Trial Scroll</div>
+    </div>
+  </div>
+  <div class="admin-tabs">
+    <button class="tab" data-tab="seekers">Seekers</button>
+    <button class="tab" data-tab="schedule">Schedule</button>
+    <button class="tab" data-tab="windows">Windows</button>
+    <button class="tab" data-tab="events">Events</button>
+    <button class="tab" data-tab="log">Audit Log</button>
+  </div>
+  <div class="admin-user" id="admin-user-chip">⚡ <span id="admin-email">…</span></div>
+</header>
+
+<main class="admin-main">
+
+  <!-- ─── SEEKERS TAB ─── -->
+  <section class="tab-panel" data-tab-panel="seekers">
+    <div class="tab-toolbar">
+      <h2>The Trial Scroll</h2>
+      <div class="toolbar-actions">
+        <input type="search" id="seeker-search" placeholder="Search by name or email…" />
+        <button class="secondary" id="add-seeker-btn">+ Add seeker</button>
+      </div>
+    </div>
+    <div class="card">
+      <table class="data-table" id="seekers-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>House</th>
+            <th>Rings</th>
+            <th>Title</th>
+            <th>Tiers</th>
+            <th>Email status</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="empty-state" id="seekers-empty" hidden>No seekers yet. The first will arrive soon.</div>
+    </div>
+  </section>
+
+  <!-- ─── SCHEDULE TAB ─── -->
+  <section class="tab-panel" data-tab-panel="schedule" hidden>
+    <div class="tab-toolbar">
+      <h2>Schedule</h2>
+      <div class="toolbar-actions">
+        <select id="schedule-event"></select>
+      </div>
+    </div>
+    <div id="schedule-content" class="card">
+      <p class="muted">Choose an event to see its windows and bookings.</p>
+    </div>
+  </section>
+
+  <!-- ─── WINDOWS TAB ─── -->
+  <section class="tab-panel" data-tab-panel="windows" hidden>
+    <div class="tab-toolbar">
+      <h2>Working windows</h2>
+      <div class="toolbar-actions">
+        <select id="windows-event"></select>
+      </div>
+    </div>
+    <div class="card">
+      <p class="muted">Define the days and times you're available to keep trials at this event. Seekers will only see open slots inside these windows.</p>
+      <div id="windows-list"></div>
+      <div class="windows-actions">
+        <button class="secondary" id="windows-add-btn">+ Add window</button>
+        <button class="primary" id="windows-save-btn">Save windows</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── EVENTS TAB ─── -->
+  <section class="tab-panel" data-tab-panel="events" hidden>
+    <div class="tab-toolbar">
+      <h2>Hynafol calendar</h2>
+      <div class="toolbar-actions">
+        <button class="secondary" id="add-event-btn">+ Add event</button>
+      </div>
+    </div>
+    <div class="card">
+      <table class="data-table" id="events-table">
+        <thead>
+          <tr><th>Name</th><th>Kind</th><th>Dates</th><th>Active</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ─── AUDIT LOG TAB ─── -->
+  <section class="tab-panel" data-tab-panel="log" hidden>
+    <div class="tab-toolbar">
+      <h2>Audit log</h2>
+    </div>
+    <div class="card">
+      <table class="data-table" id="log-table">
+        <thead>
+          <tr><th>When</th><th>Who</th><th>Action</th><th>Target</th><th>Detail</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- Modal scaffold -->
+<div class="modal-backdrop" id="modal-backdrop" hidden>
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <h3 id="modal-title"></h3>
+      <button class="modal-close" id="modal-close">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="/assets/js/admin.js"></script>
+</body>
+</html>
