@@ -101,9 +101,12 @@
               <span class="ring-name">Mind — Focus</span>
             </label>
             <label>
-              <input type="checkbox" name="rings_pursued" value="soul">
+              <input type="checkbox" name="rings_pursued" value="soul" id="ring-soul">
               <span class="ring-name">Soul — Connection</span>
             </label>
+          </div>
+          <div id="soul-tier3-note" hidden style="margin-top:8px;padding:10px 12px;background:rgba(200,150,62,0.07);border-left:3px solid var(--gold);border-radius:0 3px 3px 0;font-size:13px;color:var(--text-dim);line-height:1.6;">
+            <strong style="color:var(--gold-light);">Soul Tier III note:</strong> The final tier of the Soul ring requires that you bring someone to the faith through your own presence over the course of the trials — and host a public ceremony to welcome them. This is not a solo trial. Begin thinking about who that person might be.
           </div>
           <span class="help">Choose one or all three. Within each pillar, tiers must be completed in order — Tier I first, then II, then III.</span>
         </div>
@@ -147,6 +150,15 @@
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
+<script>
+  const soulCb = document.getElementById('ring-soul');
+  const soulNote = document.getElementById('soul-tier3-note');
+  if (soulCb && soulNote) {
+    const updateNote = () => { soulNote.hidden = !soulCb.checked; };
+    soulCb.addEventListener('change', updateNote);
+    updateNote();
+  }
+</script>
 <script type="module" src="/assets/js/seeker.js"></script>
 </body>
 </html>

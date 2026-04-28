@@ -270,6 +270,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
         preferred_date: input.preferred_date,
         preferred_time: input.preferred_time,
         submitted_at_iso: submittedAtIso,
+        bookings: insertedBookings.map((b) => ({
+          trial_code: b.trial_code,
+          start_at: b.start_at,
+          end_at: b.end_at,
+        })),
       });
       const final = status.seeker === 'sent' && status.admin === 'sent' ? 'sent' : 'failed';
       try {
