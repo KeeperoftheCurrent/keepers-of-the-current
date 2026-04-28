@@ -32,27 +32,16 @@ export async function sendBothEmails(env: Env, ctx: SeekerEmailContext): Promise
   seeker: 'sent' | 'failed';
   admin: 'sent' | 'failed';
 }> {
-  console.log('[email] env check', {
-    hasResendKey: !!env.RESEND_API_KEY,
-    resendKeyPrefix: env.RESEND_API_KEY ? env.RESEND_API_KEY.slice(0, 5) : '(none)',
-    resendKeyLen: env.RESEND_API_KEY?.length ?? 0,
-    keeperEmail: env.KEEPER_NOTIFY_EMAIL || '(unset)',
-    emailFrom: env.EMAIL_FROM || '(unset)',
-    siteUrl: env.SITE_URL || '(unset)',
-  });
   const [seekerResult, adminResult] = await Promise.allSettled([
     sendSeekerConfirmation(env, ctx),
     sendAdminNotification(env, ctx),
   ]);
+  // Only log on rejection — happy-path stays silent.
   if (seekerResult.status === 'rejected') {
-    console.error('[email] seeker confirmation REJECTED:', String(seekerResult.reason), seekerResult.reason);
-  } else {
-    console.log('[email] seeker confirmation OK');
+    console.error('[email] seeker confirmation REJECTED:', String(seekerResult.reason));
   }
   if (adminResult.status === 'rejected') {
-    console.error('[email] admin notification REJECTED:', String(adminResult.reason), adminResult.reason);
-  } else {
-    console.log('[email] admin notification OK');
+    console.error('[email] admin notification REJECTED:', String(adminResult.reason));
   }
   return {
     seeker: seekerResult.status === 'fulfilled' ? 'sent' : 'failed',
