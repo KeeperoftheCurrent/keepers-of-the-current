@@ -8,6 +8,11 @@
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="stylesheet" href="/assets/css/components.css">
 <link rel="stylesheet" href="/assets/css/lore-pages.css">
+<style>
+  /* Lore sections always open — no accordion behaviour */
+  .lore-section > summary { cursor: default; pointer-events: none; }
+  .lore-section .sum-arrow { display: none; }
+</style>
 </head>
 <body>
 <div id="toast"></div>
@@ -51,7 +56,7 @@
 
   <!-- Core Beliefs -->
   <div class="lore-body-section">
-    </div></details><details class="lore-section"><summary><span class="sum-title">Core Beliefs<span class="sum-sub">What the Keepers hold to be true</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
+    </div></details><details class="lore-section" open><summary><span class="sum-title">Core Beliefs<span class="sum-sub">What the Keepers hold to be true</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
     <p><strong style="color:var(--gold-light)">The Current flows through all things.</strong> A living force moves through every breathing creature — through flesh and stone, through words spoken and unspoken, through the silence between people who finally understand one another. This is the Current. It is not worshipped. It is felt. It is the reason a stranger's grief can move you to tears, and why a crowd can suddenly breathe as one. You are not separate from the world around you. You are woven into it — and it into you. To become aware of this is the beginning. To move with it is the practice.</p>
     <p><strong style="color:var(--gold-light)">Unity.</strong> The Keepers do not believe in isolation. A soul that cuts itself off — from the Current, from the people and world around it — diminishes. Not as punishment, but as consequence, the way a branch cut from a tree does not flourish. You cannot carry the Current alone. It grows between people. When a circle holds, when a vow is kept, when someone shows up for another without being asked — the Current moves through the space they make for it. We move as one, or we do not move at all.</p>
     <p><strong style="color:var(--gold-light)">Balance.</strong> The Current seeks equilibrium the way water seeks level. It does not require perfection — it requires honesty about where the weight lies. When something is out of balance, the Current presses against it, patient as tide. The Keepers do not try to force the world into a shape they prefer. They try to remain sensitive to where they are adding to the imbalance, and where they are in a position to restore it. Balance is not stillness. It is the willingness to keep adjusting.</p>
@@ -63,7 +68,7 @@
 
   <!-- The Keeper's Call -->
   <div class="lore-body-section">
-    </div></details><details class="lore-section"><summary><span class="sum-title">The Keeper's Call<span class="sum-sub">Liturgy and practice</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
+    </div></details><details class="lore-section" open><summary><span class="sum-title">The Keeper's Call<span class="sum-sub">Liturgy and practice</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
     <p>When the Keeper calls the faithful to attention — before a ritual, at the opening of a Circle, at the close of a working — there is a call and response that has become the heartbeat of the faith. It is spoken over a single drum pulse:</p>
     <div class="lore-pull" style="text-align:center;font-size:0.95rem;">
       <strong style="color:var(--gold-light);font-style:normal;">Keeper: "When I call you respond."</strong><br>
@@ -74,7 +79,7 @@
 
   <!-- Talia -->
   <div class="lore-body-section">
-    </div></details><details class="lore-section"><summary><span class="sum-title">Talia Emberborn<span class="sum-sub">High Priestess of the Current</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
+    </div></details><details class="lore-section" open><summary><span class="sum-title">Talia Emberborn<span class="sum-sub">High Priestess of the Current</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
     <div class="lore-talia-row">
       <img class="lore-talia-portrait" src="/assets/img/talia-portrait.png" alt="Talia Emberborn" onerror="this.style.display='none'"/>
       <div class="lore-talia-bio">
@@ -89,7 +94,7 @@
 
   <!-- Discord + Video -->
   <div class="lore-body-section">
-    </div></details><details class="lore-section"><summary><span class="sum-title">Find the Current<span class="sum-sub">Connect with the Keepers</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
+    </div></details><details class="lore-section" open><summary><span class="sum-title">Find the Current<span class="sum-sub">Connect with the Keepers</span></span><span class="sum-arrow">▶</span></summary><div class="lore-body">
     <div class="lore-media-grid">
       <div class="lore-media-card">
         <div class="media-icon">⚡</div>
@@ -113,5 +118,11 @@
 
 </details></div>
 </main>
+<script>
+/* Keep all lore sections permanently open */
+document.querySelectorAll('details.lore-section').forEach(d => {
+  d.addEventListener('toggle', () => { if (!d.open) d.open = true; });
+});
+</script>
 <script>(function(){const t=document.getElementById("toast");if(!t)return;window.toast=(m)=>{t.textContent=m;t.classList.add("show");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove("show"),2400);};})();</script>
 </body></html>
