@@ -11,6 +11,7 @@ export interface IntakeInput {
   rings_pursued: Ring[];
   event_id: string;
   preferred_date: string | null;
+  preferred_time: string | null;
 }
 
 export type ValidationResult<T> =
@@ -61,10 +62,14 @@ export function validateIntake(raw: unknown): ValidationResult<IntakeInput> {
     else preferred_date = dateRaw;
   }
 
+  const VALID_TIMES = ['morning', 'afternoon', 'evening', 'no_preference'];
+  const timeRaw = typeof r.preferred_time === 'string' ? r.preferred_time.trim() : '';
+  const preferred_time = VALID_TIMES.includes(timeRaw) ? timeRaw : null;
+
   if (errors.length > 0) return { ok: false, errors };
   return {
     ok: true,
-    data: { name, email, house, rings_pursued, event_id, preferred_date },
+    data: { name, email, house, rings_pursued, event_id, preferred_date, preferred_time },
   };
 }
 

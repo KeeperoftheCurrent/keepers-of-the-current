@@ -23,6 +23,7 @@ interface SeekerEmailContext {
   event_starts_on: string | null;
   event_ends_on: string | null;
   preferred_date: string | null;
+  preferred_time: string | null;
   submitted_at_iso: string;
 }
 
@@ -81,8 +82,10 @@ async function sendSeekerConfirmation(env: Env, c: SeekerEmailContext): Promise<
   </div>
   <p style="line-height:1.6;margin:0 0 12px 0;"><strong style="color:#E8B96A;">What happens next:</strong></p>
   <ul style="line-height:1.7;margin:0 0 16px 0;padding-left:20px;">
-    <li>Arrive at the event ready in body and mind. The Keeper will recognize you.</li>
-    <li>The Trials may be undertaken in any order, in any pillar, at any event &mdash; except those of the Body's third tier, which belong to the Grand Gathering alone.</li>
+    <li>Arrive at the event ready in body and mind. The Keeper will recognize you and confirm your time.</li>
+    <li>Within each pillar, tiers must be completed in order — Tier I before Tier II, Tier II before Tier III. You may work across different pillars at the same event.</li>
+    <li>Body Tier III may only be attempted at the Grand Gathering.</li>
+    <li>If a trial is not completed — for any reason — that attempt is spent. You must apply again to attempt it at a future event. There are no restarts on the day.</li>
     <li>You may view your standing at any time at <a href="${escapeAttr(lookupUrl)}" style="color:#C8963E;">${escapeHtml(lookupUrl)}</a> &mdash; your name and this address are the key.</li>
   </ul>
   <p style="line-height:1.6;margin:24px 0 4px 0;font-style:italic;color:#E8B96A;text-align:center;">"When we move, we move as one."</p>
@@ -99,9 +102,12 @@ The Keeper has marked your name in the Trial Scroll.
   First gathering: ${c.event_name} — ${eventDates}
 
 What happens next:
-  • Arrive at the event ready in body and mind. The Keeper will recognize you.
-  • The Trials may be undertaken in any order, in any pillar, at any event —
-    except those of the Body's third tier, which belong to the Grand Gathering alone.
+  • Arrive at the event ready in body and mind. The Keeper will recognize you and confirm your time.
+  • Within each pillar, tiers must be completed in order — Tier I before Tier II, Tier II before Tier III.
+    You may work across different pillars at the same event.
+  • Body Tier III may only be attempted at the Grand Gathering.
+  • If a trial is not completed — for any reason — that attempt is spent.
+    You must apply again to attempt it at a future event. There are no restarts on the day.
   • You may view your standing at any time at ${lookupUrl} —
     your name and this address are the key.
 
@@ -132,6 +138,7 @@ Email:          ${c.email}
 Rings pursued:  ${ringsCsv}
 Event:          ${c.event_name}
 Preferred date: ${c.preferred_date ?? '—'}
+Preferred time: ${c.preferred_time ?? '—'}
 Submitted:      ${c.submitted_at_iso}
 
 Open the panel: ${adminUrl}`;

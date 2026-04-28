@@ -84,6 +84,7 @@ async function handleSubmit(e) {
     rings_pursued: rings,
     event_id: (data.get('event_id') || '').toString(),
     preferred_date: (data.get('preferred_date') || '').toString().trim() || null,
+    preferred_time: (data.get('preferred_time') || '').toString().trim() || null,
   };
 
   const { ok, status, body } = await api('POST', '/api/seekers', payload);

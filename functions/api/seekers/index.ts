@@ -123,6 +123,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
         event_starts_on: event.starts_on,
         event_ends_on: event.ends_on,
         preferred_date: input.preferred_date,
+        preferred_time: input.preferred_time,
         submitted_at_iso: submittedAtIso,
       });
       const final = status.seeker === 'sent' && status.admin === 'sent' ? 'sent' : 'failed';

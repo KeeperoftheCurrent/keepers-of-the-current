@@ -58,7 +58,7 @@
               <span class="ring-name">Soul — Connection</span>
             </label>
           </div>
-          <span class="help">Choose one or all three. The trials may be undertaken in any order.</span>
+          <span class="help">Choose one or all three. Within each pillar, tiers must be completed in order — Tier I first, then II, then III.</span>
         </div>
 
         <label class="field">
@@ -73,6 +73,17 @@
           <span class="label-text">Preferred day at that gathering <span class="muted">(optional)</span></span>
           <input type="date" name="preferred_date">
           <span class="help">Leave blank if any day works.</span>
+        </label>
+
+        <label class="field">
+          <span class="label-text">Preferred time of day <span class="muted">(optional)</span></span>
+          <select name="preferred_time">
+            <option value="no_preference">No preference</option>
+            <option value="morning">Morning (before noon)</option>
+            <option value="afternoon">Afternoon (noon – 4pm)</option>
+            <option value="evening">Evening (after 4pm)</option>
+          </select>
+          <span class="help">The Keeper will do her best to accommodate your preference.</span>
         </label>
 
         <button class="primary" id="submit-btn" type="submit">Mark me in the Scroll</button>
