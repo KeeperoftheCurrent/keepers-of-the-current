@@ -10,4 +10,4 @@ database_id = "717869db-3de5-491d-bb46-c4310d1d20fa"
 [vars]
 KEEPER_NOTIFY_EMAIL = "desiree.rock@gmail.com"
 EMAIL_FROM = "Keepers of the Current <keeper@keepersofthecurrent.org>"
-SITE_URL = "http://localhost:8788"
+SITE_URL = "https://keepersofthecurrent.org"
