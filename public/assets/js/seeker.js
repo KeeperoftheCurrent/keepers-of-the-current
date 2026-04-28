@@ -159,7 +159,7 @@ async function loadEvents() {
   for (const ev of body.events) {
     const dates = ` (${fmtEventDates(ev.starts_on, ev.ends_on)})`;
     const star = ev.kind === 'grand_gathering' ? ' ★' : '';
-    options.push(`<option value="${escapeHtml(ev.id)}" data-kind="${escapeHtml(ev.kind)}">${escapeHtml(ev.name)}${star}${escapeHtml(dates)}</option>`);
+    options.push(`<option value="${escapeHtml(ev.id)}" data-kind="${escapeHtml(ev.kind)}" data-starts="${escapeHtml(ev.starts_on || '')}" data-ends="${escapeHtml(ev.ends_on || '')}">${escapeHtml(ev.name)}${star}${escapeHtml(dates)}</option>`);
   }
   select.innerHTML = options.join('');
   select.addEventListener('change', onEventChange);
@@ -187,12 +187,17 @@ function getSelectedRings() {
 // null means "no event selected yet — hide the section entirely."
 let currentAvailability = null;
 let currentIsGG = false;
+let currentEventDates = { starts: null, ends: null };
 
 async function onEventChange() {
   const select = $('#event_id');
   const eventId = select.value;
   const eventOption = select.options[select.selectedIndex];
   currentIsGG = eventOption?.dataset.kind === 'grand_gathering';
+  currentEventDates = {
+    starts: eventOption?.dataset.starts || null,
+    ends:   eventOption?.dataset.ends   || null,
+  };
 
   if (!eventId) {
     currentAvailability = null;
@@ -208,10 +213,10 @@ async function onEventChange() {
   // Even on failure we set availability to {} so notification-only trials
   // are still visible — the seeker can still notify the Keeper.
   currentAvailability = (ok && body?.trials) ? body.trials : {};
-  renderTrialList(currentIsGG, getSelectedRings());
+  renderTrialList(currentIsGG, getSelectedRings(), currentEventDates);
 }
 
-function renderTrialList(isGG, selectedRings = []) {
+function renderTrialList(isGG, selectedRings = [], eventDates = {}) {
   const list = $('#trials-list');
   const trialsSection = $('#trials-section');
 
@@ -263,8 +268,15 @@ function renderTrialList(isGG, selectedRings = []) {
           ${isFull ? `<div class="full-msg">No slots are currently open for this trial at this gathering — speak with the Keeper at the event to arrange a time.</div>` : ''}
         </div>`;
       } else {
-        // ── Notification-only trial: no slot needed, just a heads-up ─────
+        // ── Notification-only trial: no slot needed, but seeker can state a preferred time ──
         const subLine = t.sub ? `<div class="trial-meta" style="font-style:italic;">${escapeHtml(t.sub)}</div>` : '';
+        const minDt = eventDates.starts ? `${eventDates.starts}T06:00` : '';
+        const maxDt = (eventDates.ends || eventDates.starts) ? `${eventDates.ends || eventDates.starts}T23:59` : '';
+        const dtAttrs = [
+          minDt ? `min="${minDt}"` : '',
+          maxDt ? `max="${maxDt}"` : '',
+          minDt ? `value="${minDt.slice(0, 11)}12:00"` : '',
+        ].filter(Boolean).join(' ');
         return `<div class="trial-row notify-only" data-code="${t.code}">
           <label class="head">
             <input type="checkbox" data-code="${t.code}" data-notify-only="true">
@@ -274,8 +286,13 @@ function renderTrialList(isGG, selectedRings = []) {
               <div class="trial-meta">${escapeHtml(t.note)}</div>
             </div>
           </label>
-          <div class="notify-confirm" style="display:none;margin-top:8px;padding:8px 12px 8px 26px;font-size:13px;color:var(--gold-light);background:rgba(200,150,62,0.06);border-left:2px solid var(--gold-dim);border-radius:0 3px 3px 0;">
-            The Keeper will be notified you're planning this trial at this event. Find her when you're ready — no appointment needed.
+          <div class="notify-confirm" style="display:none;margin-top:8px;padding:8px 12px 8px 26px;background:rgba(200,150,62,0.06);border-left:2px solid var(--gold-dim);border-radius:0 3px 3px 0;">
+            <div style="font-size:13px;color:var(--text-dim);margin-bottom:10px;">The Keeper will be notified. This trial doesn't need a reserved slot — pick a preferred time and she'll expect you then.</div>
+            <label style="display:block;">
+              <span style="font-size:12px;color:var(--text-dim);display:block;margin-bottom:4px;">Preferred time <span style="opacity:0.6;">(optional)</span></span>
+              <input type="datetime-local" data-pref-time-for="${t.code}" ${dtAttrs}
+                style="background:var(--red-dark);color:var(--text-light);border:1px solid var(--border);border-radius:3px;padding:6px 8px;font-family:var(--serif);font-size:13px;width:100%;max-width:260px;color-scheme:dark;">
+            </label>
           </div>
         </div>`;
       }
@@ -358,7 +375,8 @@ async function handleSubmit(e) {
     if (!cb.checked) return;
     const code = cb.dataset.code;
     if (cb.dataset.notifyOnly === 'true') {
-      trial_intentions.push(code);
+      const prefInput = document.querySelector(`[data-pref-time-for="${code}"]`);
+      trial_intentions.push({ code, preferred_time: prefInput?.value || null });
     } else {
       const select = document.querySelector(`[data-slot-for="${code}"]`);
       const start_at = select?.value;
@@ -434,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Re-render the trial list when ring selections change.
   document.querySelectorAll('input[name="rings_pursued"]').forEach((cb) => {
     cb.addEventListener('change', () => {
-      renderTrialList(currentIsGG, getSelectedRings());
+      renderTrialList(currentIsGG, getSelectedRings(), currentEventDates);
     });
   });
 });

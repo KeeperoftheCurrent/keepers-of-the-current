@@ -65,14 +65,29 @@ interface BookingInput {
   start_at: string;
 }
 
-// trial_intentions: notification-only trial codes the seeker flagged (no slot).
-// Not stored in DB; included in the admin email so the Keeper knows to expect them.
-function parseTrialIntentions(raw: unknown): string[] {
+// trial_intentions: notification-only trials the seeker flagged.
+// May include an optional preferred_time (ISO datetime) which is shown to the Keeper
+// but does NOT block the calendar — no slot is reserved.
+interface TrialIntention {
+  code: string;
+  preferred_time?: string | null;
+}
+
+const ISODATETIME_LAX = /^\d{4}-\d{2}-\d{2}T([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
+
+function parseTrialIntentions(raw: unknown): TrialIntention[] {
   if (!Array.isArray(raw)) return [];
   return raw
-    .filter((v) => typeof v === 'string' && v.trim().length > 0)
-    .map((v) => (v as string).trim())
-    .slice(0, 20); // reasonable cap
+    .filter((v) => v && (typeof v === 'string' || (typeof v === 'object' && typeof (v as Record<string,unknown>).code === 'string')))
+    .map((v): TrialIntention => {
+      if (typeof v === 'string') return { code: v.trim() };
+      const obj = v as Record<string, unknown>;
+      const pt = typeof obj.preferred_time === 'string' && ISODATETIME_LAX.test(obj.preferred_time)
+        ? obj.preferred_time : null;
+      return { code: String(obj.code).trim(), preferred_time: pt };
+    })
+    .filter((t) => t.code.length > 0)
+    .slice(0, 20);
 }
 
 const ISODATETIME = /^\d{4}-\d{2}-\d{2}T([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
@@ -127,7 +142,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     return jsonResponse({ ok: false, error: bookingsParsed.error }, 422);
   }
   const requestedBookings: BookingInput[] = bookingsParsed;
-  const trialIntentions: string[] = parseTrialIntentions((raw as Record<string, unknown>).trial_intentions);
+  const trialIntentions: TrialIntention[] = parseTrialIntentions((raw as Record<string, unknown>).trial_intentions);
 
   // Confirm event
   const event = await queryFirst<EventRow>(

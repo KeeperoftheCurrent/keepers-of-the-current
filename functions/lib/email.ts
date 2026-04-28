@@ -26,8 +26,9 @@ interface SeekerEmailContext {
   preferred_time: string | null;
   submitted_at_iso: string;
   bookings?: { trial_code: string; start_at: string; end_at: string }[];
-  // Notification-only trials the seeker flagged (no slot needed — just a heads-up).
-  trial_intentions?: string[];
+  // Notification-only trials the seeker flagged. preferred_time is their preference
+  // but does NOT block the calendar — no slot is reserved.
+  trial_intentions?: { code: string; preferred_time?: string | null }[];
 }
 
 export async function sendBothEmails(env: Env, ctx: SeekerEmailContext): Promise<{
@@ -176,7 +177,10 @@ async function sendAdminNotification(env: Env, c: SeekerEmailContext): Promise<v
     : '  (none booked)';
 
   const intentionsText = c.trial_intentions && c.trial_intentions.length > 0
-    ? c.trial_intentions.map((code) => `  • ${TRIAL_DISPLAY_NAMES[code] ?? code}`).join('\n')
+    ? c.trial_intentions.map((i) => {
+        const name = TRIAL_DISPLAY_NAMES[i.code] ?? i.code;
+        return i.preferred_time ? `  • ${name} — prefers ${i.preferred_time}` : `  • ${name}`;
+      }).join('\n')
     : '  (none flagged)';
 
   const text = `A new seeker has entered the Trial.
