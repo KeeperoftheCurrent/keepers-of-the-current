@@ -234,8 +234,8 @@ function renderTrialList(isGG, selectedRings = [], eventDates = {}) {
   ];
 
   list.innerHTML = PILLARS.map((p) => {
-    // Skip pillars for rings the seeker has not chosen to pursue.
-    if (selectedRings.length > 0 && !selectedRings.includes(p.key)) return '';
+    // Only show pillars the seeker has chosen to pursue. Nothing shows until at least one ring is ticked.
+    if (!selectedRings.includes(p.key)) return '';
 
     // Only show Tier I — higher tiers require prior completion of all earlier tiers.
     const trials = TRIAL_CATALOG.filter((t) => t.pillar === p.key && t.tier <= NEW_SEEKER_MAX_TIER);
