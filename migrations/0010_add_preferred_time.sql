@@ -9,4 +9,5 @@
 -- per-trial, so registration-level preferred_time is unused going forward, but
 -- the column needs to exist for the existing SQL to parse.
 
-ALTER TABLE registrations ADD COLUMN preferred_time TEXT;
+-- ALTER TABLE registrations ADD COLUMN preferred_time TEXT;
+-- Column already existed in production; this migration is a no-op to satisfy the tracker.

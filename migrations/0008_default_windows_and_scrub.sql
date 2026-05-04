@@ -9,7 +9,7 @@
 
 DELETE FROM seekers WHERE house = '(test row)';
 
-INSERT INTO event_schedule_window (id, event_id, day_date, start_time, end_time, notes, created_at, created_by) VALUES
+INSERT OR IGNORE INTO event_schedule_window (id, event_id, day_date, start_time, end_time, notes, created_at, created_by) VALUES
   -- Festival of Champions: May 22-25, 2026
   ('win_festival_2026_05_22', 'festival_of_champions_2026', '2026-05-22', '09:00', '17:00', 'Default 9–5; adjust in admin', strftime('%s','now'), 'system'),
   ('win_festival_2026_05_23', 'festival_of_champions_2026', '2026-05-23', '09:00', '17:00', 'Default 9–5; adjust in admin', strftime('%s','now'), 'system'),
