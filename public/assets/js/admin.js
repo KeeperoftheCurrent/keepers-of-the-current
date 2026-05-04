@@ -127,6 +127,16 @@ async function openSeekerDetail(id) {
     </li>`;
   }).join('') || '<li class="muted">No registrations.</li>';
 
+  const bookingsList = (body.bookings || []).filter(b => !b.voided_at).map((b) => {
+    const start = b.start_at ? b.start_at.replace('T', ' ') : '—';
+    const end   = b.end_at   ? b.end_at.replace('T', ' ').slice(11) : '';
+    return `<li>
+      <strong>${escapeHtml(b.trial_name)}</strong>
+      <span class="muted"> · ${escapeHtml(b.event_name || b.event_id || '')}</span>
+      <br><span style="color:var(--gold-light);font-size:13px;">⏱ ${escapeHtml(start)}${end ? ' → ' + escapeHtml(end) : ''}</span>
+    </li>`;
+  }).join('') || '<li class="muted">No time slots booked.</li>';
+
   const trialDropdownOptions = (await fetchCatalog()).map((c) => `<option value="${c.code}">${escapeHtml(c.short_label)} — ${escapeHtml(c.name)}</option>`).join('');
   const eventDropdownOptions = events.map((e) => `<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('');
 
@@ -145,6 +155,9 @@ async function openSeekerDetail(id) {
 
     <h4>Trial events (Trial Scroll)</h4>
     <ul style="margin-bottom:16px;">${trialEventsList}</ul>
+
+    <h4>Booked trial times</h4>
+    <ul style="margin-bottom:16px;">${bookingsList}</ul>
 
     <h4>Registrations</h4>
     <ul style="margin-bottom:16px;">${registrationsList}</ul>

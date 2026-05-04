@@ -43,7 +43,20 @@ export const onRequestGet: PagesFunction<Env, 'id', AdminContextData> = async ({
     id
   );
 
-  return jsonResponse({ seeker, registrations, trial_events, awards, progress });
+  const bookings = await queryAll(
+    env,
+    `SELECT b.id, b.trial_code, b.start_at, b.end_at, b.event_id, b.voided_at,
+            tc.name AS trial_name, tc.pillar, tc.tier,
+            e.name AS event_name
+       FROM bookings b
+       JOIN trial_catalog tc ON tc.code = b.trial_code
+       LEFT JOIN events e ON e.id = b.event_id
+      WHERE b.seeker_id = ?
+      ORDER BY b.start_at`,
+    id
+  );
+
+  return jsonResponse({ seeker, registrations, trial_events, awards, progress, bookings });
 };
 
 export const onRequestPatch: PagesFunction<Env, 'id', AdminContextData> = async ({ request, env, params, data }) => {
