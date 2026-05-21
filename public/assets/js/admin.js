@@ -770,5 +770,29 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Whoami via Cf-Access — not exposed via API; just show first part of email if available
   $('#admin-email').textContent = 'Keeper';
 
+  // If CF Access JWT is broken, fall back to admin key prompt.
+  // The key is set in Cloudflare Pages → Settings → Environment variables as KEEPER_ADMIN_KEY.
+  const probe = await api('GET', '/api/admin/seekers');
+  if (probe.status === 401) {
+    const stored = sessionStorage.getItem('keeper_admin_key');
+    if (!stored) {
+      const key = prompt('⚡ Keeper admin key required.\n\nEnter the KEEPER_ADMIN_KEY from your Cloudflare Pages settings:');
+      if (key) {
+        sessionStorage.setItem('keeper_admin_key', key.trim());
+        window.location.reload();
+        return;
+      }
+    } else {
+      // Key stored but still 401 — it's wrong, clear it and ask again.
+      sessionStorage.removeItem('keeper_admin_key');
+      const key = prompt('⚡ Admin key rejected. Re-enter KEEPER_ADMIN_KEY:');
+      if (key) {
+        sessionStorage.setItem('keeper_admin_key', key.trim());
+        window.location.reload();
+        return;
+      }
+    }
+  }
+
   switchTab('seekers');
 });

@@ -26,6 +26,16 @@ export const onRequest: PagesFunction<Env, string, AdminContextData> = async (co
     return await context.next();
   }
 
+  // Emergency bypass: Bearer token checked against KEEPER_ADMIN_KEY env var.
+  // Set this secret in Cloudflare Pages dashboard → Settings → Environment variables.
+  if (env.KEEPER_ADMIN_KEY) {
+    const auth = request.headers.get('Authorization') || '';
+    if (auth === `Bearer ${env.KEEPER_ADMIN_KEY}`) {
+      context.data.user = { email: 'keeper@keepersofthecurrent.org' };
+      return await context.next();
+    }
+  }
+
   if (!env.CF_ACCESS_AUD || !env.CF_ACCESS_TEAM_DOMAIN) {
     return jsonResponse({ ok: false, error: 'Access not configured (CF_ACCESS_AUD / CF_ACCESS_TEAM_DOMAIN unset)' }, 500);
   }

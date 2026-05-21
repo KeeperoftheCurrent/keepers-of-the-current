@@ -2,9 +2,13 @@
 // Body is parsed JSON when Content-Type is JSON, otherwise raw text.
 
 export async function api(method, path, body = undefined) {
+  const adminKey = sessionStorage.getItem('keeper_admin_key') || '';
   const init = {
     method,
-    headers: { 'Accept': 'application/json' },
+    headers: {
+      'Accept': 'application/json',
+      ...(adminKey ? { 'Authorization': `Bearer ${adminKey}` } : {}),
+    },
   };
   if (body !== undefined) {
     init.headers['Content-Type'] = 'application/json';

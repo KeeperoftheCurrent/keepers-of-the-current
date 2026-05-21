@@ -9,6 +9,7 @@ export interface Env {
   SITE_URL: string;
   CF_ACCESS_AUD?: string;
   CF_ACCESS_TEAM_DOMAIN?: string;
+  KEEPER_ADMIN_KEY?: string;
 }
 
 export async function queryAll<T = Record<string, unknown>>(
