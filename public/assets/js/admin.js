@@ -770,27 +770,45 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Whoami via Cf-Access — not exposed via API; just show first part of email if available
   $('#admin-email').textContent = 'Keeper';
 
-  // If CF Access JWT is broken, fall back to admin key prompt.
+  // If CF Access JWT is broken, fall back to admin key entry.
   // The key is set in Cloudflare Pages → Settings → Environment variables as KEEPER_ADMIN_KEY.
+  function showKeyForm(message) {
+    const main = document.querySelector('.admin-main');
+    main.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;min-height:60vh;">
+        <div class="card" style="max-width:420px;width:100%;padding:2rem;text-align:center;">
+          <div style="font-size:2rem;margin-bottom:1rem;">⚡</div>
+          <h3 style="margin-bottom:0.5rem;">Keeper Admin Key Required</h3>
+          <p style="color:var(--muted,#888);margin-bottom:1.5rem;">${message}</p>
+          <input id="key-input" type="password" placeholder="KEEPER_ADMIN_KEY"
+            style="width:100%;padding:0.6rem 0.8rem;font-size:1rem;border:1px solid var(--border,#444);border-radius:6px;background:var(--surface,#1a1a1a);color:inherit;margin-bottom:1rem;box-sizing:border-box;" />
+          <button id="key-submit" class="primary" style="width:100%;">Enter the Current</button>
+        </div>
+      </div>`;
+    const input = document.getElementById('key-input');
+    const submit = document.getElementById('key-submit');
+    input.focus();
+    const doSubmit = () => {
+      const val = input.value.trim();
+      if (!val) return;
+      sessionStorage.setItem('keeper_admin_key', val);
+      window.location.reload();
+    };
+    submit.addEventListener('click', doSubmit);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSubmit(); });
+  }
+
   const probe = await api('GET', '/api/admin/seekers');
   if (probe.status === 401) {
     const stored = sessionStorage.getItem('keeper_admin_key');
     if (!stored) {
-      const key = prompt('⚡ Keeper admin key required.\n\nEnter the KEEPER_ADMIN_KEY from your Cloudflare Pages settings:');
-      if (key) {
-        sessionStorage.setItem('keeper_admin_key', key.trim());
-        window.location.reload();
-        return;
-      }
+      showKeyForm('Enter the KEEPER_ADMIN_KEY from your Cloudflare Pages settings.');
+      return;
     } else {
       // Key stored but still 401 — it's wrong, clear it and ask again.
       sessionStorage.removeItem('keeper_admin_key');
-      const key = prompt('⚡ Admin key rejected. Re-enter KEEPER_ADMIN_KEY:');
-      if (key) {
-        sessionStorage.setItem('keeper_admin_key', key.trim());
-        window.location.reload();
-        return;
-      }
+      showKeyForm('Admin key rejected — please re-enter KEEPER_ADMIN_KEY.');
+      return;
     }
   }
 
