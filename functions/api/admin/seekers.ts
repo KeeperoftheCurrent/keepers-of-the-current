@@ -5,6 +5,7 @@ import type { Env } from '../../lib/db';
 import { queryAll } from '../../lib/db';
 import { jsonResponse } from '../../_middleware';
 import type { AdminContextData } from './_middleware';
+import { RETIRED_TRIAL_CODE } from '../../lib/catalog';
 
 interface SeekerSummary {
   id: string;
@@ -25,10 +26,11 @@ export const onRequestGet: PagesFunction<Env, string, AdminContextData> = async 
     `SELECT
        s.id, s.name, s.email, s.house, s.rings_pursued, s.notes, s.created_at,
        (SELECT COUNT(*) FROM registrations r WHERE r.seeker_id = s.id AND r.voided_at IS NULL) AS registrations_count,
-       (SELECT COUNT(*) FROM trial_events te WHERE te.seeker_id = s.id AND te.voided_at IS NULL AND te.outcome = 'passed') AS passed_trials,
+       (SELECT COUNT(DISTINCT te.trial_code) FROM trial_events te WHERE te.seeker_id = s.id AND te.voided_at IS NULL AND te.outcome = 'passed' AND te.trial_code <> ?) AS passed_trials,
        (SELECT GROUP_CONCAT(kind, ',') FROM awards a WHERE a.seeker_id = s.id AND a.revoked_at IS NULL) AS active_awards
        FROM seekers s
-       ORDER BY s.created_at DESC`
+       ORDER BY s.created_at DESC`,
+    RETIRED_TRIAL_CODE
   );
   // Parse rings_pursued JSON for the response
   const expanded = seekers.map((s) => ({

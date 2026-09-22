@@ -26,6 +26,7 @@ import { queryFirst, queryAll, exec } from '../../lib/db';
 import { jsonResponse } from '../../_middleware';
 import { validateIntake, normalizeEmail } from '../../lib/validate';
 import { sendBothEmails } from '../../lib/email';
+import { RETIRED_TRIAL_CODE } from '../../lib/catalog';
 
 interface EventRow {
   id: string;
@@ -63,9 +64,10 @@ async function isTierCompleted(
   interface TierRow { code: string; tier_aggregation: string; }
   const tierCodes = await queryAll<TierRow>(
     env,
-    `SELECT code, tier_aggregation FROM trial_catalog WHERE pillar = ? AND tier = ?`,
+    `SELECT code, tier_aggregation FROM trial_catalog WHERE pillar = ? AND tier = ? AND code <> ?`,
     pillar,
-    tier
+    tier,
+    RETIRED_TRIAL_CODE
   );
   if (tierCodes.length === 0) return true; // no catalog codes = nothing to check
   const agg = tierCodes[0].tier_aggregation;
@@ -73,7 +75,7 @@ async function isTierCompleted(
   const ph = codes.map(() => '?').join(',');
   const done = await queryAll<{ trial_code: string }>(
     env,
-    `SELECT trial_code FROM trial_events
+    `SELECT DISTINCT trial_code FROM trial_events
       WHERE seeker_id = ? AND trial_code IN (${ph})
         AND voided_at IS NULL AND outcome = 'passed'`,
     seekerId,
@@ -314,31 +316,32 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
   const ringsJson = JSON.stringify(input.rings_pursued);
 
   // existingSeeker was already looked up above for prerequisite checks.
+  const writes: D1PreparedStatement[] = [];
   let seekerId: string;
   if (existingSeeker) {
     seekerId = existingSeeker.id;
-    await exec(
-      env,
-      `UPDATE seekers SET name = ?, email = ?, house = ?, rings_pursued = ? WHERE id = ?`,
+    writes.push(env.DB.prepare(
+      `UPDATE seekers SET name = ?, email = ?, house = ?, rings_pursued = ? WHERE id = ?`
+    ).bind(
       input.name, input.email, input.house, ringsJson, seekerId
-    );
+    ));
   } else {
     seekerId = crypto.randomUUID();
-    await exec(
-      env,
+    writes.push(env.DB.prepare(
       `INSERT INTO seekers (id, name, email, email_normalized, house, rings_pursued, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
+    ).bind(
       seekerId, input.name, input.email, emailNormalized, input.house, ringsJson, now
-    );
+    ));
   }
 
   const registrationId = crypto.randomUUID();
-  await exec(
-    env,
+  writes.push(env.DB.prepare(
     `INSERT INTO registrations (id, seeker_id, event_id, preferred_date, preferred_time, rings_pursued, email_status, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)`,
+     VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)`
+  ).bind(
     registrationId, seekerId, event.id, input.preferred_date, input.preferred_time, ringsJson, now
-  );
+  ));
 
   const insertedBookings: { id: string; trial_code: string; start_at: string; end_at: string }[] = [];
   for (const b of requestedBookings) {
@@ -346,14 +349,18 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     const end_at = addMinutes(b.start_at, cat.duration_minutes!);
     const buffer_until = addMinutes(end_at, cat.buffer_minutes);
     const id = crypto.randomUUID();
-    await exec(
-      env,
+    writes.push(env.DB.prepare(
       `INSERT INTO bookings (id, registration_id, seeker_id, event_id, trial_code, start_at, end_at, buffer_until, created_by, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    ).bind(
       id, registrationId, seekerId, event.id, b.trial_code, b.start_at, end_at, buffer_until, 'public/seeker', now
-    );
+    ));
     insertedBookings.push({ id, trial_code: b.trial_code, start_at: b.start_at, end_at });
   }
+
+  // D1 rolls back the entire batch if any statement fails, including profile
+  // edits and earlier bookings. Only send confirmations after it commits.
+  await env.DB.batch(writes);
 
   // Background email send + status update.
   waitUntil(

@@ -6,6 +6,7 @@ import type { Env } from '../../../lib/db';
 import { queryFirst, queryAll, exec, audit } from '../../../lib/db';
 import { jsonResponse } from '../../../_middleware';
 import type { AdminContextData } from '../_middleware';
+import { RETIRED_TRIAL_CODE } from '../../../lib/catalog';
 
 export const onRequestGet: PagesFunction<Env, 'id', AdminContextData> = async ({ env, params }) => {
   const id = String(params.id);
@@ -39,8 +40,14 @@ export const onRequestGet: PagesFunction<Env, 'id', AdminContextData> = async ({
   );
   const progress = await queryAll(
     env,
-    `SELECT trial_code, completed FROM v_seeker_progress WHERE seeker_id = ?`,
-    id
+    `SELECT tc.code AS trial_code,
+       EXISTS(SELECT 1 FROM trial_events te
+               WHERE te.trial_code = tc.code AND te.seeker_id = ?
+                 AND te.voided_at IS NULL AND te.outcome = 'passed') AS completed
+       FROM trial_catalog tc WHERE tc.code <> ?
+       ORDER BY tc.display_order`,
+    id,
+    RETIRED_TRIAL_CODE
   );
 
   const bookings = await queryAll(

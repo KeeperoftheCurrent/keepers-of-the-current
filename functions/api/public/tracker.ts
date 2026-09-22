@@ -6,6 +6,7 @@
 import type { Env } from '../../lib/db';
 import { queryAll } from '../../lib/db';
 import { jsonResponse } from '../../_middleware';
+import { RETIRED_TRIAL_CODE } from '../../lib/catalog';
 
 interface Row {
   seeker_id: string;
@@ -29,8 +30,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
     `SELECT
         s.id AS seeker_id, s.name, s.house,
         tc.pillar, tc.tier, tc.tier_aggregation,
-        COUNT(*) AS total_codes,
-        SUM(CASE WHEN te.id IS NOT NULL THEN 1 ELSE 0 END) AS passed_codes
+        COUNT(DISTINCT tc.code) AS total_codes,
+        COUNT(DISTINCT te.trial_code) AS passed_codes
        FROM seekers s
        CROSS JOIN trial_catalog tc
        LEFT JOIN trial_events te
@@ -38,7 +39,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
         AND te.trial_code = tc.code
         AND te.voided_at IS NULL
         AND te.outcome = 'passed'
-       GROUP BY s.id, s.name, s.house, tc.pillar, tc.tier, tc.tier_aggregation`
+       WHERE tc.code <> ?
+       GROUP BY s.id, s.name, s.house, tc.pillar, tc.tier, tc.tier_aggregation`,
+    RETIRED_TRIAL_CODE
   );
 
   // Active awards per seeker

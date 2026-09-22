@@ -7,6 +7,7 @@ import type { Env } from '../../lib/db';
 import { queryFirst, queryAll } from '../../lib/db';
 import { jsonResponse } from '../../_middleware';
 import { normalizeEmail } from '../../lib/validate';
+import { RETIRED_TRIAL_CODE } from '../../lib/catalog';
 
 interface SeekerRow {
   id: string;
@@ -44,16 +45,18 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     env,
     `SELECT
         tc.pillar, tc.tier, tc.tier_aggregation,
-        COUNT(*) AS total_codes,
-        SUM(CASE WHEN te.id IS NOT NULL THEN 1 ELSE 0 END) AS passed_codes
+        COUNT(DISTINCT tc.code) AS total_codes,
+        COUNT(DISTINCT te.trial_code) AS passed_codes
        FROM trial_catalog tc
        LEFT JOIN trial_events te
          ON te.trial_code = tc.code
         AND te.seeker_id = ?
         AND te.voided_at IS NULL
         AND te.outcome = 'passed'
+       WHERE tc.code <> ?
        GROUP BY tc.pillar, tc.tier, tc.tier_aggregation`,
-    seeker.id
+    seeker.id,
+    RETIRED_TRIAL_CODE
   );
   const PILLARS: Pillar[] = ['body', 'mind', 'soul'];
   const tiersComplete: Record<Pillar, number> = { body: 0, mind: 0, soul: 0 };

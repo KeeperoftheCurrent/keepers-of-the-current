@@ -191,7 +191,6 @@ async function fetchCatalog() {
     { code: 'b_t3_burden',             short_label: 'Body III',    name: 'The Burden' },
     { code: 'b_t3_plank',              short_label: 'Body III',    name: 'The Plank' },
     { code: 'b_t3_foot_race',          short_label: 'Body III',    name: 'The Foot Race' },
-    { code: 'b_t3_course',             short_label: 'Body III',    name: 'The Course' },
     { code: 'm_t1_dilemma',            short_label: 'Mind I',      name: 'The Dilemma' },
     { code: 'm_t1_recitation',         short_label: 'Mind I',      name: 'The Recitation' },
     { code: 'm_t2',                    short_label: 'Mind II',     name: 'Discipline of Thought' },
