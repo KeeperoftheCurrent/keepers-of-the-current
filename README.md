@@ -134,6 +134,23 @@ Push to GitHub → Pages auto-builds → live within ~60s.
 
 ## Common one-off commands
 
+### Regression checks
+
+```sh
+npm ci
+npm run typecheck
+npm test
+npx wrangler pages functions build --outdir .wrangler/test-build
+```
+
+The tests create disposable local D1 databases from the repository migrations,
+use synthetic seekers, and stub email delivery. They cover registration rollback,
+booking conflicts, award correction/restoration, retired trials, and progress
+counts. They do not contact the production database or send email.
+
+Migration 0010 includes the `preferred_time` column for fresh databases.
+Production already has this column and records 0010 as applied; do not replay it.
+
 ```sh
 # View seekers in local D1
 npm run db:local -- --command="SELECT * FROM seekers"

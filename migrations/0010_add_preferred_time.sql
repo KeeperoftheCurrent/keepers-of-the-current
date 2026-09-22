@@ -9,5 +9,6 @@
 -- per-trial, so registration-level preferred_time is unused going forward, but
 -- the column needs to exist for the existing SQL to parse.
 
--- ALTER TABLE registrations ADD COLUMN preferred_time TEXT;
--- Column already existed in production; this migration is a no-op to satisfy the tracker.
+ALTER TABLE registrations ADD COLUMN preferred_time TEXT;
+-- Production already records 0010 as applied (the column was added manually).
+-- Do not replay applied migrations; this statement fixes fresh local databases.

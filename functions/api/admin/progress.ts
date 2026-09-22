@@ -9,6 +9,7 @@ import type { Env } from '../../lib/db';
 import { queryFirst, exec, audit } from '../../lib/db';
 import { jsonResponse } from '../../_middleware';
 import { evaluateAwards } from '../../lib/awards';
+import { RETIRED_TRIAL_CODE } from '../../lib/catalog';
 import type { AdminContextData } from './_middleware';
 
 interface CatalogRow {
@@ -36,6 +37,9 @@ export const onRequestPost: PagesFunction<Env, string, AdminContextData> = async
   if (!trial_code) errors.push('trial_code is required');
   if (!completed_on || !/^\d{4}-\d{2}-\d{2}$/.test(completed_on)) errors.push('completed_on must be YYYY-MM-DD');
   if (errors.length) return jsonResponse({ ok: false, error: 'Validation failed', errors }, 422);
+  if (trial_code === RETIRED_TRIAL_CODE) {
+    return jsonResponse({ ok: false, error: 'retired_trial', detail: 'This trial is retired. Historical results remain in the Trial Scroll.' }, 422);
+  }
 
   const seeker = await queryFirst<{ id: string }>(env, `SELECT id FROM seekers WHERE id = ?`, seeker_id);
   if (!seeker) return jsonResponse({ ok: false, error: 'Unknown seeker' }, 422);

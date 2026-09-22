@@ -12,6 +12,7 @@
 //   retracted automatically. Manual awards (Shield) require explicit revoke.
 
 import { queryAll, exec, type Env } from './db';
+import { RETIRED_TRIAL_CODE } from './catalog';
 
 const PILLARS = ['body', 'mind', 'soul'] as const;
 type Pillar = (typeof PILLARS)[number];
@@ -35,7 +36,8 @@ async function tierStatesForSeeker(
 ): Promise<Map<Pillar, boolean>> {
   const catalog = await queryAll<CatalogRow>(
     env,
-    `SELECT code, pillar, tier, tier_aggregation FROM trial_catalog`
+    `SELECT code, pillar, tier, tier_aggregation FROM trial_catalog WHERE code <> ?`,
+    RETIRED_TRIAL_CODE
   );
   const passed = new Set(
     (
@@ -84,6 +86,26 @@ export interface EvaluateResult {
   master_added: boolean;
 }
 
+async function conferAward(
+  env: Env, seekerId: string, kind: string, today: string,
+  eventId: string | null, actorEmail: string, now: number
+): Promise<boolean> {
+  const result = await exec(
+    env,
+    `INSERT INTO awards (id, seeker_id, kind, awarded_on, event_id, auto_conferred, created_by, created_at)
+     VALUES (?, ?, ?, ?, ?, 1, ?, ?)
+     ON CONFLICT(seeker_id, kind) DO UPDATE SET
+       awarded_on = excluded.awarded_on, event_id = excluded.event_id,
+       auto_conferred = 1, created_by = excluded.created_by, created_at = excluded.created_at,
+       revoked_at = NULL, revoked_by = NULL, revoke_reason = NULL
+     WHERE awards.revoked_at IS NOT NULL`,
+    crypto.randomUUID(), seekerId, kind, today, eventId, actorEmail, now
+  );
+  // Keep the original award ID on restoration; progress.mark / progress.void
+  // retain the correction history in admin_log. Active awards are left alone.
+  return result.meta.changes > 0;
+}
+
 export async function evaluateAwards(
   env: Env,
   seekerId: string,
@@ -100,20 +122,9 @@ export async function evaluateAwards(
     const ringKind = RING_KIND[pillar];
     if (existing.has(ringKind)) continue;
     if (!tierStates.get(pillar)) continue;
-    const id = crypto.randomUUID();
-    await exec(
-      env,
-      `INSERT INTO awards (id, seeker_id, kind, awarded_on, event_id, auto_conferred, created_by, created_at)
-       VALUES (?, ?, ?, ?, ?, 1, ?, ?)`,
-      id,
-      seekerId,
-      ringKind,
-      today,
-      eventId,
-      actorEmail,
-      now
-    );
-    ringsAdded.push(ringKind);
+    if (await conferAward(env, seekerId, ringKind, today, eventId, actorEmail, now)) {
+      ringsAdded.push(ringKind);
+    }
     existing.add(ringKind);
   }
 
@@ -122,19 +133,7 @@ export async function evaluateAwards(
     !existing.has('master_title') &&
     PILLARS.every((p) => existing.has(RING_KIND[p]))
   ) {
-    const id = crypto.randomUUID();
-    await exec(
-      env,
-      `INSERT INTO awards (id, seeker_id, kind, awarded_on, event_id, auto_conferred, created_by, created_at)
-       VALUES (?, ?, 'master_title', ?, ?, 1, ?, ?)`,
-      id,
-      seekerId,
-      today,
-      eventId,
-      actorEmail,
-      now
-    );
-    masterAdded = true;
+    masterAdded = await conferAward(env, seekerId, 'master_title', today, eventId, actorEmail, now);
   }
 
   return { rings_added: ringsAdded, master_added: masterAdded };
