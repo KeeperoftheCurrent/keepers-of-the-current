@@ -27,6 +27,7 @@ import { jsonResponse } from '../../_middleware';
 import { validateIntake, normalizeEmail } from '../../lib/validate';
 import { sendBothEmails } from '../../lib/email';
 import { RETIRED_TRIAL_CODE } from '../../lib/catalog';
+import { eventClock } from '../../lib/event-time';
 
 interface EventRow {
   id: string;
@@ -187,6 +188,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     input.event_id
   );
   if (!event) return jsonResponse({ ok: false, error: 'Unknown event.' }, 422);
+  const clock = eventClock(env.EVENT_TIME_ZONE);
+  const eventEnd = event.ends_on ?? event.starts_on;
+  if (eventEnd && eventEnd < clock.date) {
+    return jsonResponse({ ok: false, error: 'event_ended', detail: 'This gathering has ended. Please choose an upcoming gathering.' }, 422);
+  }
 
   // Look up existing seeker early — needed for tier-prerequisite checks below.
   // New seekers (null) have no completions, so any Tier > 1 booking is rejected.
@@ -229,6 +235,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
 
     for (let i = 0; i < requestedBookings.length; i++) {
       const b = requestedBookings[i];
+      if (b.start_at < clock.localDateTime) {
+        return jsonResponse({ ok: false, error: 'past_slot', detail: 'This time has passed. Please choose a later trial time.', index: i }, 422);
+      }
       const cat = catalogByCode.get(b.trial_code);
       if (!cat) {
         return jsonResponse({ ok: false, error: 'unknown_trial', detail: `${b.trial_code} not in catalog`, index: i }, 422);

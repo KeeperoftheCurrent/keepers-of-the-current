@@ -1,0 +1,45 @@
+.page-shell { max-width: 900px; }
+.quiet { color: #c8b08e; }
+.small { font-size: 14px; }
+.eyebrow { color: var(--gold-light); text-transform: uppercase; letter-spacing: 2px; font-size: 12px; }
+.journey-header { text-align: center; }
+.journey-header h2 { font-size: clamp(26px, 5vw, 36px); color: var(--parchment); overflow-wrap: anywhere; }
+.ring-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 24px; }
+.ring-card { padding: 14px 8px; border: 1px solid var(--border); border-radius: 4px; background: var(--red-dark); }
+.ring-card.held { border-color: var(--gold); background: var(--gold-faint); }
+.ring-card img { width: 54px; height: 54px; object-fit: contain; display: block; margin: 0 auto 8px; }
+.ring-card strong { display: block; color: var(--gold-light); font-weight: normal; }
+.ring-card span { font-size: 13px; color: #c8b08e; }
+.title-banner { color: var(--gold-light); padding: 8px; border-bottom: 1px solid var(--border); }
+.booking-card, .gathering-card { padding: 16px; margin: 14px 0; border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 3px; background: var(--red-dark); overflow-wrap: anywhere; }
+.booking-card h3, .gathering-card h3 { color: var(--parchment); margin-bottom: 6px; font-size: 18px; }
+.booking-card p, .gathering-card p { margin-bottom: 4px; }
+.booking-time { color: var(--gold-light); font-size: 18px; }
+.empty-state { padding: 18px; margin: 16px 0; border: 1px dashed var(--border-strong); color: #c8b08e; border-radius: 3px; }
+.pillar-block { padding: 20px 0; border-top: 1px solid var(--border); }
+.pillar-block:first-child { border-top: 0; }
+.pillar-block h3 { margin-bottom: 4px; color: var(--gold-light); }
+.tier-progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 0; margin: 14px 0; list-style: none; }
+.tier-progress li { padding: 10px 8px; background: var(--red-dark); border: 1px solid var(--border); border-radius: 3px; text-align: center; }
+.tier-progress li.complete { border-color: var(--gold); background: var(--gold-faint); }
+.tier-progress li.next { border-color: #b59a75; }
+.tier-progress span { display: block; color: #c8b08e; font-size: 12px; }
+.next-step { color: var(--parchment); margin-bottom: 8px; }
+.journey-link { display: inline-block; padding: 10px 0; }
+.history summary { cursor: pointer; color: var(--gold-light); padding: 4px; }
+.history[open] summary { margin-bottom: 18px; }
+.history h3 { margin-top: 18px; }
+.history ul { padding-left: 20px; color: #c8b08e; }
+.history li { margin-bottom: 12px; }
+.page-shell :focus-visible { outline: 2px solid var(--gold-light); outline-offset: 4px; }
+.page-shell label.field .label-text, .page-header .subtitle, #form-wrap .muted, #not-found .muted { color: #c8b08e; }
+@media (max-width: 520px) {
+  .page-shell { padding: 24px 14px 48px; }
+  .panel { padding: 22px 16px; }
+  .ring-row { gap: 7px; }
+  .ring-card { padding: 12px 4px; }
+  .ring-card img { width: 42px; height: 42px; }
+  .tier-progress { gap: 5px; }
+  .tier-progress li { padding: 10px 3px; }
+  #lookup-form button { width: 100%; }
+}

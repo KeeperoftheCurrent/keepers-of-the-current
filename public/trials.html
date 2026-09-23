@@ -27,6 +27,7 @@
   <a href="/trials.html" class="active">The Trials</a>
   <a href="/seeker.html" class="nav-cta">Register</a>
   <a href="/tracker.html">Trial Scroll</a>
+  <a href="/lookup.html">My Trials</a>
   <a href="/rewards.html">Rewards</a>
 </nav>
 
@@ -113,7 +114,7 @@
   <!-- BODY -->
   <h2 class="section-title">Ring of Endurance<small>Body Pillar · Earth</small></h2>
 
-  <div class="tier-block body">
+  <div class="tier-block body" id="body-tier-1">
     <div class="tier-header" onclick="toggleTier(this)">
       <div class="tier-num">I</div>
       <div class="tier-header-text">
@@ -139,7 +140,7 @@
     </div>
   </div>
 
-  <div class="tier-block body">
+  <div class="tier-block body" id="body-tier-2">
     <div class="tier-header" onclick="toggleTier(this)">
       <div class="tier-num">II</div>
       <div class="tier-header-text">
@@ -161,7 +162,7 @@
     </div>
   </div>
 
-  <div class="tier-block body">
+  <div class="tier-block body" id="body-tier-3">
     <div class="tier-header" onclick="toggleTier(this)">
       <div class="tier-num">III</div>
       <div class="tier-header-text">
@@ -201,7 +202,7 @@
   <!-- MIND -->
   <h2 class="section-title">Ring of Focus<small>Mind Pillar · Wind</small></h2>
 
-  <div class="tier-block mind">
+  <div class="tier-block mind" id="mind-tier-1">
     <div class="tier-header" onclick="toggleTier(this)">
       <div class="tier-num">I</div>
       <div class="tier-header-text">
@@ -227,7 +228,7 @@
     </div>
   </div>
 
-  <div class="tier-block mind">
+  <div class="tier-block mind" id="mind-tier-2">
     <div class="tier-header" onclick="toggleTier(this)">
       <div class="tier-num">II</div>
       <div class="tier-header-text">
@@ -247,7 +248,7 @@
     </div>
   </div>
 
-  <div class="tier-block mind">
+  <div class="tier-block mind" id="mind-tier-3">
     <div class="tier-header" onclick="toggleTier(this)">
       <div class="tier-num">III</div>
       <div class="tier-header-text">
@@ -275,7 +276,7 @@
   <!-- SOUL -->
   <h2 class="section-title">Ring of Connection<small>Soul Pillar · Water</small></h2>
 
-  <div class="tier-block soul">
+  <div class="tier-block soul" id="soul-tier-1">
     <div class="tier-header" onclick="toggleTier(this)">
       <div class="tier-num">I</div>
       <div class="tier-header-text">
@@ -302,7 +303,7 @@
     </div>
   </div>
 
-  <div class="tier-block soul">
+  <div class="tier-block soul" id="soul-tier-2">
     <div class="tier-header" onclick="toggleTier(this)">
       <div class="tier-num">II</div>
       <div class="tier-header-text">
@@ -322,7 +323,7 @@
     </div>
   </div>
 
-  <div class="tier-block soul">
+  <div class="tier-block soul" id="soul-tier-3">
     <div class="tier-header" onclick="toggleTier(this)">
       <div class="tier-num">III</div>
       <div class="tier-header-text">
@@ -484,19 +485,39 @@
 function toggleTier(header) {
   const body = header.nextElementSibling;
   const isOpen = header.classList.toggle('open');
+  header.setAttribute('aria-expanded', String(isOpen));
   body.classList.toggle('open', isOpen);
   header.querySelector('.tier-chevron').style.transform = isOpen ? 'rotate(180deg)' : '';
 }
 // Open first tier of each pillar by default
 document.addEventListener('DOMContentLoaded', () => {
-  const firstHeaders = document.querySelectorAll('.tier-block:first-of-type .tier-header');
+  document.querySelectorAll('.tier-header').forEach(header => {
+    header.setAttribute('role', 'button');
+    header.tabIndex = 0;
+    header.setAttribute('aria-expanded', 'false');
+    header.nextElementSibling.id = header.parentElement.id + '-content';
+    header.setAttribute('aria-controls', header.nextElementSibling.id);
+    header.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        toggleTier(header);
+      }
+    });
+  });
+  function openLinkedTier() {
+    const target = document.getElementById(location.hash.slice(1));
+    const header = target?.querySelector('.tier-header');
+    if (header && !header.classList.contains('open')) toggleTier(header);
+  }
+  addEventListener('hashchange', openLinkedTier);
   document.querySelectorAll('.tier-block').forEach((block, i) => {
     // Open the first tier under each pillar section heading
     const prev = block.previousElementSibling;
     if (prev && prev.classList.contains('section-title')) {
-      toggleTier(block.querySelector('.tier-header'));
+      if (!location.hash || location.hash === '#' + block.id) toggleTier(block.querySelector('.tier-header'));
     }
   });
+  openLinkedTier();
 });
 </script>
 </body></html>

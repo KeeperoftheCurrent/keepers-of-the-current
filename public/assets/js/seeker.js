@@ -155,6 +155,13 @@ async function loadEvents() {
     showToast('Could not load the Hynafol calendar.', 'error');
     return;
   }
+  if (body.events.length === 0) {
+    select.innerHTML = '<option value="">— no upcoming gatherings yet —</option>';
+    select.disabled = true;
+    $('#submit-btn').disabled = true;
+    renderErrors(['No upcoming gatherings are open for registration. Please check back when the Keeper adds the next event.']);
+    return;
+  }
   const options = ['<option value="">— choose a gathering —</option>'];
   for (const ev of body.events) {
     const dates = ` (${fmtEventDates(ev.starts_on, ev.ends_on)})`;
@@ -428,8 +435,8 @@ async function handleSubmit(e) {
   submitBtn.textContent = 'Mark me in the Scroll';
 
   if (status === 422 && body) {
-    if (body.error === 'slot_taken') {
-      renderErrors([`The slot for ${body.trial_code} was just taken. Refreshing availability — please pick another time.`]);
+    if (body.error === 'slot_taken' || body.error === 'past_slot') {
+      renderErrors([body.detail || 'That time is no longer available. Please pick another time.']);
       onEventChange();
       return;
     }
@@ -442,7 +449,7 @@ async function handleSubmit(e) {
       return;
     }
   }
-  const detail = (body && (body.error || body.detail)) || 'Unknown error';
+  const detail = (body && (body.detail || body.error)) || 'Unknown error';
   renderErrors([detail]);
 }
 
