@@ -9,6 +9,7 @@
 import type { Env } from '../../lib/db';
 import { queryFirst, queryAll } from '../../lib/db';
 import { jsonResponse } from '../../_middleware';
+import { eventClock } from '../../lib/event-time';
 
 interface CatalogRow {
   code: string;
@@ -64,6 +65,7 @@ function overlaps(aStart: string, aEnd: string, bStart: string, bEnd: string): b
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
+  const clock = eventClock(env.EVENT_TIME_ZONE);
   const url = new URL(request.url);
   const event_id = url.searchParams.get('event_id');
   const codesParam = url.searchParams.get('trial_codes');
@@ -131,6 +133,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       const winEnd = combine(w.day_date, w.end_time);
       const candidates = timeStringsBetween(winStart, winEnd);
       for (const candStart of candidates) {
+        if (candStart < clock.localDateTime) continue;
         const candEnd = addMinutes(candStart, dur);
         const candBufferUntil = addMinutes(candEnd, buf);
         if (candBufferUntil > winEnd) continue;

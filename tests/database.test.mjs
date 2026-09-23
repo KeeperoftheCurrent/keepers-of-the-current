@@ -23,6 +23,8 @@ before(async () => {
       export { onRequestGet as seekerDetail } from './functions/api/admin/seekers/[id].ts';
       export { onRequestGet as seekers } from './functions/api/admin/seekers.ts';
       export { evaluateAwards } from './functions/lib/awards.ts';
+      export { onRequestGet as events } from './functions/api/public/events.ts';
+      export { eventClock } from './functions/lib/event-time.ts';
     ` },
     bundle: true, platform: 'node', format: 'esm', outfile,
     plugins: [{ name: 'no-real-email', setup(builder) {
@@ -55,6 +57,7 @@ function migrationStatements(sql) {
 }
 
 async function database(t) {
+  t.mock.timers.enable({ apis: ['Date'], now: new Date('2026-09-22T12:00:00Z') });
   const mf = new Miniflare({
     modules: true, script: 'export default { fetch() { return new Response("test"); } }',
     compatibilityDate: '2024-11-01', d1Databases: { DB: crypto.randomUUID() },
@@ -241,4 +244,95 @@ test('duplicate passes cannot satisfy another required trial or unlock a higher 
   assert.equal(tracker.data.seekers[0].pillar_counts.mind.complete, 0);
   await mark(d, id, 'm_t1_dilemma');
   assert.equal((await d.call(app.intake, payload({ bookings: [slot('m_t2')] }))).status, 201);
+});
+
+test('My Trials only exposes the matched seeker’s active bookings, without private fields', async t => {
+  const d = await database(t);
+  const id = await register(d, { bookings: [slot()] });
+  await register(d, { name: 'Another seeker', email: 'another@example.invalid', bookings: [slot('m_t1_recitation', '10:00')] });
+  await d.db.prepare("UPDATE bookings SET notes = 'private appointment note'").run();
+  await d.db.prepare("UPDATE seekers SET notes = 'private Keeper note'").run();
+  const lookup = () => d.call(app.lookup, { name: 'Test Seeker', email: 'seeker@example.invalid' });
+  const found = await lookup();
+  assert.equal(found.data.seeker.bookings.length, 1);
+  assert.equal(found.data.seeker.bookings[0].start_at, slot().start_at);
+  assert.equal(found.data.seeker.bookings[0].past, false);
+  assert.equal(found.data.seeker.time_zone, 'America/Chicago');
+  assert.ok(!JSON.stringify(found.data).includes('private'));
+  assert.ok(!JSON.stringify(found.data).includes('example.invalid'));
+  assert.ok(!('id' in found.data.seeker.bookings[0]));
+  await d.db.prepare('UPDATE bookings SET voided_at = 1 WHERE seeker_id = ?').bind(id).run();
+  assert.equal((await lookup()).data.seeker.bookings.length, 0);
+  await register(d, { bookings: [slot('m_t1_recitation', '11:00')] });
+  await d.db.prepare('UPDATE registrations SET voided_at = 1 WHERE seeker_id = ?').bind(id).run();
+  assert.equal((await lookup()).data.seeker.bookings.length, 0);
+  assert.deepEqual((await lookup()).data.seeker.registrations, []);
+  for (const body of [{}, {name: 'Wrong', email: 'seeker@example.invalid'}, {name: 'Test Seeker', email: 'missing@example.invalid'}]) {
+    assert.deepEqual((await d.call(app.lookup, body)).data, {ok: false});
+  }
+});
+
+test('next tiers respect alternative trials, all-of requirements, voids and completion', async t => {
+  const d = await database(t);
+  const id = await register(d);
+  const lookup = async () => (await d.call(app.lookup, {name:'Test Seeker', email:'seeker@example.invalid'})).data.seeker;
+  assert.deepEqual((await lookup()).next_tiers, {body:1, mind:1, soul:1});
+  const first = await mark(d, id, 'm_t1_recitation');
+  assert.equal((await lookup()).next_tiers.mind, 2);
+  await mark(d, id, 'm_t2');
+  await mark(d, id, 'm_t3');
+  assert.equal((await lookup()).next_tiers.mind, null);
+  await d.call(app.voidProgress, {}, {params:{id:first.trial_event_id}, method:'DELETE'});
+  assert.equal((await lookup()).next_tiers.mind, 1);
+  for (const code of ['s_t1','s_t2','s_t3_testament']) await mark(d, id, code);
+  assert.equal((await lookup()).next_tiers.soul, 3);
+  assert.equal((await lookup()).tier_progress.soul.find(tier => tier.tier === 3).complete, false);
+});
+
+test('past events disappear from registration but remain in personal history', async t => {
+  const d = await database(t);
+  const id = await register(d, {bookings:[slot()]});
+  await d.db.prepare("UPDATE events SET starts_on = '2026-01-01', ends_on = '2026-01-02' WHERE id = 'gg_2026'").run();
+  await d.db.prepare("UPDATE bookings SET start_at = '2026-01-01T09:00', end_at = '2026-01-01T09:30', buffer_until = '2026-01-01T09:45' WHERE seeker_id = ?").bind(id).run();
+  const events = (await d.call(app.events)).data.events;
+  assert.ok(!events.some(event => event.id === 'gg_2026'));
+  assert.ok(events.some(event => event.id === 'october_expedition_2026'));
+  const found = (await d.call(app.lookup, {name:'Test Seeker',email:'seeker@example.invalid'})).data.seeker;
+  assert.equal(found.registrations[0].past, true);
+  assert.equal(found.bookings[0].past, true);
+  const rejected = await d.call(app.intake, payload({email:'late@example.invalid'}));
+  assert.equal(rejected.status, 422);
+  assert.equal(rejected.data.error, 'event_ended');
+  assert.equal(await d.count('seekers'), 1);
+  assert.equal(d.env.testEmailCalls, 1);
+});
+
+test('ongoing and undated events remain available; inactive events are hidden', async t => {
+  const d = await database(t);
+  for (const [id, starts, ends, active] of [
+    ['ongoing','2026-09-20','2026-09-22',1], ['today','2026-09-22',null,1],
+    ['undated',null,null,1], ['inactive','2026-10-01','2026-10-02',0],
+  ]) {
+    await d.db.prepare("INSERT INTO events (id,name,kind,starts_on,ends_on,active) VALUES (?,?,'expedition',?,?,?)").bind(id,id,starts,ends,active).run();
+  }
+  const ids = (await d.call(app.events)).data.events.map(event => event.id);
+  for (const id of ['ongoing','today','undated']) assert.ok(ids.includes(id));
+  assert.ok(!ids.includes('inactive'));
+});
+
+test('event day boundaries use Central Time across daylight-saving changes', () => {
+  assert.equal(app.eventClock('America/Chicago', new Date('2026-09-23T01:30:00Z')).date, '2026-09-22');
+  assert.equal(app.eventClock('America/Chicago', new Date('2026-11-08T15:00:00Z')).localDateTime, '2026-11-08T09:00');
+  assert.equal(app.eventClock('America/Chicago', new Date('2026-06-08T14:00:00Z')).localDateTime, '2026-06-08T09:00');
+});
+
+test('past appointment times cannot be booked and are removed from availability', async t => {
+  const d = await database(t);
+  t.mock.timers.setTime(new Date('2026-11-08T16:00:00Z').getTime()); // 10 AM at the gathering
+  const rejected = await d.call(app.intake, payload({bookings:[slot()]}));
+  assert.equal(rejected.status, 422);
+  assert.equal(rejected.data.error, 'past_slot');
+  assert.equal(await d.count('registrations'), 0);
+  const availability = (await d.call(app.availability, undefined, {route:'/api/public/availability?event_id=gg_2026&trial_codes=m_t1_recitation'})).data;
+  assert.ok(availability.trials.m_t1_recitation.available_starts.every(start => start >= '2026-11-08T10:00'));
 });

@@ -735,3 +735,7 @@ nav a.nav-cta-ext{
   color:var(--gold);
   font-weight:bold;
 }
+
+/* Keep linked trials clear of the sticky navigation. */
+.tier-block { scroll-margin-top: 110px; }
+.tier-header:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; }

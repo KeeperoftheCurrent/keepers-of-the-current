@@ -3,20 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Find My Standing — Keepers of the Current</title>
+<title>My Trials — Keepers of the Current</title>
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="stylesheet" href="/assets/css/components.css">
-<style>
-  .pillar-block { margin-bottom: 16px; padding: 12px 16px; background: var(--red-dark); border: 1px solid var(--border); border-radius: 3px; }
-  .pillar-block .pillar-name { color: var(--gold); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
-  .pillar-block .pillar-stat { color: var(--text-light); font-size: 18px; margin-top: 4px; }
-  .ring-row { display: flex; gap: 18px; justify-content: center; margin: 18px 0; }
-  .ring-disc { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold-dim); display: flex; align-items: center; justify-content: center; flex-direction: column; }
-  .ring-disc.held { border-color: var(--gold); box-shadow: 0 0 12px var(--gold-faint); }
-  .ring-disc .ring-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-  .ring-disc.held .ring-label { color: var(--gold-light); }
-  .title-banner { text-align: center; padding: 14px; margin: 16px 0; background: var(--gold-faint); border: 1px solid var(--gold); border-radius: 3px; color: var(--gold-light); font-style: italic; }
-</style>
+<link rel="stylesheet" href="/assets/css/my-trials.css">
 </head>
 <body>
 
@@ -35,7 +25,7 @@
   <a href="/trials.html">The Trials</a>
   <a href="/seeker.html" class="nav-cta">Register</a>
   <a href="/tracker.html">Trial Scroll</a>
-  <a href="/lookup.html" class="active">My Standing</a>
+  <a href="/lookup.html" class="active">My Trials</a>
   <a href="/rewards.html">Rewards</a>
 </nav>
 
@@ -44,16 +34,16 @@
 
   <header class="page-header">
     <img src="/assets/img/sigil.png" alt="" class="sigil">
-    <div class="title">Find your standing</div>
-    <div class="subtitle">"The Keeper sees what the Scroll records."</div>
+    <h1 class="title">My Trials</h1>
+    <div class="subtitle">Your rings, your next gathering, your path ahead.</div>
   </header>
 
   <section id="form-wrap">
     <div class="panel">
-      <h2>Look up your standing</h2>
-      <p class="muted">Enter the name and email you used to register. The Scroll will reveal your standing in the Trial of the Three Rings.</p>
+      <h2>Return to your path</h2>
+      <p class="muted">Use the name and email from your registration to see your progress and booked trial times.</p>
 
-      <div id="errors" hidden></div>
+      <div id="errors" role="alert" tabindex="-1" hidden></div>
 
       <form id="lookup-form" novalidate>
         <label class="field">
@@ -64,7 +54,7 @@
           <span class="label-text">Email</span>
           <input type="email" name="email" maxlength="200" required autocomplete="email">
         </label>
-        <button class="primary" type="submit">Reveal my standing</button>
+        <button class="primary" type="submit">Show my trials</button>
       </form>
     </div>
 
@@ -73,29 +63,45 @@
     </p>
   </section>
 
-  <section id="result" class="panel" hidden>
-    <h2 id="result-name"></h2>
-    <p class="muted" id="result-house"></p>
+  <section id="result" hidden aria-label="Your trials">
+    <div class="panel journey-header">
+      <p class="eyebrow">Your Trial Scroll</p>
+      <h2 id="result-name" tabindex="-1"></h2>
+      <p class="quiet" id="result-house"></p>
+      <div id="result-titles"></div>
+      <div class="ring-row" id="result-rings"></div>
+    </div>
 
-    <div id="result-titles"></div>
+    <section class="panel" aria-labelledby="bookings-title">
+      <h2 id="bookings-title">Your booked times</h2>
+      <p class="quiet" id="time-zone-note">All times are local to the gathering.</p>
+      <div id="result-bookings"></div>
+      <p class="quiet small">Need to change a time? Speak with the Keeper to arrange it.</p>
+    </section>
 
-    <div class="ring-row" id="result-rings"></div>
+    <section class="panel" aria-labelledby="progress-title">
+      <h2 id="progress-title">Your path ahead</h2>
+      <p class="quiet">Progress reflects the results recorded by the Keeper. If a completion is missing, ask the Keeper to update your Scroll.</p>
+      <div id="result-pillars"></div>
+    </section>
 
-    <h3 style="margin-top:24px;">Pillar progress</h3>
-    <div id="result-pillars"></div>
+    <section class="panel" aria-labelledby="gatherings-title">
+      <h2 id="gatherings-title">Your gatherings</h2>
+      <div id="result-registrations"></div>
+      <a class="journey-link" href="/seeker.html">Register for a gathering →</a>
+    </section>
 
-    <h3 style="margin-top:24px;">Registrations</h3>
-    <ul id="result-registrations"></ul>
-
-    <p class="center" style="margin-top:24px;">
-      <button class="secondary" id="lookup-again">Look up another</button>
-    </p>
+    <details class="panel history" id="result-history" hidden>
+      <summary>Past gatherings and booked times</summary>
+      <div id="result-history-content"></div>
+    </details>
+    <p class="center"><button class="secondary" id="lookup-again">Clear my details</button></p>
   </section>
 
   <section id="not-found" class="panel" hidden>
     <div class="success-block">
       <div class="seal">·</div>
-      <h2>No standing found</h2>
+      <h2 id="not-found-title" tabindex="-1">No matching Scroll found</h2>
       <p class="muted">No record matches that name and email. If you've recently registered, check that the spelling matches your seeker form exactly.</p>
       <p class="muted" style="margin-top:24px;">
         <button class="secondary" id="not-found-again">Try again</button>
