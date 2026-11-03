@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="/assets/css/components.css">
 <link rel="stylesheet" href="/assets/css/my-trials.css">
 <link rel="stylesheet" href="/assets/css/seeker-flow.css">
-<link href="/assets/css/reading.css" rel="stylesheet"><link href="/assets/css/magic.css?v=20261103-editorial-v2" rel="stylesheet"></head>
+<link href="/assets/css/reading.css" rel="stylesheet"><link href="/assets/css/magic.css?v=20261103-editorial-v2" rel="stylesheet"><link rel="stylesheet" href="/assets/css/journeys.css?v=20261103-1"></head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
 
 <header class="site-header">
@@ -29,7 +29,7 @@
   <header class="page-header">
     <img src="/assets/img/sigil.png" alt="" class="sigil">
     <h1 class="title">My Trials</h1>
-    <div class="subtitle">Your saved progress, bookings and next step.</div>
+    <div class="subtitle">Return to your Trial Scroll. Your path is remembered.</div>
   </header>
 
   <section id="form-wrap">
@@ -61,18 +61,18 @@
       <h2 id="result-name" tabindex="-1"></h2>
       <p class="quiet" id="result-house"></p>
       <div id="result-titles"></div>
-      <div class="ring-row" id="result-rings"></div>
+      
     </div>
 
-    <section class="panel" aria-labelledby="bookings-title">
-      <h2 id="bookings-title">Your booked times</h2>
+    <section id="next-trial" class="panel next-trial" aria-label="Your next step"></section><section class="panel" aria-labelledby="bookings-title">
+      <p class="eyebrow">Keep this scroll close</p><h2 id="bookings-title">Your trial itinerary</h2><p class="quiet">Save a screenshot of your appointments before the gathering. Revisit this Scroll for any changes.</p>
       <p class="quiet" id="time-zone-note">All times are local to the gathering.</p>
       <div id="result-bookings"></div><div id="booking-editor" tabindex="-1" hidden></div><p id="booking-status" role="status"></p><h3>Planned trials · no appointment reserved</h3><div id="result-intentions"></div>
       <p class="quiet small">Questions or missing results? <a href="mailto:desiree.rock@gmail.com">Email the Keeper</a>.</p>
     </section>
 
     <section class="panel" aria-labelledby="progress-title">
-      <h2 id="progress-title">Your path ahead</h2>
+      <h2 id="progress-title">Your path ahead</h2><div class="ring-row" id="result-rings"></div>
       <p class="quiet">The Keeper records each result. If one is missing, contact the Keeper.</p>
       <div id="result-pillars"></div><details><summary>Recorded attempts</summary><div id="result-attempts"></div></details>
     </section>
@@ -95,6 +95,6 @@
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="/assets/js/lookup.js?v=20261103-mobile"></script>
+<script type="module" src="/assets/js/lookup.js?v=20261103-journeys"></script>
 <script type="module" src="/assets/js/reading.js"></script></body>
 </html>

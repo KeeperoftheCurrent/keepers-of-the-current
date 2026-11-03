@@ -43,7 +43,7 @@ function show(section) {
 }
 function clearDetails() {
   $('#lookup-form').reset();
-  for (const id of ['result-name', 'result-house', 'result-titles', 'result-rings', 'result-pillars', 'result-bookings', 'result-registrations', 'result-history-content','result-intentions','result-attempts','booking-editor','booking-status']) {
+  for (const id of ['next-trial', 'result-name', 'result-house', 'result-titles', 'result-rings', 'result-pillars', 'result-bookings', 'result-registrations', 'result-history-content','result-intentions','result-attempts','booking-editor','booking-status']) {
     document.getElementById(id).textContent = '';
   }
   $('#result-history').open = false;
@@ -69,15 +69,19 @@ function renderResult(seeker) {
   }).join('');
 
   const bookings = seeker.bookings || [];
-  const upcomingBookings = bookings.filter(b => !b.past);
+  const upcomingBookings = bookings.filter(b => !b.past).sort((a,b) => a.start_at.localeCompare(b.start_at));
+  const next = upcomingBookings[0];
+  $('#next-trial').innerHTML = next
+    ? `<p class="eyebrow">Your next appointment · Confirmed</p><h2>${escapeHtml(next.trial_name)}</h2><p class="booking-time">${escapeHtml(bookingTime(next))}</p><p>${escapeHtml(next.event_name)} · ${seeker.time_zone === 'America/Chicago' ? 'Central Time' : 'Gathering local time'}</p><p>Check in at Keepers Rest. Confirm the exact trial meeting place with the Keeper.</p><a class="primary" href="/trials.html#${escapeHtml(next.pillar)}-tier-${Number(next.tier)}">Read your preparation &amp; rules →</a>`
+    : '<p class="eyebrow">Your next step</p><h2>The path awaits.</h2><p>No appointment is reserved. If you have planned trials below, agree on their timing with the Keeper.</p><a class="primary" href="/seeker.html">Choose trials &amp; times →</a>';
   $('#time-zone-note').textContent = seeker.time_zone === 'America/Chicago'
     ? 'All times are Central Time at the gathering.' : 'All times are local to the gathering.';
   $('#result-bookings').innerHTML = upcomingBookings.length
     ? upcomingBookings.map(b => `<article class="booking-card">
-        <h3>${escapeHtml(b.trial_name)}</h3>
+        <span class="status-seal">Confirmed appointment</span><h3>${escapeHtml(b.trial_name)}</h3>
         <p class="booking-time">${escapeHtml(bookingTime(b))}</p>
         <p class="quiet">${escapeHtml(b.event_name)} · ${PILLARS[b.pillar].name}, Tier ${ROMAN[b.tier]}</p>
-        <p><button type="button" data-calendar="${b.id}">Add to calendar</button> <button type="button" data-change="${b.id}">Change time</button> <button type="button" data-cancel="${b.id}">Cancel booking</button></p>
+        <p><a href="/trials.html#${escapeHtml(b.pillar)}-tier-${Number(b.tier)}">Preparation &amp; full rules →</a></p><p><button type="button" data-calendar="${b.id}">Add to calendar</button> <button type="button" data-change="${b.id}">Change time</button> <button type="button" data-cancel="${b.id}">Cancel booking</button></p>
         ${b.event_active ? ''  : '<p>This gathering is inactive. Check the arrangements with the Keeper.</p>'}
       </article>`).join('')
     : '<p class="empty-state">No upcoming trial times are booked. Choose a gathering to see the trials available for your next tier.</p>';
