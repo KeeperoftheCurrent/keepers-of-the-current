@@ -226,3 +226,7 @@ html[data-light] .outreach-card {background:var(--red-panel);}
 .arrival-copy>.brand-wordmark {display:none;}
 .arrival-art .pavilion-art {aspect-ratio:3/2;object-fit:contain;}
 .arrival-copy h1 {font-size:clamp(2rem,3.8vw,3rem);}
+
+/* Four main destinations, balanced for small screens. */
+.site-nav a:last-child{border:0!important;border-radius:0;margin-left:0!important}
+@media(max-width:600px){.site-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.site-nav>a:nth-child(n){grid-column:auto;margin-left:0}}

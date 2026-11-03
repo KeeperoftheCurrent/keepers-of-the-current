@@ -6,7 +6,7 @@ test('all public journeys have skip links, optional reading preferences and a co
   const{document:d}=parseHTML(read(page+'.html'));
   assert.ok(d.querySelector('main#main-content'));assert.ok(d.querySelector('a[href="#main-content"]'));
   assert.ok(d.querySelector('#larger-text'));assert.ok(d.querySelector('#light-background'));
-  assert.equal(d.querySelectorAll('.site-nav>a').length,5);
+  assert.equal(d.querySelectorAll('.site-nav>a').length,4);
   assert.ok(d.querySelector('link[href="/assets/css/reading.css"]'));
  }
 });
