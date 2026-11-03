@@ -24,7 +24,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
       WHERE active = 1
         AND (COALESCE(ends_on, starts_on) IS NULL OR COALESCE(ends_on, starts_on) >= ?)
       ORDER BY
-        CASE kind WHEN 'expedition' THEN 0 ELSE 1 END,
         COALESCE(starts_on, '9999-99-99'),
         name`,
     clock.date
