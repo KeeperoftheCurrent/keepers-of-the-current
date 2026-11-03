@@ -4,6 +4,18 @@ Site: https://keepersofthecurrent.org
 Stack: Cloudflare Pages + Pages Functions + D1 + Resend
 Plan: `~/.claude/plans/flickering-noodling-spindle.md`
 
+## Player access and email operations (November 2026)
+
+- `/lookup.html` uses one-time email links (15-minute lifetime) and secure eight-hour sessions. No exact character-name match is required. Tokens are stored only as hashes.
+- Apply migrations `0011_seeker_sign_in.sql` and `0012_email_delivery.sql` before deploying this version. Do not replay applied migrations.
+- Confirmations and reminders share the rules in `functions/lib/email.ts`, summarized from `public/trials.html`. Keep these synchronized when trial rules change.
+- Registration saves independently of email delivery. `seeker_email_status` and `admin_email_status` track transport results separately; `email_status` remains the legacy aggregate. “Sent” means accepted by Resend, not proof of inbox placement.
+- The standalone reminder worker source is `worker/reminder.ts`; deploy with `npx wrangler deploy --config worker/wrangler.toml`. It uses the same D1 database and needs `RESEND_API_KEY`. Its daily cron is 12:00 UTC (6 or 7 AM Central depending on daylight saving).
+- Reminders go to active registrations the day before an event starts, include active booked times, and exclude canceled registrations. `reminder_deliveries` records sent/failed results and prevents duplicate sends. Resend idempotency keys protect retries.
+- Manual reminder runs require POST `/trigger` plus the configured `REMINDER_TRIGGER_SECRET`. With no secret configured, the endpoint refuses access.
+- No automatic Google Calendar synchronization is implemented here. Do not treat Discord RSVPs or trial intentions as booked appointments.
+- Test with `npm test`, `npm run typecheck`, and `npx wrangler pages functions build --outdir .wrangler/test-build`. Tests use synthetic data and no real email.
+
 ## What's in this folder
 
 | Path | Purpose |

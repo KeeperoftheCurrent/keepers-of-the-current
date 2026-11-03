@@ -1,5 +1,3 @@
-import { api } from './api.js';
-
 const $ = sel => document.querySelector(sel);
 const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 const PILLARS = {
@@ -40,9 +38,7 @@ function renderError(message) {
 function show(section) {
   $('#form-wrap').hidden = section !== 'form';
   $('#result').hidden = section !== 'result';
-  $('#not-found').hidden = section !== 'not-found';
   if (section === 'result') $('#result-name').focus();
-  if (section === 'not-found') $('#not-found-title').focus();
 }
 function clearDetails() {
   $('#lookup-form').reset();
@@ -52,7 +48,7 @@ function clearDetails() {
   $('#result-history').open = false;
   renderError(null);
   show('form');
-  $('#lookup-form input[name="name"]').focus();
+  $('#lookup-form input[name="email"]').focus();
 }
 
 function renderResult(seeker) {
@@ -132,39 +128,87 @@ function renderResult(seeker) {
     (pastBookings.length ? `<h3>Booked times</h3><ul>${pastBookings.map(b => `<li>${escapeHtml(b.trial_name)} · ${escapeHtml(b.event_name)}<br>${escapeHtml(bookingTime(b))}</li>`).join('')}</ul>` : '');
 }
 
-async function handleSubmit(event) {
-  event.preventDefault();
-  renderError(null);
-  const form = event.target;
-  const data = new FormData(form);
-  const payload = { name: String(data.get('name') || '').trim(), email: String(data.get('email') || '').trim() };
-  if (!payload.name || !payload.email) { renderError('Enter both the name and email from your registration.'); return; }
-  const button = form.querySelector('button[type="submit"]');
-  button.disabled = true;
-  button.textContent = 'Opening your Scroll…';
-  form.setAttribute('aria-busy', 'true');
-  try {
-    const { ok, body } = await api('POST', '/api/seekers/lookup', payload);
-    if (!ok || !body || typeof body.ok !== 'boolean') {
-      renderError('Could not reach the Scroll. Your details are still here; please try again.');
-    } else if (body.ok && body.seeker) {
-      renderResult(body.seeker);
-      show('result');
-    } else show('not-found');
-  } catch {
-    renderError('Could not load your trials. Please try again in a moment.');
-  } finally {
-    button.disabled = false;
-    button.textContent = 'Show my trials';
-    form.removeAttribute('aria-busy');
-  }
+async function signIn(action, fields = {}) {
+  const response = await fetch('/api/seekers/lookup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action, ...fields }),
+  });
+  if (response.status === 401) return null;
+  if (!response.ok) throw new Error('Sign-in request failed');
+  return response.json();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  $('#lookup-form').addEventListener('submit', handleSubmit);
-  $('#lookup-again').addEventListener('click', clearDetails);
-  $('#not-found-again').addEventListener('click', () => {
-    show('form');
-    $('#lookup-form input[name="name"]').focus();
+document.addEventListener('DOMContentLoaded', async () => {
+  const form = $('#lookup-form');
+  const status = $('#sign-in-status');
+  const redeem = $('#redeem-link');
+  const token = new URLSearchParams(location.hash.slice(1)).get('sign-in');
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    renderError(null);
+    status.textContent = '';
+    const email = form.elements.email;
+    if (!email.checkValidity()) { email.reportValidity(); return; }
+    const button = form.querySelector('button[type="submit"]');
+    button.disabled = true;
+    try {
+      await signIn('request', { email: email.value });
+      status.textContent = 'If that email is registered, a sign-in link is on its way. Check your inbox and spam folder.';
+    } catch {
+      renderError('Could not request a link. Please try again.');
+    } finally {
+      button.disabled = false;
+    }
   });
+
+  $('#lookup-again').addEventListener('click', async event => {
+    const button = event.currentTarget;
+    button.disabled = true;
+    try {
+      await signIn('logout');
+      status.textContent = '';
+      clearDetails();
+    } catch {
+      status.textContent = '';
+      window.alert('Could not sign out. Please try again.');
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  if (token) {
+    history.replaceState(null, '', location.pathname + location.search);
+    redeem.hidden = false;
+    form.hidden = true;
+    redeem.addEventListener('click', async () => {
+      redeem.disabled = true;
+      try {
+        const result = await signIn('redeem', { token });
+        if (result?.seeker) {
+          renderResult(result.seeker);
+          show('result');
+        } else {
+          renderError('This link has expired or has already been used. Request a new link below.');
+        }
+      } catch {
+        renderError('Could not open your trials. Request a new link below.');
+      } finally {
+        redeem.hidden = true;
+        form.hidden = false;
+      }
+    });
+    return;
+  }
+
+  try {
+    const result = await signIn('session');
+    if (result?.seeker) {
+      renderResult(result.seeker);
+      show('result');
+    }
+  } catch {
+    renderError('Could not load your trials. Please refresh or request a new link.');
+  }
 });

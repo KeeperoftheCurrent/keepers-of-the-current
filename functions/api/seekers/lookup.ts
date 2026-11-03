@@ -1,12 +1,7 @@
-// POST /api/seekers/lookup
-// Public seeker self-lookup by name + email. Returns sanitized progress + rings.
-// No-match returns { ok: false } — same response shape as bad-name and bad-email
-// to avoid enumeration.
-
 import type { Env } from '../../lib/db';
 import { queryFirst, queryAll } from '../../lib/db';
 import { jsonResponse } from '../../_middleware';
-import { normalizeEmail } from '../../lib/validate';
+import { authenticateSeeker } from '../../lib/seeker-auth';
 import { RETIRED_TRIAL_CODE } from '../../lib/catalog';
 import { eventClock } from '../../lib/event-time';
 
@@ -18,24 +13,17 @@ interface SeekerRow {
   created_at: number;
 }
 
-export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  const body = (await request.json().catch(() => null)) as Record<string, unknown> | null;
-  if (!body) return jsonResponse({ ok: false }, 200);
-
-  const name = typeof body.name === 'string' ? body.name.trim() : '';
-  const email = typeof body.email === 'string' ? body.email.trim() : '';
-  if (!name || !email) return jsonResponse({ ok: false }, 200);
-
+export const onRequestPost: PagesFunction<Env> = async (context) => {
+  const { env } = context;
+  const authentication = await authenticateSeeker(context);
+  if (authentication instanceof Response) return authentication;
+  const { seekerId, cookie } = authentication;
   const seeker = await queryFirst<SeekerRow>(
     env,
-    `SELECT id, name, house, rings_pursued, created_at
-       FROM seekers
-      WHERE email_normalized = ? AND lower(name) = lower(?)
-      LIMIT 1`,
-    normalizeEmail(email),
-    name
+    'SELECT id, name, house, rings_pursued, created_at FROM seekers WHERE id = ?',
+    seekerId
   );
-  if (!seeker) return jsonResponse({ ok: false }, 200);
+  if (!seeker) return jsonResponse({ ok: false }, 401);
 
   // Per-tier completion (same shape as the public tracker)
   type Pillar = 'body' | 'mind' | 'soul';
@@ -89,7 +77,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }>(
     env,
     `SELECT r.event_id, e.name AS event_name, e.starts_on, e.ends_on, e.active AS event_active,
-            r.email_status, r.preferred_date, r.preferred_time, r.created_at
+            r.seeker_email_status AS email_status, r.preferred_date, r.preferred_time, r.created_at
        FROM registrations r LEFT JOIN events e ON e.id = r.event_id
       WHERE r.seeker_id = ? AND r.voided_at IS NULL
       ORDER BY r.created_at DESC`,
@@ -140,7 +128,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       bookings: bookings.map(booking => ({ ...booking, past: booking.end_at < clock.localDateTime })),
       time_zone: clock.timeZone,
     },
-  });
+  }, 200, cookie ? { 'Set-Cookie': cookie } : {});
 };
 
 function safeJsonParse(s: string | null, fallback: unknown): unknown {

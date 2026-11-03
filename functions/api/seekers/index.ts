@@ -346,10 +346,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
 
   const registrationId = crypto.randomUUID();
   writes.push(env.DB.prepare(
-    `INSERT INTO registrations (id, seeker_id, event_id, preferred_date, preferred_time, rings_pursued, email_status, created_at)
-     VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)`
+    `INSERT INTO registrations (id, seeker_id, event_id, preferred_date, preferred_time, rings_pursued, trial_intentions, email_status, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)`
   ).bind(
-    registrationId, seekerId, event.id, input.preferred_date, input.preferred_time, ringsJson, now
+    registrationId, seekerId, event.id, input.preferred_date, input.preferred_time, ringsJson, JSON.stringify(trialIntentions), now
   ));
 
   const insertedBookings: { id: string; trial_code: string; start_at: string; end_at: string }[] = [];
@@ -394,7 +394,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
       });
       const final = status.seeker === 'sent' && status.admin === 'sent' ? 'sent' : 'failed';
       try {
-        await exec(env, `UPDATE registrations SET email_status = ? WHERE id = ?`, final, registrationId);
+        await exec(env, `UPDATE registrations SET email_status = ?, seeker_email_status = ?, admin_email_status = ? WHERE id = ?`, final, status.seeker, status.admin, registrationId);
       } catch (err) {
         console.error('[intake] failed to update email_status', err);
       }

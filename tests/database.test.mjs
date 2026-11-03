@@ -24,12 +24,15 @@ before(async () => {
       export { onRequestGet as seekers } from './functions/api/admin/seekers.ts';
       export { evaluateAwards } from './functions/lib/awards.ts';
       export { onRequestGet as events } from './functions/api/public/events.ts';
+      export { runReminders } from './worker/reminder.ts';
       export { eventClock } from './functions/lib/event-time.ts';
     ` },
     bundle: true, platform: 'node', format: 'esm', outfile,
     plugins: [{ name: 'no-real-email', setup(builder) {
       builder.onLoad({ filter: /functions\/lib\/email\.ts$/ }, () => ({
-        loader: 'js', contents: `export async function sendBothEmails(env) {
+        loader: 'js', contents: `export async function sendViaResend(env, payload) { env.testSignInEmails.push(payload); }
+        export async function sendSeekerConfirmation(env, payload) { if (env.failReminder) throw new Error('simulated mail failure'); env.reminders.push(payload); }
+        export async function sendBothEmails(env) {
           env.testEmailCalls++;
           return { seeker: 'sent', admin: 'sent' };
         }`,
@@ -70,23 +73,35 @@ async function database(t) {
       await db.prepare(sql).run();
     }
   }
-  const env = { DB: db, testEmailCalls: 0, SITE_URL: 'https://example.invalid',
+  const env = { DB: db, testEmailCalls: 0, testSignInEmails: [], reminders: [], SITE_URL: 'https://example.invalid',
     EMAIL_FROM: 'test@example.invalid', KEEPER_NOTIFY_EMAIL: 'test@example.invalid' };
-  const call = async (handler, body, { route = '/', params = {}, method } = {}) => {
+  const call = async (handler, body, { route = '/', params = {}, method, cookie, origin = 'https://example.invalid' } = {}) => {
     const background = [];
     const response = await handler({
       env, params, data: { user: { email: 'keeper@example.invalid' } },
       request: new Request('https://example.invalid' + route, {
         method: method ?? (body === undefined ? 'GET' : 'POST'),
-        ...(body === undefined ? {} : { body: JSON.stringify(body), headers: { 'Content-Type': 'application/json' } }),
+        ...(body === undefined ? {} : { body: JSON.stringify(body), headers: { 'Content-Type': 'application/json', Origin: origin, ...(cookie ? {Cookie:cookie} : {}) } }),
       }),
       waitUntil: p => background.push(p),
     });
     await Promise.all(background);
-    return { status: response.status, data: await response.json() };
+    return { status: response.status, cookie: response.headers.get('Set-Cookie'), data: await response.json() };
   };
   const count = async table => (await db.prepare(`SELECT COUNT(*) AS n FROM ${table}`).first()).n;
-  return { db, env, call, count };
+  const login = async (email = 'seeker@example.invalid') => {
+    await call(app.lookup, {action:'request', email});
+    const message = env.testSignInEmails.at(-1);
+    const token = message.text.match(/sign-in=([0-9a-f-]+)/)[1];
+    const response = await call(app.lookup, {action:'redeem', token});
+    return response.cookie.split(';')[0];
+  };
+  const sessions = new Map();
+  const lookup = async (email = 'seeker@example.invalid') => {
+    if (!sessions.has(email)) sessions.set(email, await login(email));
+    return call(app.lookup, {action:'session'}, {cookie:sessions.get(email)});
+  };
+  return { db, env, call, count, login, lookup };
 }
 
 const payload = (extra = {}) => ({ name: 'Test Seeker', email: 'seeker@example.invalid',
@@ -108,7 +123,7 @@ test('fresh migrations support registration, normalized email, lookup and bookin
   const d = await database(t);
   const id = await register(d, { bookings: [slot()] });
   assert.equal(d.env.testEmailCalls, 1);
-  const found = await d.call(app.lookup, { name: 'Test Seeker', email: 'SEEKER@example.invalid' });
+  const found = await d.lookup();
   assert.equal(found.data.ok, true);
   assert.equal(found.data.seeker.registrations.length, 1);
   assert.equal((await d.db.prepare('SELECT email_status FROM registrations').first()).email_status, 'sent');
@@ -176,7 +191,7 @@ test('Body ring and every progress view exclude the retired Course while keeping
   const tracker = await d.call(app.tracker);
   assert.equal(tracker.data.seekers[0].rings.body, true);
   assert.deepEqual(tracker.data.seekers[0].pillar_counts.body, { complete: 3, total: 3 });
-  const lookup = await d.call(app.lookup, { name: 'Test Seeker', email: 'seeker@example.invalid' });
+  const lookup = await d.lookup();
   assert.deepEqual(lookup.data.seeker.pillar_counts.body, { complete: 3, total: 3 });
   // Existing historical completion remains readable, even though new ones are refused.
   await d.db.prepare(`INSERT INTO trial_events
@@ -252,7 +267,7 @@ test('My Trials only exposes the matched seeker’s active bookings, without pri
   await register(d, { name: 'Another seeker', email: 'another@example.invalid', bookings: [slot('m_t1_recitation', '10:00')] });
   await d.db.prepare("UPDATE bookings SET notes = 'private appointment note'").run();
   await d.db.prepare("UPDATE seekers SET notes = 'private Keeper note'").run();
-  const lookup = () => d.call(app.lookup, { name: 'Test Seeker', email: 'seeker@example.invalid' });
+  const lookup = () => d.lookup();
   const found = await lookup();
   assert.equal(found.data.seeker.bookings.length, 1);
   assert.equal(found.data.seeker.bookings[0].start_at, slot().start_at);
@@ -275,7 +290,7 @@ test('My Trials only exposes the matched seeker’s active bookings, without pri
 test('next tiers respect alternative trials, all-of requirements, voids and completion', async t => {
   const d = await database(t);
   const id = await register(d);
-  const lookup = async () => (await d.call(app.lookup, {name:'Test Seeker', email:'seeker@example.invalid'})).data.seeker;
+  const lookup = async () => (await d.lookup()).data.seeker;
   assert.deepEqual((await lookup()).next_tiers, {body:1, mind:1, soul:1});
   const first = await mark(d, id, 'm_t1_recitation');
   assert.equal((await lookup()).next_tiers.mind, 2);
@@ -297,7 +312,7 @@ test('past events disappear from registration but remain in personal history', a
   const events = (await d.call(app.events)).data.events;
   assert.ok(!events.some(event => event.id === 'gg_2026'));
   assert.ok(events.some(event => event.id === 'october_expedition_2026'));
-  const found = (await d.call(app.lookup, {name:'Test Seeker',email:'seeker@example.invalid'})).data.seeker;
+  const found = (await d.lookup()).data.seeker;
   assert.equal(found.registrations[0].past, true);
   assert.equal(found.bookings[0].past, true);
   const rejected = await d.call(app.intake, payload({email:'late@example.invalid'}));
@@ -335,4 +350,69 @@ test('past appointment times cannot be booked and are removed from availability'
   assert.equal(await d.count('registrations'), 0);
   const availability = (await d.call(app.availability, undefined, {route:'/api/public/availability?event_id=gg_2026&trial_codes=m_t1_recitation'})).data;
   assert.ok(availability.trials.m_t1_recitation.available_starts.every(start => start >= '2026-11-08T10:00'));
+});
+
+test('email sign-in proves mailbox ownership, is single-use, and signs out server-side', async t => {
+  const d = await database(t);
+  await register(d);
+  assert.equal((await d.call(app.lookup, {name:'Test Seeker',email:'seeker@example.invalid'})).status, 401);
+  const requested = await d.call(app.lookup, {action:'request',email:'SEEKER@example.invalid'});
+  assert.equal(requested.status, 202);
+  const token = d.env.testSignInEmails[0].text.match(/sign-in=([0-9a-f-]+)/)[1];
+  assert.ok(!(await d.db.prepare('SELECT token_hash FROM seeker_sign_ins').first()).token_hash.includes(token));
+  const rejectedOrigin = await d.call(app.lookup, {action:'redeem',token}, {origin:'https://other.invalid'});
+  assert.equal(rejectedOrigin.status, 403);
+  const opened = await d.call(app.lookup, {action:'redeem',token});
+  assert.equal(opened.data.seeker.name, 'Test Seeker');
+  assert.match(opened.cookie, /Secure; HttpOnly; SameSite=Strict/);
+  assert.equal((await d.call(app.lookup, {action:'redeem',token})).status, 401);
+  const cookie = opened.cookie.split(';')[0];
+  assert.equal((await d.call(app.lookup,{action:'session'}, {cookie})).status, 200);
+  await d.call(app.lookup, {action:'logout'}, {cookie});
+  assert.equal((await d.call(app.lookup,{action:'session'}, {cookie})).status, 401);
+});
+
+test('expired links fail and unknown or rate-limited emails receive the same response', async t => {
+  const d = await database(t);
+  await register(d);
+  const known = await d.call(app.lookup,{action:'request',email:'seeker@example.invalid'});
+  const repeated = await d.call(app.lookup,{action:'request',email:'seeker@example.invalid'});
+  const missing = await d.call(app.lookup,{action:'request',email:'missing@example.invalid'});
+  assert.deepEqual(known.data, missing.data);
+  assert.deepEqual(known.data, repeated.data);
+  assert.equal(d.env.testSignInEmails.length, 1);
+  const token = d.env.testSignInEmails[0].text.match(/sign-in=([0-9a-f-]+)/)[1];
+  await d.db.prepare('UPDATE seeker_sign_ins SET expires_at = 1').run();
+  assert.equal((await d.call(app.lookup,{action:'redeem',token})).status, 401);
+});
+
+test('reminders exclude void registrations and bookings, persist intentions, and never resend a sent reminder', async t => {
+  const d = await database(t);
+  const id = await register(d, {bookings:[slot()], trial_intentions:[{code:'b_t1',preferred_time:'10:00'}]});
+  const canceled = await register(d, {email:'canceled@example.invalid'});
+  await d.db.prepare('UPDATE registrations SET voided_at=1 WHERE seeker_id=?').bind(canceled).run();
+  await register(d, {bookings:[slot('m_t1_recitation','10:00')]});
+  await d.db.prepare("UPDATE registrations SET voided_at=1 WHERE id=(SELECT registration_id FROM bookings WHERE start_at LIKE '%T10:00')").run();
+  t.mock.timers.tick(new Date('2026-11-07T12:00:00Z') - new Date('2026-09-22T12:00:00Z'));
+  const first = await app.runReminders(d.env);
+  assert.equal(first.sent,1);
+  assert.equal(d.env.reminders[0].bookings.length,1);
+  assert.equal(d.env.reminders[0].trial_intentions[0].code,'b_t1');
+  assert.equal(d.env.reminders[0].reminder,true);
+  assert.equal((await app.runReminders(d.env)).sent,0);
+  assert.equal(d.env.reminders.length,1);
+  assert.equal((await d.db.prepare('SELECT status FROM reminder_deliveries WHERE seeker_id=?').bind(id).first()).status,'sent');
+});
+
+test('failed reminders stay visible and may be retried without duplicating successful ones', async t => {
+  const d = await database(t);
+  await register(d);
+  t.mock.timers.tick(new Date('2026-11-07T12:00:00Z') - new Date('2026-09-22T12:00:00Z'));
+  d.env.failReminder = true;
+  assert.equal((await app.runReminders(d.env)).failed,1);
+  assert.equal((await d.db.prepare('SELECT status FROM reminder_deliveries').first()).status,'failed');
+  d.env.failReminder = false;
+  assert.equal((await app.runReminders(d.env)).sent,1);
+  assert.equal(d.env.reminders.length,1);
+  assert.equal((await d.db.prepare('SELECT attempts FROM reminder_deliveries').first()).attempts,2);
 });
