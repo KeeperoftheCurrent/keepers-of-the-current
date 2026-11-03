@@ -16,6 +16,7 @@ interface ResendPayload {
 
 export interface SeekerEmailContext {
   reminder?: boolean;
+  appointment_reminder?: boolean;
   idempotency_key?: string;
   name: string;
   email: string;
@@ -62,9 +63,9 @@ export async function sendSeekerConfirmation(env: Env, c: SeekerEmailContext): P
   const lookupUrl = `${env.SITE_URL}/lookup.html`;
   const trialsUrl = `${env.SITE_URL}/trials.html`;
 
-  const title = c.reminder ? 'Your gathering begins tomorrow' : 'The Current acknowledges you';
+  const title = c.appointment_reminder ? 'Your trial appointment is tomorrow' : c.reminder ? 'Your gathering begins tomorrow' : 'The Current acknowledges you';
   const introduction = c.reminder ? 'Review your arrangements and prepare before you arrive.' : 'The Keeper has marked your name in the Trial Scroll.';
-  const subject = c.reminder ? `Tomorrow — ${c.event_name} — your trial preparations` : `The Current acknowledges you, ${c.name}`;
+  const subject = c.appointment_reminder ? `Tomorrow — your trial appointment at ${c.event_name}` : c.reminder ? `Tomorrow — ${c.event_name} — your trial preparations` : `The Current acknowledges you, ${c.name}`;
   const preparation = [
     'Your registration records your interest. Only the times listed as booked are reserved; preferences and trial intentions are not appointments.',
     'All appointment times are Central Time (America/Chicago). Check in with the Keeper at Keepers Rest and confirm the exact meeting place before your trial.',
@@ -73,13 +74,13 @@ export async function sendSeekerConfirmation(env: Env, c: SeekerEmailContext): P
     `For questions, a missing result, or a time change, reply to this email or contact ${env.KEEPER_NOTIFY_EMAIL}.`,
     'Marking Interested in a Discord event does not reserve a trial appointment.',
   ];
-  const intentions = (c.trial_intentions ?? []).map(i => `${TRIAL_DISPLAY_NAMES[i.code] ?? i.code}${i.preferred_time ? ` — preferred time: ${i.preferred_time}` : ''}`);
+  const intentions = (c.trial_intentions ?? []).map(i => `${TRIAL_DISPLAY_NAMES[i.code] ?? i.code}${i.preferred_time ? ` — preferred time: ${(i.preferred_time.includes('T') ? fmtBookingSlot(i.code, i.preferred_time, '') : i.preferred_time)}` : ''}`);
   const practicalHtml = `<h2 style="color:#E8B96A;font-size:18px;">What to do next</h2><ul style="line-height:1.7;">${preparation.map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>${intentions.length ? `<p><strong>Planned trials — no time reserved:</strong></p><ul>${intentions.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>` : ''}`;
   const practicalText = `WHAT TO DO NEXT:\n${preparation.map(p => `• ${p}`).join('\n')}\n${intentions.length ? `\nPLANNED TRIALS — NO TIME RESERVED:\n${intentions.join('\n')}` : ''}`;
 
   const html = `<!doctype html>
 <html><body style="margin:0;padding:24px;background:#0e0404;font-family:Georgia,'Times New Roman',serif;color:#f0dfc0;">
-<div style="max-width:580px;margin:0 auto;background:rgba(42,14,14,0.7);border:1px solid rgba(200,150,62,0.25);border-radius:6px;padding:32px;">
+<div style="max-width:580px;margin:0 auto;background:rgba(42,14,14,0.7);border:1px solid rgba(200,150,62,0.25);border-radius:6px;padding:20px;">
   <h1 style="color:#C8963E;font-size:22px;margin:0 0 16px 0;letter-spacing:0.5px;">${title}</h1>
   <p style="line-height:1.6;margin:0 0 16px 0;">${introduction}</p>
 
@@ -92,12 +93,12 @@ export async function sendSeekerConfirmation(env: Env, c: SeekerEmailContext): P
   <!-- ── BOOKED TIMES ── -->
   ${c.bookings && c.bookings.length > 0 ? `
   <div style="margin:16px 0;padding:14px 16px;background:rgba(200,150,62,0.07);border:1px solid rgba(200,150,62,0.22);border-radius:4px;">
-    <p style="margin:0 0 10px 0;color:#E8B96A;font-size:13px;font-weight:bold;letter-spacing:0.2px;">Your booked trial times:</p>
-    ${c.bookings.map((b) => `<div style="padding:3px 0;font-size:13px;color:#c8b08a;">${escapeHtml(fmtBookingSlot(b.trial_code, b.start_at, b.end_at))}</div>`).join('')}
-    <p style="margin:10px 0 0 0;font-size:12px;color:#907050;font-style:italic;">If you need to change a time, speak with the Keeper before the event.</p>
+    <p style="margin:0 0 10px 0;color:#E8B96A;font-size:16px;font-weight:bold;letter-spacing:0.2px;">Your booked trial times:</p>
+    ${c.bookings.map((b) => `<div style="padding:3px 0;font-size:16px;color:#c8b08a;">${escapeHtml(fmtBookingSlot(b.trial_code, b.start_at, b.end_at))}</div>`).join('')}
+    <p style="margin:10px 0 0 0;font-size:15px;color:#907050;font-style:italic;">If you need to change a time, speak with the Keeper before the event.</p>
   </div>` : c.preferred_date ? `
   <div style="margin:16px 0;padding:12px 16px;background:rgba(200,150,62,0.05);border:1px solid rgba(200,150,62,0.15);border-radius:4px;">
-    <p style="margin:0;font-size:13px;color:#c8b08a;">Preferred session: <strong style="color:#E8B96A;">${escapeHtml(c.preferred_date)}${c.preferred_time ? ` at ${escapeHtml(c.preferred_time)}` : ''}</strong>. This is a preference, not a reserved appointment. Contact the Keeper to agree a time.</p>
+    <p style="margin:0;font-size:16px;color:#c8b08a;">Preferred session: <strong style="color:#E8B96A;">${escapeHtml(c.preferred_date)}${c.preferred_time ? ` at ${escapeHtml(c.preferred_time)}` : ''}</strong>. This is a preference, not a reserved appointment. Contact the Keeper to agree a time.</p>
   </div>` : ''}
 
   ${practicalHtml}
@@ -106,7 +107,7 @@ export async function sendSeekerConfirmation(env: Env, c: SeekerEmailContext): P
   <div style="border:1px solid rgba(210,90,50,0.55);background:rgba(100,25,10,0.3);border-radius:4px;padding:15px 18px;margin:22px 0;">
     <p style="margin:0 0 8px 0;color:#e08060;font-size:11.5px;font-weight:bold;letter-spacing:0.7px;text-transform:uppercase;">Before you begin — read this</p>
     <p style="margin:0 0 10px 0;line-height:1.65;font-size:13.5px;">Read the requirements for your chosen tier before you begin. Required parts and witness attestations must be completed for the Keeper to record a pass. If an attempt is incomplete, ask the Keeper about your next eligible attempt. Health needs are respected.</p>
-    <p style="margin:0;font-style:italic;color:#c8a080;font-size:13px;line-height:1.5;">Come ready. Take this seriously. The Current is patient — but the Scroll remembers.</p>
+    <p style="margin:0;font-style:italic;color:#c8a080;font-size:16px;line-height:1.5;">Come ready. Take this seriously. The Current is patient — but the Scroll remembers.</p>
   </div>
 
   <!-- ── HOW IT WORKS ── -->
@@ -116,16 +117,16 @@ export async function sendSeekerConfirmation(env: Env, c: SeekerEmailContext): P
     <li>Tier I is open to all Hynafol members. Tiers within each pillar are sequential — Tier I before Tier II, Tier II before Tier III. Tier II is attempted at a subsequent event after Tier I. You may work across different pillars at the same event.</li>
     <li>The final tier of every pillar (Tier III) may only be attempted at the <strong>Grand Gathering</strong> — once per year.</li>
   </ul>
-  <p style="margin:4px 0 20px 0;font-size:13px;"><a href="${escapeAttr(trialsUrl)}" style="color:#C8963E;">See the full trial descriptions →</a></p>
+  <p style="margin:4px 0 20px 0;font-size:16px;"><a href="${escapeAttr(trialsUrl)}" style="color:#C8963E;">See the full trial descriptions →</a></p>
 
   <!-- ── TRIAL RULES FOR THEIR RINGS ── -->
   <p style="line-height:1.6;margin:0 0 8px 0;"><strong style="color:#E8B96A;">Your trials — what is required of you:</strong></p>
-  ${trialRulesHtml(c.rings_pursued)}
+  ${trialRulesHtml(c.rings_pursued, c)}
 
   <!-- ── SIGN-OFF ── -->
-  <p style="line-height:1.6;margin:20px 0 8px 0;font-size:13px;">Track your standing at any time: <a href="${escapeAttr(lookupUrl)}" style="color:#C8963E;">${escapeHtml(lookupUrl)}</a> — enter your registration email to receive a one-time sign-in link.</p>
+  <p style="line-height:1.6;margin:20px 0 8px 0;font-size:16px;">Track your standing at any time: <a href="${escapeAttr(lookupUrl)}" style="color:#C8963E;">${escapeHtml(lookupUrl)}</a> — enter your registration email to receive a one-time sign-in link.</p>
   <p style="line-height:1.6;margin:28px 0 4px 0;font-style:italic;color:#E8B96A;text-align:center;">"When we move, we move as one."</p>
-  <p style="text-align:center;margin:0;color:#907050;font-size:13px;">— Keepers of the Current</p>
+  <p style="text-align:center;margin:0;color:#907050;font-size:16px;">— Keepers of the Current</p>
 </div>
 </body></html>`;
 
@@ -168,7 +169,7 @@ HOW THE TRIALS WORK:
 Full trial details: ${trialsUrl}
 
 YOUR TRIALS — WHAT IS REQUIRED OF YOU:
-${trialRulesText(c.rings_pursued)}
+${trialRulesText(c.rings_pursued, c)}
 
 Track your standing at any time: ${lookupUrl}
 Enter your registration email to receive a one-time sign-in link.
@@ -221,7 +222,7 @@ ${intentionsText}
 
 Open the panel: ${adminUrl}`;
 
-  const html = `<pre style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.5;background:#0e0404;color:#f0dfc0;padding:20px;border:1px solid #C8963E;">${escapeHtml(text)}</pre>`;
+  const html = `<pre style="font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px;line-height:1.5;background:#0e0404;color:#f0dfc0;padding:20px;border:1px solid #C8963E;">${escapeHtml(text)}</pre>`;
 
   await sendViaResend(env, {
     from: env.EMAIL_FROM,
@@ -350,11 +351,16 @@ const RULES = {
      'Prepare: arrange the private tea, confirm the new member’s registration, and plan the public ceremony.'],
   ],
 };
-function trialRulesHtml(rings: ('body' | 'mind' | 'soul')[]): string {
-  return rings.map(ring => `<h3 style="color:#E8B96A;">${escapeHtml(ringHumanList([ring]))}</h3>${RULES[ring].map(([title,...paragraphs]) => `<h4>${escapeHtml(title)}</h4>${paragraphs.map(p=>`<p style="line-height:1.6;">${escapeHtml(p)}</p>`).join('')}`).join('')}`).join('');
+function selectedRules(ring: 'body'|'mind'|'soul', c: SeekerEmailContext) {
+  const codes = [...(c.bookings??[]).map(b=>b.trial_code),...(c.trial_intentions??[]).map(i=>i.code)];
+  const tiers = new Set(codes.filter(code=>code.startsWith(ring[0]+'_')).map(code=>Number(code.match(/_t(\d)/)?.[1])));
+  return RULES[ring].filter((_rule,index)=>tiers.has(index+1));
 }
-function trialRulesText(rings: ('body' | 'mind' | 'soul')[]): string {
-  return rings.map(ring => `${ringHumanList([ring])}\n${RULES[ring].map(section => section.join('\n')).join('\n\n')}`).join('\n\n');
+function trialRulesHtml(rings: ('body' | 'mind' | 'soul')[], c: SeekerEmailContext): string {
+  return rings.map(ring => `<h3 style="color:#E8B96A;">${escapeHtml(ringHumanList([ring]))}</h3>${selectedRules(ring,c).map(([title,...paragraphs]) => `<h4>${escapeHtml(title)}</h4>${paragraphs.map(p=>`<p style="line-height:1.6;">${escapeHtml(p)}</p>`).join('')}`).join('')}`).join('');
+}
+function trialRulesText(rings: ('body' | 'mind' | 'soul')[], c: SeekerEmailContext): string {
+  return rings.map(ring => `${ringHumanList([ring])}\n${selectedRules(ring,c).map(section => section.join('\n')).join('\n\n')}`).join('\n\n');
 }
 
 function escapeHtml(s: string): string {
@@ -368,4 +374,19 @@ function escapeHtml(s: string): string {
 
 function escapeAttr(s: string): string {
   return escapeHtml(s);
+}
+
+export async function sendProgressUpdate(env: Env, seekerId: string, trialCode: string, outcome: string) {
+ const seeker=await env.DB.prepare('SELECT name,email FROM seekers WHERE id=?').bind(seekerId).first<{name:string;email:string}>();
+ if(!seeker)return;
+ const text=`${seeker.name}, your Trial Scroll has been updated.\n${TRIAL_DISPLAY_NAMES[trialCode]||trialCode}: ${outcome==='passed'?'Passed':'Attempt recorded — ask the Keeper about your next eligible attempt'}.\nView your progress and next steps: ${env.SITE_URL}/lookup.html\nIf anything looks wrong, reply to this email.`;
+ await sendViaResend(env,{from:env.EMAIL_FROM,to:[seeker.email],subject:'Your trial progress has been updated',text,html:`<p>${escapeHtml(text).replace(/\n/g,'<br>')}</p>`,reply_to:env.KEEPER_NOTIFY_EMAIL});
+}
+
+export async function sendBookingUpdate(env: Env, seekerId: string, trialCode: string, action: string, start: string) {
+ const seeker=await env.DB.prepare('SELECT name,email FROM seekers WHERE id=?').bind(seekerId).first<{name:string;email:string}>();
+ if(!seeker)return;
+ const text=`${seeker.name}, your appointment has been ${action==='cancel'?'canceled':'rescheduled'}.\n${fmtBookingSlot(trialCode,start,'')}\nYour recorded progress is unchanged. View My Trials: ${env.SITE_URL}/lookup.html\nUpdate any copy in your personal calendar. Reply if you need help.`;
+ await sendViaResend(env,{from:env.EMAIL_FROM,to:[seeker.email],subject:action==='cancel'?'Trial appointment canceled':'Trial appointment rescheduled',text,html:`<p>${escapeHtml(text).replace(/\n/g,'<br>')}</p>`,reply_to:env.KEEPER_NOTIFY_EMAIL});
+ await sendViaResend(env,{from:env.EMAIL_FROM,to:[env.KEEPER_NOTIFY_EMAIL],subject:'Seeker booking change',text,html:`<p>${escapeHtml(text).replace(/\n/g,'<br>')}</p>`});
 }

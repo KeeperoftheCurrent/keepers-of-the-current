@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="stylesheet" href="/assets/css/components.css">
 <link rel="stylesheet" href="/assets/css/my-trials.css">
+<link rel="stylesheet" href="/assets/css/seeker-flow.css">
 </head>
 <body>
 
@@ -73,20 +74,20 @@
     <section class="panel" aria-labelledby="bookings-title">
       <h2 id="bookings-title">Your booked times</h2>
       <p class="quiet" id="time-zone-note">All times are local to the gathering.</p>
-      <div id="result-bookings"></div>
-      <p class="quiet small">Need to change a time? Speak with the Keeper to arrange it.</p>
+      <div id="result-bookings"></div><div id="booking-editor" tabindex="-1" hidden></div><p id="booking-status" role="status"></p><h3>Planned trials · no appointment reserved</h3><div id="result-intentions"></div>
+      <p class="quiet small">Questions or missing results? <a href="mailto:desiree.rock@gmail.com">Email the Keeper</a>.</p>
     </section>
 
     <section class="panel" aria-labelledby="progress-title">
       <h2 id="progress-title">Your path ahead</h2>
       <p class="quiet">Progress reflects the results recorded by the Keeper. If a completion is missing, ask the Keeper to update your Scroll.</p>
-      <div id="result-pillars"></div>
+      <div id="result-pillars"></div><details><summary>Recorded attempts</summary><div id="result-attempts"></div></details>
     </section>
 
     <section class="panel" aria-labelledby="gatherings-title">
       <h2 id="gatherings-title">Your gatherings</h2>
       <div id="result-registrations"></div>
-      <a class="journey-link" href="/seeker.html">Register for a gathering →</a>
+      <a class="journey-link" href="/seeker.html">Choose more trials →</a>
     </section>
 
     <details class="panel history" id="result-history" hidden>
@@ -101,6 +102,6 @@
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="/assets/js/lookup.js?v=20261103-email-login"></script>
+<script type="module" src="/assets/js/lookup.js?v=20261103-mobile"></script>
 </body>
 </html>

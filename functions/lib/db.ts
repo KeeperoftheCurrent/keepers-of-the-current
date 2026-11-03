@@ -3,6 +3,7 @@
 
 export interface Env {
   DB: D1Database;
+  TALIA_CALENDAR_ICS_URL?: string;
   RESEND_API_KEY?: string;
   KEEPER_NOTIFY_EMAIL: string;
   EMAIL_FROM: string;

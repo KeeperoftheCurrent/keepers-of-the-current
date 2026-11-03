@@ -23,10 +23,11 @@ test('player mail includes preparation, accurate rules, booked vs planned times,
   assert.equal(player.reply_to,env.KEEPER_NOTIFY_EMAIL);
   assert.match(player.html,/Test &lt;Seeker&gt;/);
   for(const field of ['html','text']) {
-    for(const phrase of ['Central Time','Keepers Rest','no time reserved','one-time sign-in link','unless spoken to','teach it to two willing people','witness','records the result']) assert.ok(player[field].toLowerCase().includes(phrase.toLowerCase()),`${field}: ${phrase}`);
+    for(const phrase of ['Central Time','Keepers Rest','no time reserved','one-time sign-in link','unless spoken to','witness','records the result']) assert.ok(player[field].toLowerCase().includes(phrase.toLowerCase()),`${field}: ${phrase}`);
     assert.ok(!player[field].includes('no exceptions'));
     assert.ok(!player[field].includes('learn the nine-movement'));
   }
+  assert.ok(!player.text.includes('teach it to two willing people'), 'unselected Tier II rules are omitted');
   assert.match(player.text,/Nov 9, 2026/);
   assert.match(player.text,/4 PM – 4:15 PM/);
 });

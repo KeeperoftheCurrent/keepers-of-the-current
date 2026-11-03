@@ -9,6 +9,7 @@
 import type { Env } from '../../lib/db';
 import { queryFirst, queryAll } from '../../lib/db';
 import { jsonResponse } from '../../_middleware';
+import { getCalendarBusy } from '../../lib/calendar-busy';
 import { eventClock } from '../../lib/event-time';
 
 interface CatalogRow {
@@ -110,9 +111,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const bookings = await queryAll<BookingRow>(
     env,
     `SELECT start_at, buffer_until FROM bookings
-      WHERE event_id = ? AND voided_at IS NULL`,
-    event_id
+      WHERE voided_at IS NULL`
   );
+
+  try {
+    if(windows.length)bookings.push(...await getCalendarBusy(env,windows[0].day_date+'T00:00',windows[windows.length-1].day_date+'T23:59'));
+  } catch { return jsonResponse({ok:false,detail:'We could not check the Keeper’s calendar. Please try again shortly.'},503); }
 
   // Compute available starts per trial
   const trials: Record<string, {

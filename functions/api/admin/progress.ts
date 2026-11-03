@@ -8,6 +8,7 @@
 import type { Env } from '../../lib/db';
 import { queryFirst, exec, audit } from '../../lib/db';
 import { jsonResponse } from '../../_middleware';
+import { sendProgressUpdate } from '../../lib/email';
 import { evaluateAwards } from '../../lib/awards';
 import { RETIRED_TRIAL_CODE } from '../../lib/catalog';
 import type { AdminContextData } from './_middleware';
@@ -19,7 +20,7 @@ interface CatalogRow {
   gg_only: number;
 }
 
-export const onRequestPost: PagesFunction<Env, string, AdminContextData> = async ({ request, env, data }) => {
+export const onRequestPost: PagesFunction<Env, string, AdminContextData> = async ({ request, env, data, waitUntil }) => {
   const body = (await request.json().catch(() => null)) as Record<string, unknown> | null;
   if (!body) return jsonResponse({ ok: false, error: 'JSON body required' }, 400);
 
@@ -103,5 +104,6 @@ export const onRequestPost: PagesFunction<Env, string, AdminContextData> = async
     detail: { seeker_id, trial_code, outcome, force, event_id, evalResult },
   });
 
+  waitUntil(sendProgressUpdate(env,seeker_id!,trial_code!,outcome).catch(()=>console.error('[progress] Result email could not be sent')));
   return jsonResponse({ ok: true, trial_event_id: id, awards: evalResult }, 201);
 };

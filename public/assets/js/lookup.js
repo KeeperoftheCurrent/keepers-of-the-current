@@ -1,3 +1,4 @@
+import { downloadCalendar } from './calendar-file.js';
 const $ = sel => document.querySelector(sel);
 const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 const PILLARS = {
@@ -42,7 +43,7 @@ function show(section) {
 }
 function clearDetails() {
   $('#lookup-form').reset();
-  for (const id of ['result-name', 'result-house', 'result-titles', 'result-rings', 'result-pillars', 'result-bookings', 'result-registrations', 'result-history-content']) {
+  for (const id of ['result-name', 'result-house', 'result-titles', 'result-rings', 'result-pillars', 'result-bookings', 'result-registrations', 'result-history-content','result-intentions','result-attempts','booking-editor','booking-status']) {
     document.getElementById(id).textContent = '';
   }
   $('#result-history').open = false;
@@ -76,9 +77,16 @@ function renderResult(seeker) {
         <h3>${escapeHtml(b.trial_name)}</h3>
         <p class="booking-time">${escapeHtml(bookingTime(b))}</p>
         <p class="quiet">${escapeHtml(b.event_name)} · ${PILLARS[b.pillar].name}, Tier ${ROMAN[b.tier]}</p>
-        ${b.event_active ? '' : '<p>This gathering is inactive. Check the arrangements with the Keeper.</p>'}
+        <p><button type="button" data-calendar="${b.id}">Add to calendar</button> <button type="button" data-change="${b.id}">Change time</button> <button type="button" data-cancel="${b.id}">Cancel booking</button></p>
+        ${b.event_active ? ''  : '<p>This gathering is inactive. Check the arrangements with the Keeper.</p>'}
       </article>`).join('')
     : '<p class="empty-state">No upcoming trial times are booked. Register for a gathering to choose a Tier I appointment, or speak with the Keeper to arrange your next tier.</p>';
+
+  $('#result-intentions').innerHTML=(seeker.registrations||[]).filter(r=>!r.past).flatMap(r=>(r.trial_intentions||[]).map(i=>`<p><strong>${escapeHtml((seeker.requirements||[]).find(t=>t.code===i.code)?.name||i.code)}</strong> · ${escapeHtml(r.event_name)}<br>${i.preferred_time?escapeHtml(formatDate(i.preferred_time.slice(0,10))+' · '+formatTime(i.preferred_time)+' Central · requested time'):'Agree on timing with the Keeper'}<br>No time reserved.</p>`)).join('')||'<p>No planned trials recorded.</p>';
+  $('#result-attempts').innerHTML=(seeker.attempts||[]).map(a=>`<p>${escapeHtml(a.name)} · ${escapeHtml(a.completed_on)} · ${a.outcome==='passed'?'Passed':'Not passed — ask the Keeper about your next attempt'}</p>`).join('')||'<p>No attempts recorded yet.</p>';
+  $('#result-bookings').querySelectorAll('[data-calendar]').forEach(b=>b.onclick=()=>downloadCalendar(bookings.find(x=>x.id===b.dataset.calendar)));
+  $('#result-bookings').querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>editBooking(bookings.find(x=>x.id===b.dataset.cancel),'cancel'));
+  $('#result-bookings').querySelectorAll('[data-change]').forEach(b=>b.onclick=()=>editBooking(bookings.find(x=>x.id===b.dataset.change),'reschedule'));
 
   const pursued = Array.isArray(seeker.rings_pursued) ? seeker.rings_pursued : [];
   $('#result-pillars').innerHTML = Object.entries(PILLARS).map(([pillar, label]) => {
@@ -88,8 +96,8 @@ function renderResult(seeker) {
     const guidance = next === 1
       ? 'Begin at an upcoming gathering. Choose any Tier I appointment you need when registering.'
       : next === 2
-        ? 'Continue at a later gathering than Tier I. Speak with the Keeper to arrange this tier.'
-        : 'Grand Gathering only, once per year. Speak with the Keeper to confirm your next attempt.';
+        ? 'Continue at a later gathering than Tier I. Choose your next trial below; confirm the arrangements with the Keeper.'
+        : 'Grand Gathering only, once per year. Choose your next trial below; confirm your next eligible attempt with the Keeper.';
     return `<article class="pillar-block">
       <h3>${label.name} · Ring of ${label.ring}</h3>
       <p class="quiet small">${count} of ${tiers.length} tiers complete${pursued.includes(pillar) ? '' : ' · Not currently pursuing'}</p>
@@ -97,6 +105,7 @@ function renderResult(seeker) {
         const state = tier.complete ? 'complete' : tier.tier === next ? 'next' : 'later';
         return `<li class="${state}">Tier ${ROMAN[tier.tier]}<span>${tier.complete ? '✓ Complete' : tier.tier === next ? 'Next step' : 'Earlier tiers first'}</span></li>`;
       }).join('')}</ol>
+      <ul>${(seeker.requirements||[]).filter(r=>r.pillar===pillar).map(r=>`<li>${r.complete?'✓':'○'} Tier ${ROMAN[r.tier]} · ${escapeHtml(r.name)} — ${r.complete?'Complete':'Not yet recorded as complete'}</li>`).join('')}</ul>
       ${next ? `<p class="next-step"><strong>Next: Tier ${ROMAN[next]}.</strong> ${guidance}</p>
         <a class="journey-link" href="/trials.html#${pillar}-tier-${next}">Read the Tier ${ROMAN[next]} trials →</a>`
         : `<p class="next-step">All tiers recorded.${seeker.rings[pillar] ? ' Your ring is earned.' : ' Ask the Keeper to review your ring award.'}</p>`}
@@ -159,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch {
       renderError('Could not request a link. Please try again.');
     } finally {
-      button.disabled = false;
+      if(status.textContent){button.textContent='Link sent · resend in 60 seconds';setTimeout(()=>{button.disabled=false;button.textContent='Email me another sign-in link';},60000);}else button.disabled=false;
     }
   });
 
@@ -212,3 +221,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderError('Could not load your trials. Please refresh or request a new link.');
   }
 });
+
+async function editBooking(booking, action) {
+ const editor=$('#booking-editor');editor.hidden=false;editor.innerHTML='<p>Loading…</p>';editor.focus();
+ let starts=[];
+ if(action==='reschedule'){
+  try {const response=await fetch(`/api/public/availability?event_id=${encodeURIComponent(booking.event_id)}&trial_codes=${encodeURIComponent(booking.trial_code)}`);if(!response.ok)throw new Error();starts=(await response.json()).trials[booking.trial_code]?.available_starts||[];}catch{editor.textContent='Could not load times. Your booking is unchanged. Try again.';return;}
+ }
+ editor.innerHTML=`<h3>${action==='cancel'?'Cancel':'Change'} ${escapeHtml(booking.trial_name)}?</h3><p>Your recorded trial progress will be kept.</p>${action==='reschedule'?'<label>Day<select id="change-day"><option value="">Choose a day</option>'+[...new Set(starts.map(s=>s.slice(0,10)))].map(d=>`<option value="${d}">${formatDate(d)}</option>`).join('')+'</select></label><label>Time · Central<select id="change-time"><option value="">Choose a day first</option></select></label>':''}<button id="confirm-booking-change">${action==='cancel'?'Cancel this booking':'Save new time'}</button><button id="keep-booking">Keep current booking</button><p id="change-error" role="alert"></p>`;
+ $('#keep-booking').onclick=()=>editor.hidden=true;
+ if(action==='reschedule')$('#change-day').onchange=()=>{$('#change-time').innerHTML='<option value="">Choose a time</option>'+starts.filter(s=>s.startsWith($('#change-day').value)&&$('#change-day').value).map(s=>`<option value="${s}">${formatTime(s)}</option>`).join('');};
+ $('#confirm-booking-change').onclick=async()=>{
+  const start_at=$('#change-time')?.value;
+  if(action==='reschedule'&&!start_at){$('#change-error').textContent='Choose a new day and time.';return;}
+  $('#confirm-booking-change').disabled=true;
+  try{const response=await fetch('/api/seekers/booking',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,id:booking.id,start_at})});const data=await response.json();if(!response.ok)throw new Error(data.detail||'Please sign in again and retry.');const result=await signIn('session');if(!result?.seeker)throw new Error('Please sign in again to see your updated booking.');renderResult(result.seeker);editor.hidden=true;$('#booking-status').textContent=action==='cancel'?'Booking canceled. Your progress is unchanged.':'New time saved. Update any copy in your personal calendar.';}
+  catch(e){$('#change-error').textContent=e.message;$('#confirm-booking-change').disabled=false;}
+ };
+}

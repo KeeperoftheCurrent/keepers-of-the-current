@@ -39,6 +39,7 @@
   .pillar-group { margin-bottom: 14px; }
   .pillar-group h4 { color: var(--gold); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
 </style>
+<link rel="stylesheet" href="/assets/css/seeker-flow.css">
 </head>
 <body>
 
@@ -64,82 +65,50 @@
 
 <main class="page-shell">
 
-  <header class="page-header">
-    <img src="/assets/img/sigil.png" alt="" class="sigil">
-    <div class="title">Enter the Trial Scroll</div>
-    <div class="subtitle">"The Current flows where genuine souls gather in true connection."</div>
+  <header class="page-header compact"><h1 class="title">Choose your trials</h1>
+    <p>Tier I is open to every Hynafol member.</p>
+    <a href="/lookup.html">Returning seeker? Open My Trials →</a>
   </header>
-
-  <section id="form-wrap">
-    <div class="panel">
-      <h2>Mark your name</h2>
-      <p class="muted">Already registered? <a href="/lookup.html">See your progress and booked times in My Trials →</a></p>
-            <p><strong>Tier I trials are open to all Hynafol members, regardless of house, court, or affiliation.</strong></p>
-<p class="muted">Tell the Keeper who you are, what you seek, and where you intend to begin. A confirmation will reach you by post once your name is set in the Scroll.</p>
-
-      <div id="errors" hidden></div>
-
-      <form id="intake-form" novalidate>
-        <label class="field">
-          <span class="label-text">Your name</span>
-          <input type="text" name="name" maxlength="100" required autocomplete="name">
-        </label>
-
-        <label class="field">
-          <span class="label-text">Email</span>
-          <input type="email" name="email" maxlength="200" required autocomplete="email">
-          <span class="help">Your confirmation will be sent here. Used later to look up your standing.</span>
-        </label>
-
-        <label class="field">
-          <span class="label-text">House or affiliation <span class="muted">(optional)</span></span>
-          <input type="text" name="house" maxlength="100" autocomplete="off">
-        </label>
-
-        <div class="field">
-          <span class="label-text">Rings I intend to pursue</span>
-          <div class="checkbox-row" role="group" aria-label="Rings to pursue">
-            <label>
-              <input type="checkbox" name="rings_pursued" value="body">
-              <span class="ring-name">Body — Endurance</span>
-            </label>
-            <label>
-              <input type="checkbox" name="rings_pursued" value="mind">
-              <span class="ring-name">Mind — Focus</span>
-            </label>
-            <label>
-              <input type="checkbox" name="rings_pursued" value="soul" id="ring-soul">
-              <span class="ring-name">Soul — Connection</span>
-            </label>
-          </div>
-          <div id="soul-tier3-note" hidden style="margin-top:8px;padding:10px 12px;background:rgba(200,150,62,0.07);border-left:3px solid var(--gold);border-radius:0 3px 3px 0;font-size:13px;color:var(--text-dim);line-height:1.6;">
-            <strong style="color:var(--gold-light);">Soul Tier III note:</strong> The final tier of the Soul ring requires that you bring someone to the faith through your own presence over the course of the trials — and host a public ceremony to welcome them. This is not a solo trial. Begin thinking about who that person might be.
-          </div>
-          <span class="help">Choose one or all three. Within each pillar, tiers must be completed in order — Tier I first, then II, then III.</span>
+  <section id="form-wrap" class="panel">
+    <p id="welcome" role="status"></p>
+    <ol class="flow-steps" aria-label="Registration steps"><li>Gathering</li><li>Trials & times</li><li>Your details</li><li>Review</li></ol>
+    <div id="errors" role="alert" tabindex="-1" hidden></div>
+    <p id="load-status" role="status"></p>
+    <button id="retry-load" type="button" hidden>Try loading again</button>
+    <form id="intake-form" novalidate>
+      <section data-step="0"><h2 tabindex="-1">1. Choose your gathering</h2>
+        <label class="field">Gathering<select name="event_id" id="event_id" required><option value="">Loading gatherings…</option></select></label>
+        <p>Dates are listed in order. All trial times are Central Time at Hynafol.</p>
+      </section>
+      <section data-step="1" hidden><h2 tabindex="-1">2. Add trials to your plan</h2>
+        <p>Choose one or more rings, then add the trials you want to attempt.</p>
+        <div class="checkbox-row" role="group" aria-label="Rings to pursue">
+          <label><input type="checkbox" name="rings_pursued" value="body"><span>Body · Endurance</span></label>
+          <label><input type="checkbox" name="rings_pursued" value="mind"><span>Mind · Focus</span></label>
+          <label><input type="checkbox" name="rings_pursued" value="soul"><span>Soul · Connection</span></label>
         </div>
-
-        <label class="field">
-          <span class="label-text">First gathering</span>
-          <select name="event_id" id="event_id" required>
-            <option value="">— loading the Hynafol calendar —</option>
-          </select>
-        </label>
-
-        <div class="field" id="trials-section" hidden>
-          <span class="label-text">Trials you plan to attempt <span class="muted">(optional)</span></span>
-          <span class="help" style="margin-bottom:10px;">Select the Tier I trial(s) you intend to attempt at this gathering. Some require a specific time with the Keeper — pick a slot. Others just need a heads-up so she knows to expect you.</span>
-          <div id="trials-list"></div>
-        </div>
-
-        <button class="primary" id="submit-btn" type="submit">Mark me in the Scroll</button>
-      </form>
-    </div>
-
+        <p id="availability-status" role="status"></p><button type="button" id="retry-times" hidden>Try loading times again</button>
+        <div id="trials-section"><div id="trials-list"></div></div>
+        <p class="help">You can register without a trial time and arrange one later. Read each trial’s requirements before starting.</p>
+      </section>
+      <section data-step="2" hidden><h2 tabindex="-1">3. Your details</h2>
+        <label class="field">Your character name<input name="name" required maxlength="100" autocomplete="name"></label>
+        <label class="field">Email<input type="email" name="email" required maxlength="200" autocomplete="email" inputmode="email"><span class="help">Use the same email each time to keep your progress together. We’ll email your confirmation here.</span></label>
+        <label class="field">House or affiliation (optional)<input name="house" maxlength="100"></label>
+      </section>
+      <section data-step="3" hidden><h2 tabindex="-1">4. Your Trial Plan</h2><div id="plan-review"></div>
+        <p>Times are reserved only after you confirm. Planned trials and preferred times do not reserve an appointment.</p>
+        <p>Meet the Keeper at Keepers Rest to confirm your trial’s exact meeting place. <a href="mailto:desiree.rock@gmail.com">Ask the Keeper a question</a>.</p>
+      </section>
+      <div class="flow-actions"><button type="button" id="back-btn" hidden>Back</button><button class="primary" id="next-btn" type="button">Choose trials →</button><button class="primary" id="submit-btn" type="submit" hidden>Confirm registration</button></div>
+      <p id="plan-count" role="status"></p>
+      <p class="help">Your unfinished plan is saved in this tab. <button type="button" id="clear-draft" class="text-button">Clear saved plan</button></p>
+    </form>
   </section>
 
-  <section id="success" class="panel success-block" hidden>
+  <section id="success" class="panel success-block" tabindex="-1" hidden>
     <div class="seal">⊙</div>
-    <h2>The Current acknowledges you</h2>
+    <h2>Your registration is saved</h2>
     <p>Your name is set in the Trial Scroll, <strong id="success-name">seeker</strong>.</p>
     <div id="success-bookings"></div>
     <p>Your registration is saved. We’re preparing your confirmation email and notification to the Keeper. You can check your booked times in <a href="/lookup.html">My Trials</a>.</p>
@@ -150,15 +119,6 @@
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<script>
-  const soulCb = document.getElementById('ring-soul');
-  const soulNote = document.getElementById('soul-tier3-note');
-  if (soulCb && soulNote) {
-    const updateNote = () => { soulNote.hidden = !soulCb.checked; };
-    soulCb.addEventListener('change', updateNote);
-    updateNote();
-  }
-</script>
-<script type="module" src="/assets/js/seeker.js"></script>
+<script type="module" src="/assets/js/seeker.js?v=20261103-mobile"></script>
 </body>
 </html>

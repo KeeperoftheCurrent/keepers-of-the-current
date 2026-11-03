@@ -7,7 +7,7 @@ export async function runReminders(env: Env) {
   const tomorrow = new Date(`${today}T12:00:00Z`);
   tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
   const tomorrowDate = tomorrow.toISOString().slice(0, 10);
-  const {results: events} = await env.DB.prepare('SELECT id, name, starts_on, ends_on FROM events WHERE active = 1 AND starts_on = ?').bind(tomorrowDate).all<{id:string;name:string;starts_on:string;ends_on:string|null}>();
+  const {results: events} = await env.DB.prepare('SELECT id, name, starts_on, ends_on FROM events WHERE active = 1 AND (starts_on = ? OR EXISTS(SELECT 1 FROM bookings b WHERE b.event_id=events.id AND b.voided_at IS NULL AND substr(b.start_at,1,10)=?))').bind(tomorrowDate,tomorrowDate).all<{id:string;name:string;starts_on:string;ends_on:string|null}>();
   let sent = 0, failed = 0, skipped = 0;
   for (const event of events ?? []) {
     // Use the most recent active registration; canceled registrations never receive reminders.
@@ -17,8 +17,10 @@ export async function runReminders(env: Env) {
       AND r.id = (SELECT r2.id FROM registrations r2 WHERE r2.event_id = r.event_id AND r2.seeker_id = r.seeker_id AND r2.voided_at IS NULL ORDER BY r2.created_at DESC, r2.rowid DESC LIMIT 1)`)
       .bind(event.id).all<{id:string;seeker_id:string;rings_pursued:string;preferred_date:string|null;preferred_time:string|null;trial_intentions:string;name:string;email:string;house:string|null}>();
     for (const registration of registrations ?? []) {
+      const appointmentDay = event.starts_on !== tomorrowDate;
+      if (appointmentDay && !await env.DB.prepare(`SELECT b.id FROM bookings b JOIN registrations r ON r.id=b.registration_id WHERE b.seeker_id=? AND b.event_id=? AND b.voided_at IS NULL AND r.voided_at IS NULL AND substr(b.start_at,1,10)=?`).bind(registration.seeker_id,event.id,tomorrowDate).first()) continue;
       const now = Math.floor(Date.now()/1000);
-      const key = `event-reminder/${event.id}/${registration.seeker_id}`;
+      const key = appointmentDay ? `appointment-reminder/${event.id}/${registration.seeker_id}/${tomorrowDate}` : `event-reminder/${event.id}/${registration.seeker_id}`;
       // Atomic claim also prevents overlapping cron/manual runs from sending twice.
       const claimed = await env.DB.prepare(`INSERT INTO reminder_deliveries (delivery_key,seeker_id,event_id,status,attempted_at)
         VALUES (?,?,?,'sending',?) ON CONFLICT(delivery_key) DO UPDATE SET status='sending', attempted_at=excluded.attempted_at, attempts=attempts+1
@@ -35,7 +37,7 @@ export async function runReminders(env: Env) {
           preferred_date:registration.preferred_date,preferred_time:registration.preferred_time,
           submitted_at_iso:new Date().toISOString(),bookings:bookings ?? [],
           trial_intentions:JSON.parse(registration.trial_intentions || '[]'),
-          reminder:true,idempotency_key:key,
+          reminder:true,appointment_reminder:appointmentDay,idempotency_key:key,
         };
         await sendSeekerConfirmation(env, context);
         await env.DB.prepare("UPDATE reminder_deliveries SET status='sent', sent_at=? WHERE delivery_key=?").bind(now,key).run();

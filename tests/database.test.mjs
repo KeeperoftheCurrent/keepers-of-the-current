@@ -14,6 +14,7 @@ before(async () => {
   const outfile = path.join(bundleDir, 'handlers.mjs');
   await build({
     stdin: { resolveDir: root, loader: 'ts', contents: `
+      export { onRequestPost as booking } from './functions/api/seekers/booking.ts';
       export { onRequestPost as intake } from './functions/api/seekers/index.ts';
       export { onRequestPost as lookup } from './functions/api/seekers/lookup.ts';
       export { onRequestGet as availability } from './functions/api/public/availability.ts';
@@ -30,7 +31,9 @@ before(async () => {
     bundle: true, platform: 'node', format: 'esm', outfile,
     plugins: [{ name: 'no-real-email', setup(builder) {
       builder.onLoad({ filter: /functions\/lib\/email\.ts$/ }, () => ({
-        loader: 'js', contents: `export async function sendViaResend(env, payload) { env.testSignInEmails.push(payload); }
+        loader: 'js', contents: `export async function sendBookingUpdate() {}
+        export async function sendProgressUpdate() {}
+        export async function sendViaResend(env, payload) { env.testSignInEmails.push(payload); }
         export async function sendSeekerConfirmation(env, payload) { if (env.failReminder) throw new Error('simulated mail failure'); env.reminders.push(payload); }
         export async function sendBothEmails(env) {
           env.testEmailCalls++;
@@ -274,8 +277,9 @@ test('My Trials only exposes the matched seeker’s active bookings, without pri
   assert.equal(found.data.seeker.bookings[0].past, false);
   assert.equal(found.data.seeker.time_zone, 'America/Chicago');
   assert.ok(!JSON.stringify(found.data).includes('private'));
-  assert.ok(!JSON.stringify(found.data).includes('example.invalid'));
-  assert.ok(!('id' in found.data.seeker.bookings[0]));
+  assert.equal(found.data.seeker.email,'seeker@example.invalid');
+  assert.ok(!JSON.stringify(found.data).includes('another@example.invalid'));
+  assert.equal(typeof found.data.seeker.bookings[0].id,'string');
   await d.db.prepare('UPDATE bookings SET voided_at = 1 WHERE seeker_id = ?').bind(id).run();
   assert.equal((await lookup()).data.seeker.bookings.length, 0);
   await register(d, { bookings: [slot('m_t1_recitation', '11:00')] });
@@ -415,4 +419,32 @@ test('failed reminders stay visible and may be retried without duplicating succe
   assert.equal((await app.runReminders(d.env)).sent,1);
   assert.equal(d.env.reminders.length,1);
   assert.equal((await d.db.prepare('SELECT attempts FROM reminder_deliveries').first()).attempts,2);
+});
+
+
+test('retrying the same plan returns the saved registration and sends mail only once', async t => {
+  const d=await database(t);
+  const body=payload({request_id:crypto.randomUUID(),bookings:[slot()]});
+  const first=await d.call(app.intake,body);
+  const retry=await d.call(app.intake,body);
+  assert.equal(first.status,201);assert.equal(retry.status,200);
+  assert.equal(first.data.registration_id,retry.data.registration_id);
+  assert.equal(d.env.testEmailCalls,1);assert.equal(await d.count('bookings'),1);
+});
+test('planned trials enforce catalog, prerequisite and date checks',async t=>{
+ const d=await database(t);
+ for(const trial_intentions of [[{code:'invented'}],[{code:'m_t2'}],[{code:'m_t1_recitation'}],[{code:'b_t1',preferred_time:'2026-12-01T10:00'}]]) {
+  assert.equal((await d.call(app.intake,payload({trial_intentions}))).status,422);
+ }
+});
+test('booking management requires ownership and retains progress after cancellation',async t=>{
+ const d=await database(t);const id=await register(d,{bookings:[slot()]});
+ const cookie=await d.login();const b=await d.db.prepare('SELECT id FROM bookings WHERE seeker_id=?').bind(id).first();
+ assert.equal((await d.call(app.booking,{action:'cancel',id:b.id})).status,401);
+ await mark(d,id,'b_t1');
+ const changed=await d.call(app.booking,{action:'reschedule',id:b.id,start_at:'2026-11-08T11:00'},{cookie});
+ assert.equal(changed.status,200);
+ const canceled=await d.call(app.booking,{action:'cancel',id:b.id},{cookie});assert.equal(canceled.status,200);
+ const result=await d.call(app.lookup,{action:'session'},{cookie});assert.equal(result.data.seeker.bookings.length,0);
+ assert.ok(result.data.seeker.requirements.find(r=>r.code==='b_t1').complete);
 });

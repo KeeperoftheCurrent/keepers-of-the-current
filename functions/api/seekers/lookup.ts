@@ -8,6 +8,7 @@ import { eventClock } from '../../lib/event-time';
 interface SeekerRow {
   id: string;
   name: string;
+  email: string;
   house: string | null;
   rings_pursued: string;
   created_at: number;
@@ -20,7 +21,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const { seekerId, cookie } = authentication;
   const seeker = await queryFirst<SeekerRow>(
     env,
-    'SELECT id, name, house, rings_pursued, created_at FROM seekers WHERE id = ?',
+    'SELECT id, name, email, house, rings_pursued, created_at FROM seekers WHERE id = ?',
     seekerId
   );
   if (!seeker) return jsonResponse({ ok: false }, 401);
@@ -62,6 +63,12 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   for (const pillar of PILLARS) tierProgress[pillar].sort((a, b) => a.tier - b.tier);
   const clock = eventClock(env.EVENT_TIME_ZONE);
 
+  const requirements = await queryAll(env, `SELECT tc.code, tc.name, tc.pillar, tc.tier, tc.tier_aggregation,
+    EXISTS(SELECT 1 FROM trial_events te WHERE te.seeker_id=? AND te.trial_code=tc.code AND te.outcome='passed' AND te.voided_at IS NULL) AS complete
+    FROM trial_catalog tc WHERE tc.code <> ? ORDER BY tc.display_order`, seeker.id, RETIRED_TRIAL_CODE);
+  const attempts = await queryAll(env, `SELECT tc.name, tc.pillar, tc.tier, te.outcome, te.completed_on
+    FROM trial_events te JOIN trial_catalog tc ON tc.code=te.trial_code
+    WHERE te.seeker_id=? AND te.voided_at IS NULL ORDER BY te.completed_on DESC`, seeker.id);
   const awards = await queryAll<{ kind: string; awarded_on: string }>(
     env,
     `SELECT kind, awarded_on FROM awards
@@ -72,12 +79,12 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
   const registrations = await queryAll<{
     event_id: string; event_name: string | null; starts_on: string | null; ends_on: string | null;
-    event_active: number; email_status: string;
+    event_active: number; email_status: string; trial_intentions: string;
     preferred_date: string | null; preferred_time: string | null; created_at: number;
   }>(
     env,
     `SELECT r.event_id, e.name AS event_name, e.starts_on, e.ends_on, e.active AS event_active,
-            r.seeker_email_status AS email_status, r.preferred_date, r.preferred_time, r.created_at
+            r.trial_intentions, r.seeker_email_status AS email_status, r.preferred_date, r.preferred_time, r.created_at
        FROM registrations r LEFT JOIN events e ON e.id = r.event_id
       WHERE r.seeker_id = ? AND r.voided_at IS NULL
       ORDER BY r.created_at DESC`,
@@ -87,10 +94,10 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   // Only this seeker's active bookings; omit contact details, private notes,
   // witnesses, and internal IDs. Voiding a registration hides its bookings too.
   const bookings = await queryAll<{
-    trial_name: string; pillar: Pillar; tier: number; start_at: string; end_at: string;
+    id: string; trial_code: string; trial_name: string; pillar: Pillar; tier: number; start_at: string; end_at: string;
     event_name: string; event_active: number;
   }>(env,
-    `SELECT tc.name AS trial_name, tc.pillar, tc.tier, b.start_at, b.end_at,
+    `SELECT b.id, b.event_id, b.trial_code, tc.name AS trial_name, tc.pillar, tc.tier, b.start_at, b.end_at,
             e.name AS event_name, e.active AS event_active
        FROM bookings b
        JOIN registrations r ON r.id = b.registration_id
@@ -104,6 +111,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     ok: true,
     seeker: {
       name: seeker.name,
+      email: seeker.email,
+      requirements,
+      attempts,
       house: seeker.house,
       rings_pursued: safeJsonParse(seeker.rings_pursued, []),
       pillar_counts: {
@@ -122,7 +132,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       tier_progress: tierProgress,
       next_tiers: Object.fromEntries(PILLARS.map(pillar => [pillar,
         tierProgress[pillar].find(tier => !tier.complete)?.tier ?? null])),
-      registrations: registrations.map(reg => ({ ...reg,
+      registrations: registrations.map(reg => ({ ...reg, trial_intentions: safeJsonParse(reg.trial_intentions, []),
         past: (reg.ends_on ?? reg.starts_on ?? '9999-12-31') < clock.date,
       })),
       bookings: bookings.map(booking => ({ ...booking, past: booking.end_at < clock.localDateTime })),

@@ -18,5 +18,8 @@
     "miniflare": "4.20260430.0",
     "typescript": "^6.0.3",
     "wrangler": "^4.87.0"
+  },
+  "dependencies": {
+    "ical.js": "^2.2.1"
   }
 }

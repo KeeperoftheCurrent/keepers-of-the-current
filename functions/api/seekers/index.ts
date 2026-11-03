@@ -27,6 +27,7 @@ import { jsonResponse } from '../../_middleware';
 import { validateIntake, normalizeEmail } from '../../lib/validate';
 import { sendBothEmails } from '../../lib/email';
 import { RETIRED_TRIAL_CODE } from '../../lib/catalog';
+import { getCalendarBusy } from '../../lib/calendar-busy';
 import { eventClock } from '../../lib/event-time';
 
 interface EventRow {
@@ -181,6 +182,22 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
   const requestedBookings: BookingInput[] = bookingsParsed;
   const trialIntentions: TrialIntention[] = parseTrialIntentions((raw as Record<string, unknown>).trial_intentions);
 
+  // The same saved plan can be retried after a dropped response without making
+  // another registration or sending another confirmation.
+  const key = (raw as Record<string, unknown>).request_id;
+  if (key !== undefined && (typeof key !== 'string' || !/^[a-f0-9-]{36}$/i.test(key)))
+    return jsonResponse({ ok:false, error:'Invalid plan identifier.' }, 422);
+  const fingerprint = JSON.stringify({key, input, requestedBookings, trialIntentions});
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(fingerprint));
+  const registrationId = key ? 'plan-' + Array.from(new Uint8Array(digest), b => b.toString(16).padStart(2,'0')).join('') : crypto.randomUUID();
+  const replay = async () => {
+    const saved = await queryFirst<{seeker_id:string}>(env, 'SELECT seeker_id FROM registrations WHERE id=? AND voided_at IS NULL', registrationId);
+    if (!saved) return null;
+    const bookings = await queryAll(env, 'SELECT id,trial_code,start_at,end_at FROM bookings WHERE registration_id=? AND voided_at IS NULL', registrationId);
+    return jsonResponse({ok:true,seeker_id:saved.seeker_id,registration_id:registrationId,bookings}, 200);
+  };
+  if (key) { const prior = await replay(); if (prior) return prior; }
+
   // Confirm event
   const event = await queryFirst<EventRow>(
     env,
@@ -202,6 +219,20 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     `SELECT id, name, email FROM seekers WHERE email_normalized = ? LIMIT 1`,
     emailNormalized
   );
+
+  for (const intention of trialIntentions) {
+    const cat = await queryFirst<CatalogRow>(env, 'SELECT * FROM trial_catalog WHERE code=? AND code<>?', intention.code, RETIRED_TRIAL_CODE);
+    if (!cat || cat.bookable) return jsonResponse({ok:false, detail:'Choose a valid planned trial; appointments require a booked time.'},422);
+    if (cat.gg_only && event.kind !== 'grand_gathering') return jsonResponse({ok:false,detail:'This trial requires a Grand Gathering.'},422);
+    for (let tier=1;tier<cat.tier;tier++) {
+      if (!existingSeeker || !await isTierCompleted(env,existingSeeker.id,cat.pillar,tier))
+        return jsonResponse({ok:false,detail:'Complete earlier tiers before choosing this trial.'},422);
+    }
+    if (intention.preferred_time && (intention.preferred_time < clock.localDateTime ||
+      (event.starts_on && intention.preferred_time.slice(0,10)<event.starts_on) ||
+      (eventEnd && intention.preferred_time.slice(0,10)>eventEnd)))
+      return jsonResponse({ok:false,detail:'Choose a future preferred time within this gathering.'},422);
+  }
 
   // Validate each requested booking against catalog + windows + existing bookings.
   let catalogByCode = new Map<string, CatalogRow>();
@@ -226,9 +257,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     existingBookings = await queryAll<BookingRow>(
       env,
       `SELECT id, start_at, buffer_until FROM bookings
-        WHERE event_id = ? AND voided_at IS NULL`,
-      event.id
+        WHERE voided_at IS NULL`
     );
+
+    try {
+      const dates=requestedBookings.map(b=>b.start_at.slice(0,10)).sort();
+      const busy=await getCalendarBusy(env,dates[0]+'T00:00',dates[dates.length-1]+'T23:59');
+      existingBookings.push(...busy.map(b=>({...b,id:'calendar'})));
+    } catch { return jsonResponse({ok:false,detail:'We could not check the Keeper’s calendar. Your plan is not booked yet; please retry.'},503); }
 
     // Within-request collisions (a single submission asking for 2 overlapping slots)
     const requestSpans: { start_at: string; buffer_until: string; trial_code: string }[] = [];
@@ -344,7 +380,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     ));
   }
 
-  const registrationId = crypto.randomUUID();
+
   writes.push(env.DB.prepare(
     `INSERT INTO registrations (id, seeker_id, event_id, preferred_date, preferred_time, rings_pursued, trial_intentions, email_status, created_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)`
@@ -360,16 +396,24 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     const id = crypto.randomUUID();
     writes.push(env.DB.prepare(
       `INSERT INTO bookings (id, registration_id, seeker_id, event_id, trial_code, start_at, end_at, buffer_until, created_by, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+       SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ? WHERE NOT EXISTS (
+         SELECT 1 FROM bookings WHERE voided_at IS NULL AND start_at < ? AND buffer_until > ?)`
     ).bind(
-      id, registrationId, seekerId, event.id, b.trial_code, b.start_at, end_at, buffer_until, 'public/seeker', now
+      id, registrationId, seekerId, event.id, b.trial_code, b.start_at, end_at, buffer_until, 'public/seeker', now, buffer_until, b.start_at
     ));
+    // Abort and roll back the batch if a simultaneous booking won this time.
+    writes.push(env.DB.prepare("SELECT json(CASE WHEN changes()=1 THEN '{}' ELSE 'booking conflict' END)"));
     insertedBookings.push({ id, trial_code: b.trial_code, start_at: b.start_at, end_at });
   }
 
   // D1 rolls back the entire batch if any statement fails, including profile
   // edits and earlier bookings. Only send confirmations after it commits.
-  await env.DB.batch(writes);
+  try { await env.DB.batch(writes); }
+  catch (error) {
+    if (key) { const prior = await replay(); if (prior) return prior; }
+    if (String(error).includes('malformed JSON')) return jsonResponse({ok:false,error:'slot_taken',detail:'That time was just booked. Choose another time.'},422);
+    throw error;
+  }
 
   // Background email send + status update.
   waitUntil(
