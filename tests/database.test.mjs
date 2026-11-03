@@ -261,6 +261,8 @@ test('duplicate passes cannot satisfy another required trial or unlock a higher 
   const tracker = await d.call(app.tracker);
   assert.equal(tracker.data.seekers[0].pillar_counts.mind.complete, 0);
   await mark(d, id, 'm_t1_dilemma');
+  assert.equal((await d.call(app.intake, payload({ bookings: [slot('m_t2')] }))).status, 422, 'Tier II requires a later gathering');
+  await d.db.prepare("UPDATE trial_events SET completed_on='2026-10-10' WHERE seeker_id=?").bind(id).run();
   assert.equal((await d.call(app.intake, payload({ bookings: [slot('m_t2')] }))).status, 201);
 });
 

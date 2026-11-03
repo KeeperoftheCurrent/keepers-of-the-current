@@ -32,7 +32,7 @@ export async function getCalendarBusy(env:Env,from:string,to:string):Promise<Bus
  if(!env.TALIA_CALENDAR_ICS_URL)return [];
  const url=new URL(env.TALIA_CALENDAR_ICS_URL);
  if(url.protocol!=='https:'||url.hostname!=='calendar.google.com')throw new Error('Calendar connection needs attention');
- const response=await fetch(url,{signal:AbortSignal.timeout(10000),redirect:'error',headers:{'Cache-Control':'no-cache'}});
+ const response=await fetch(url,{signal:AbortSignal.timeout(10000),redirect:'manual',headers:{'Cache-Control':'no-cache'}});
  if(!response.ok)throw new Error('Calendar connection unavailable');
  return calendarBusy(await response.text(),from,to,env.EVENT_TIME_ZONE);
 }
