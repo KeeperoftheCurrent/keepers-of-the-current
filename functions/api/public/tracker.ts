@@ -19,6 +19,7 @@ interface Row {
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
+  // Keep the known launch-check fixture out of the public directory; its records remain intact.
   // Compute per-tier completion using tier_aggregation rules (same as awards.ts).
   // For the public tracker we don't need to expose per-trial rows — just per-tier booleans.
   const rows = await queryAll<{
@@ -40,6 +41,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ env }) => {
         AND te.voided_at IS NULL
         AND te.outcome = 'passed'
        WHERE tc.code <> ?
+         AND s.name <> 'Website Registration Test'
        GROUP BY s.id, s.name, s.house, tc.pillar, tc.tier, tc.tier_aggregation`,
     RETIRED_TRIAL_CODE
   );

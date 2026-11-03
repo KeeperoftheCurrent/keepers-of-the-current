@@ -25,3 +25,6 @@ html[data-light] .primary{background:#75500d!important;border-color:#75500d!impo
 /* A consistent location cue throughout the public journey. */
 .site-nav a[aria-current="page"]{color:var(--gold-light);box-shadow:inset 0 -2px var(--gold);font-weight:700}
 .member-coin h3{font-family:Georgia,serif;font-size:1.5rem;line-height:1.35;color:var(--gold-light);margin-top:0}
+
+/* Shared heading and active-tab treatment across public journeys. */
+main h1,main .title{color:var(--gold-light)}.site-nav a:last-child{border-radius:0!important}.site-nav a[aria-current="page"]{box-shadow:inset 0 -2px var(--gold)}
