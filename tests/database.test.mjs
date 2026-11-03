@@ -448,3 +448,12 @@ test('booking management requires ownership and retains progress after cancellat
  const result=await d.call(app.lookup,{action:'session'},{cookie});assert.equal(result.data.seeker.bookings.length,0);
  assert.ok(result.data.seeker.requirements.find(r=>r.code==='b_t1').complete);
 });
+
+test('an appointment later in the gathering receives its own deduplicated reminder',async t=>{
+ const d=await database(t);
+ await register(d,{bookings:[{trial_code:'m_t1_recitation',start_at:'2026-11-10T10:00'}]});
+ t.mock.timers.setTime(new Date('2026-11-09T12:00:00Z').getTime());
+ const first=await app.runReminders(d.env);assert.equal(first.sent,1);
+ assert.equal(d.env.reminders[0].appointment_reminder,true);
+ const second=await app.runReminders(d.env);assert.equal(second.sent,0);
+});
