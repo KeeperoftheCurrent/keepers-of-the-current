@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="stylesheet" href="/assets/css/components.css">
 <link rel="stylesheet" href="/assets/css/admin.css">
-<link href="/assets/css/reading.css" rel="stylesheet"><link href="/assets/css/magic.css?v=20261103-editorial-v2" rel="stylesheet"></head>
+<link href="/assets/css/reading.css" rel="stylesheet"><link href="/assets/css/magic.css?v=20261103-editorial-v2" rel="stylesheet"><link rel="stylesheet" href="/assets/css/members.css?v=1"></head>
 <body class="admin-body"><a href="#main-content" class="skip-link">Skip to content</a>
 
 <header class="admin-header">
@@ -23,7 +23,7 @@
     <button class="tab" data-tab="schedule">Schedule</button>
     <button class="tab" data-tab="windows">Available times</button>
     <button class="tab" data-tab="events">Events</button>
-    <button class="tab" data-tab="log">Activity</button>
+    <button class="tab" data-tab="log">Activity</button><button class="tab" data-tab="members">Members</button><button class="tab" data-tab="chronicles">Chronicles</button>
   </div>
   <div class="admin-user" id="admin-user-chip">⚡ <span id="admin-email">…</span></div>
 </header>
@@ -121,7 +121,7 @@
     </div>
   </section>
 
-</main>
+<section class="tab-panel member-admin" data-tab-panel="members" hidden><h1>Members of the Current</h1><p>Grant faith membership, review stories and titles, and choose who appears in leadership. Login emails remain private.</p><p id="member-admin-status" role="status"></p><details class="read-section"><summary>Add or restore a faith member</summary><form id="grant-member" class="read-content"><label>Character name<input name="name" maxlength="80" required></label><label>Login email<input name="email" type="email" required></label><p>This grants profile-editing access. It does not publish a profile or register them for trials. Ask them to sign in through My Trials, then choose My character.</p><button type="submit">Grant membership</button></form></details><button type="button" id="refresh-members">Refresh queue</button><div id="member-queue"></div><section id="member-review" class="panel" hidden><h2>Review character page</h2><p id="member-review-state"></p><div id="member-draft-preview"></div><form id="admin-profile-form"><label>Character name<input name="name" maxlength="80" required autocomplete="off"></label><label>Short introduction <small>Up to 240 characters</small><textarea name="introduction" maxlength="240" rows="3" required></textarea></label><details class="read-section"><summary>Titles &amp; affiliations (optional)</summary><div class="read-content"><p>Propose your titles here. The Keeper reviews them before publication.</p><label>Role within the Current<input name="current_role" maxlength="120" placeholder="e.g. Keeper"></label><label>Titles elsewhere in Hynafol<input name="hynafol_title" maxlength="160" placeholder="e.g. Brewmaster of Hynafol"></label><label>Current honours<input name="honours" maxlength="240" placeholder="Honours entrusted or earned"></label><label>Affiliations<input name="affiliations" maxlength="200" placeholder="House, court, guild or independent"></label></div></details><label>Optional full story link (HTTPS)<input name="source" type="url" maxlength="500"></label><label>Your backstory <small>Optional · up to 16,000 characters · paragraphs welcome</small><textarea name="story" maxlength="16000" rows="12"></textarea></label><label class="consent"><input type="checkbox" id="member-leadership"> Feature in Keepers &amp; Leadership</label><p>Check the introduction, story, portrait, and all proposed titles before approving. Leadership is a role within the Current, not a title elsewhere in Hynafol.</p><button type="button" id="admin-save-member">Save changes for review</button><button type="button" id="approve-member" class="primary">Approve &amp; publish reviewed draft</button><label>Private feedback to the member<textarea id="member-review-note" maxlength="1000" rows="3"></textarea></label><div class="actions"><button type="button" id="return-member">Return for changes</button><button type="button" id="unpublish-member">Hide public profile</button><button type="button" id="suspend-member">Suspend profile access</button></div></form></section></section><section class="tab-panel member-admin" data-tab-panel="chronicles" hidden><h1>The Scribed Chronicles</h1><p>Write and revise stories here. Save a private draft first, then preview and publish. Existing public entries remain unchanged while you edit.</p><p id="chronicle-admin-status" role="status"></p><button id="new-chronicle" type="button">New chronicle</button><button id="refresh-chronicles" type="button">Refresh entries</button><div id="chronicle-queue"></div><form id="chronicle-form" class="panel" hidden><label>Title<input name="title" maxlength="160"></label><label>Story date · YYYY-MM or YYYY-MM-DD<input name="date" maxlength="10"></label><label>In-character author or scribe<input name="author" maxlength="100"></label><label>Short introduction<textarea name="summary" rows="3" maxlength="300"></textarea></label><label>The chronicle<textarea name="body" rows="14" maxlength="24000"></textarea></label><label>Optional source URL (HTTPS)<input name="source" maxlength="500"></label><label>Optional YouTube video ID<input name="video" maxlength="11"></label><div class="actions"><button type="submit">Save draft</button><button id="preview-chronicle" type="button">Preview</button><button id="publish-chronicle" type="button" class="primary">Publish saved draft</button><button id="hide-chronicle" type="button">Hide public entry</button></div></form><section id="chronicle-preview" hidden></section></section></main>
 
 <!-- Modal scaffold -->
 <div class="modal-backdrop" id="modal-backdrop" hidden>
@@ -137,5 +137,5 @@
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script type="module" src="/assets/js/admin.js"></script>
-<script type="module" src="/assets/js/reading.js"></script></body>
+<script type="module" src="/assets/js/reading.js"></script><script type="module" src="/assets/js/admin-members.js"></script><script type="module" src="/assets/js/admin-chronicles.js"></script></body>
 </html>

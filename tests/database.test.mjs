@@ -14,6 +14,12 @@ before(async () => {
   const outfile = path.join(bundleDir, 'handlers.mjs');
   await build({
     stdin: { resolveDir: root, loader: 'ts', contents: `
+      export { onRequestPost as memberEditor } from './functions/api/members/editor.ts';
+      export { onRequestPost as adminMember } from './functions/api/admin/members.ts';
+      export { onRequestGet as publicMembers } from './functions/api/public/members.ts';
+      export { onRequestPost as adminChronicle } from './functions/api/admin/chronicles.ts';
+      export { onRequestGet as publicChronicles } from './functions/api/public/chronicles.ts';
+      export { cleanPortrait } from './functions/lib/members.ts';
       export { onRequestPost as booking } from './functions/api/seekers/booking.ts';
       export { onRequestPost as intake } from './functions/api/seekers/index.ts';
       export { onRequestPost as lookup } from './functions/api/seekers/lookup.ts';
@@ -458,4 +464,47 @@ test('an appointment later in the gathering receives its own deduplicated remind
  const first=await app.runReminders(d.env);assert.equal(first.sent,1);
  assert.equal(d.env.reminders[0].appointment_reminder,true);
  const second=await app.runReminders(d.env);assert.equal(second.sent,0);
+});
+
+test('member profiles require faith approval, isolate owners, and expose only reviewed snapshots',async t=>{
+ const d=await database(t);await register(d);const cookie=await d.login();
+ assert.equal((await d.call(app.memberEditor,{action:'load'},{cookie})).status,403);
+ assert.equal((await d.call(app.adminMember,{action:'grant',email:'seeker@example.invalid',name:'Aster'},{origin:'https://attacker.invalid'})).status,403);
+ assert.equal((await d.call(app.adminMember,{action:'grant',email:'seeker@example.invalid',name:'Aster'})).status,200);
+ assert.equal(await d.count('seekers'),1);
+ const loaded=(await d.call(app.memberEditor,{action:'load'},{cookie})).data.member;
+ const profile={...loaded.draft,introduction:'A wandering brewer.',story:'One\n\nTwo',hynafol_title:'Brewmaster of Hynafol'};
+ assert.equal((await d.call(app.memberEditor,{action:'submit',revision:0,profile,consent:false},{cookie})).status,400);
+ assert.equal((await d.call(app.memberEditor,{action:'submit',revision:0,profile,consent:true},{cookie})).status,200);
+ assert.equal((await d.call(app.publicMembers)).data.members.length,0);
+ assert.equal((await d.call(app.adminMember,{action:'approve',id:loaded.id,revision:0})).status,409);
+ assert.equal((await d.call(app.adminMember,{action:'approve',id:loaded.id,revision:1,leadership:true})).status,200);
+ const publicRow=(await d.call(app.publicMembers)).data.members[0];assert.equal(publicRow.name,'Aster');assert.equal(publicRow.leadership,true);assert.equal(publicRow.email,undefined);assert.equal(publicRow.seeker_id,undefined);
+ await d.call(app.memberEditor,{action:'save',revision:1,profile:{...profile,name:'Private draft'}},{cookie});
+ assert.equal((await d.call(app.publicMembers)).data.members[0].name,'Aster');
+ assert.equal((await d.call(app.adminMember,{action:'approve',id:loaded.id,revision:2})).status,400);
+ await register(d,{email:'other@example.invalid'});const other=await d.login('other@example.invalid');
+ assert.equal((await d.call(app.memberEditor,{action:'load',id:loaded.id},{cookie:other})).status,403);
+ assert.equal((await d.call(app.memberEditor,{action:'load'},{cookie,origin:'https://attacker.invalid'})).status,403);
+ await d.call(app.memberEditor,{action:'withdraw'},{cookie});assert.equal((await d.call(app.publicMembers)).data.members.length,0);
+ await d.call(app.adminMember,{action:'suspend',id:loaded.id,revision:2});assert.equal((await d.call(app.memberEditor,{action:'load'},{cookie})).status,403);
+});
+test('portraits reject non-JPEG, strip metadata and enforce dimensions',async()=>{
+ const jpeg=(width=10)=>Uint8Array.from([255,216,255,225,0,7,71,80,83,33,33,255,192,0,11,8,0,10,width>>8,width&255,1,1,17,0,255,218,0,8,1,1,0,0,63,0,1,2,3,255,217,77,69,84,65]);
+ const data=b=>'data:image/jpeg;base64,'+Buffer.from(b).toString('base64');
+ const clean=Buffer.from(app.cleanPortrait(data(jpeg())),'base64');assert.ok(!clean.includes(Buffer.from('GPS')));assert.ok(!clean.includes(Buffer.from('META')));assert.equal(clean.at(-1),217);
+ assert.throws(()=>app.cleanPortrait('data:image/svg+xml;base64,PHN2Zz4='));assert.throws(()=>app.cleanPortrait(data(jpeg(900))));assert.throws(()=>app.cleanPortrait(data([255,216,255])));
+});
+
+test('chronicles keep edits private, reject stale publishing, and can be hidden',async t=>{
+ const d=await database(t);const entry={title:'The Beacon',date:'2026-02',summary:'A light.',body:'A light for the Circle.',author:'The Scribe',source:'https://hynafol.wiki.gg/wiki/Keepers_of_the_Current',video:''};
+ assert.equal((await d.call(app.adminChronicle,{action:'save',entry},{origin:'https://evil.invalid'})).status,403);
+ assert.equal((await d.call(app.adminChronicle,{action:'save',entry:{...entry,source:'javascript:alert(1)'}})).status,400);
+ const saved=await d.call(app.adminChronicle,{action:'save',entry});assert.equal(saved.status,200);const id=saved.data.id;
+ assert.equal((await d.call(app.publicChronicles)).data.entries.length,0);
+ await d.call(app.adminChronicle,{action:'publish',id,revision:1});assert.equal((await d.call(app.publicChronicles)).data.entries[0].title,'The Beacon');
+ await d.call(app.adminChronicle,{action:'save',id,revision:1,entry:{...entry,title:'Private revision'}});
+ assert.equal((await d.call(app.publicChronicles)).data.entries[0].title,'The Beacon');
+ assert.equal((await d.call(app.adminChronicle,{action:'publish',id,revision:1})).status,409);
+ await d.call(app.adminChronicle,{action:'hide',id,revision:2});assert.equal((await d.call(app.publicChronicles)).data.entries.length,0);
 });
