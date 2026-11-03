@@ -80,7 +80,7 @@ function renderResult(seeker) {
         <p><button type="button" data-calendar="${b.id}">Add to calendar</button> <button type="button" data-change="${b.id}">Change time</button> <button type="button" data-cancel="${b.id}">Cancel booking</button></p>
         ${b.event_active ? ''  : '<p>This gathering is inactive. Check the arrangements with the Keeper.</p>'}
       </article>`).join('')
-    : '<p class="empty-state">No upcoming trial times are booked. Register for a gathering to choose a Tier I appointment, or speak with the Keeper to arrange your next tier.</p>';
+    : '<p class="empty-state">No upcoming trial times are booked. Choose a gathering to see the trials available for your next tier.</p>';
 
   $('#result-intentions').innerHTML=(seeker.registrations||[]).filter(r=>!r.past).flatMap(r=>(r.trial_intentions||[]).map(i=>`<p><strong>${escapeHtml((seeker.requirements||[]).find(t=>t.code===i.code)?.name||i.code)}</strong> · ${escapeHtml(r.event_name)}<br>${i.preferred_time?escapeHtml(formatDate(i.preferred_time.slice(0,10))+' · '+formatTime(i.preferred_time)+' Central · requested time'):'Agree on timing with the Keeper'}<br>No time reserved.</p>`)).join('')||'<p>No planned trials recorded.</p>';
   $('#result-attempts').innerHTML=(seeker.attempts||[]).map(a=>`<p>${escapeHtml(a.name)} · ${escapeHtml(a.completed_on)} · ${a.outcome==='passed'?'Passed':'Not passed — ask the Keeper about your next attempt'}</p>`).join('')||'<p>No attempts recorded yet.</p>';

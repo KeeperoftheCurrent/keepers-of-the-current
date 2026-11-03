@@ -61,7 +61,8 @@ async function isTierCompleted(
   env: Env,
   seekerId: string,
   pillar: string,
-  tier: number
+  tier: number,
+  beforeDate?: string | null
 ): Promise<boolean> {
   interface TierRow { code: string; tier_aggregation: string; }
   const tierCodes = await queryAll<TierRow>(
@@ -79,9 +80,9 @@ async function isTierCompleted(
     env,
     `SELECT DISTINCT trial_code FROM trial_events
       WHERE seeker_id = ? AND trial_code IN (${ph})
-        AND voided_at IS NULL AND outcome = 'passed'`,
+        AND voided_at IS NULL AND outcome = 'passed' AND (? IS NULL OR completed_on < ?)`,
     seekerId,
-    ...codes
+    ...codes, beforeDate ?? null, beforeDate ?? null
   );
   return agg === 'any' ? done.length >= 1 : done.length >= codes.length;
 }
@@ -225,7 +226,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
     if (!cat || cat.bookable) return jsonResponse({ok:false, detail:'Choose a valid planned trial; appointments require a booked time.'},422);
     if (cat.gg_only && event.kind !== 'grand_gathering') return jsonResponse({ok:false,detail:'This trial requires a Grand Gathering.'},422);
     for (let tier=1;tier<cat.tier;tier++) {
-      if (!existingSeeker || !await isTierCompleted(env,existingSeeker.id,cat.pillar,tier))
+      if (!existingSeeker || !await isTierCompleted(env,existingSeeker.id,cat.pillar,tier,cat.tier===2?event.starts_on:null))
         return jsonResponse({ok:false,detail:'Complete earlier tiers before choosing this trial.'},422);
     }
     if (intention.preferred_time && (intention.preferred_time < clock.localDateTime ||
@@ -301,7 +302,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
         const seekerIdForCheck = existingSeeker?.id ?? null;
         for (let prevTier = 1; prevTier < cat.tier; prevTier++) {
           const met = seekerIdForCheck
-            ? await isTierCompleted(env, seekerIdForCheck, cat.pillar, prevTier)
+            ? await isTierCompleted(env, seekerIdForCheck, cat.pillar, prevTier, cat.tier===2?event.starts_on:null)
             : false; // brand-new seeker has no completions
           if (!met) {
             const pillarLabel = cat.pillar.charAt(0).toUpperCase() + cat.pillar.slice(1);

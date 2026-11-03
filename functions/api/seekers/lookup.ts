@@ -64,8 +64,9 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   const clock = eventClock(env.EVENT_TIME_ZONE);
 
   const requirements = await queryAll(env, `SELECT tc.code, tc.name, tc.pillar, tc.tier, tc.tier_aggregation,
+    (SELECT MIN(completed_on) FROM trial_events WHERE seeker_id=? AND trial_code=tc.code AND outcome='passed' AND voided_at IS NULL) AS first_completed_on,
     EXISTS(SELECT 1 FROM trial_events te WHERE te.seeker_id=? AND te.trial_code=tc.code AND te.outcome='passed' AND te.voided_at IS NULL) AS complete
-    FROM trial_catalog tc WHERE tc.code <> ? ORDER BY tc.display_order`, seeker.id, RETIRED_TRIAL_CODE);
+    FROM trial_catalog tc WHERE tc.code <> ? ORDER BY tc.display_order`, seeker.id, seeker.id, RETIRED_TRIAL_CODE);
   const attempts = await queryAll(env, `SELECT tc.name, tc.pillar, tc.tier, te.outcome, te.completed_on
     FROM trial_events te JOIN trial_catalog tc ON tc.code=te.trial_code
     WHERE te.seeker_id=? AND te.voided_at IS NULL ORDER BY te.completed_on DESC`, seeker.id);
@@ -92,7 +93,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   );
 
   // Only this seeker's active bookings; omit contact details, private notes,
-  // witnesses, and internal IDs. Voiding a registration hides its bookings too.
+  // witnesses, and other seekers’ data. Voiding a registration hides its bookings too.
   const bookings = await queryAll<{
     id: string; trial_code: string; trial_name: string; pillar: Pillar; tier: number; start_at: string; end_at: string;
     event_name: string; event_active: number;
