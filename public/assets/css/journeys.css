@@ -21,3 +21,7 @@ html[data-light] .primary{background:#75500d!important;border-color:#75500d!impo
 .site-header .brand-wordmark{width:280px}.header-text{min-width:0}.footer-crest{display:block;margin:0 auto 16px;object-fit:contain}
 @media(max-width:700px){.brand-home{grid-template-columns:48px minmax(0,240px) 48px;gap:8px}.site-header .header-sigil{width:48px!important;height:58px!important}.site-header .brand-wordmark{width:100%}.header-sub{font-size:10px}}
 @media(max-width:360px){.brand-home{grid-template-columns:38px minmax(0,1fr) 38px;gap:6px}.site-header .header-sigil{width:38px!important;height:48px!important}.header-sub{font-size:9px}}
+
+/* A consistent location cue throughout the public journey. */
+.site-nav a[aria-current="page"]{color:var(--gold-light);box-shadow:inset 0 -2px var(--gold);font-weight:700}
+.member-coin h3{font-family:Georgia,serif;font-size:1.5rem;line-height:1.35;color:var(--gold-light);margin-top:0}
