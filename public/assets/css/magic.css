@@ -14,8 +14,8 @@
   --display-font: Georgia, 'Times New Roman', serif;
 }
 body {
-  background: radial-gradient(ellipse at 15% 0%, #52152d70, transparent 55%),
-    radial-gradient(ellipse at 95% 60%, #360d2270, transparent 60%), var(--red-bg) !important;
+  background: radial-gradient(ellipse at 15% 0%, #52151870, transparent 55%),
+    radial-gradient(ellipse at 95% 60%, #360d0f70, transparent 60%), var(--red-bg) !important;
 }
 h1,h2,h3,h4,.title,.section-title {font-family:var(--display-font);font-weight:400;}
 h1,.page-header .title {font-size:clamp(1.85rem,5vw,2.65rem);text-wrap:balance;}
@@ -119,7 +119,7 @@ html[data-light] .path-art {background:var(--red-panel);}
 .path-art::after {content:'✧';color:var(--gold-dim);margin-top:8px;}
 @media(max-width:600px){.magic-hero .hero-sigil{width:58px;height:58px;}.magic-hero .title-art{max-width:310px;}.illuminated-banner{margin:16px 0 22px;}.magic-paths>h2,.watch-section>h2{gap:8px;}}
 @media(max-width:360px){.path-art::after{display:none;}}
-:root {--red-bg:#100609;--red-dark:#240b15;--red-mid:#431526;--red-panel:#32101e;--gold:#c8963e;}
+:root {--red-bg:#100707;--red-dark:#240b0c;--red-mid:#50171b;--red-panel:#3b1013;--gold:#c8963e;}
 .artifact-display {display:flex;align-items:center;justify-content:center;position:relative;padding:20px 8px;min-height:180px;border:1px solid #8f6334;border-radius:48% 48% 8px 8px;background:radial-gradient(ellipse at 50% 35%,#c8963e30,transparent 65%),linear-gradient(135deg,#39130f,#130707);box-shadow:inset 0 0 0 5px #180a02,inset 0 0 0 6px #70502d,0 10px 24px #0004;}
 .artifact-display::before {content:'✦';position:absolute;top:-13px;left:calc(50% - 12px);width:24px;text-align:center;color:#e8b96a;background:#1a0808;}
 .artifact-display svg {display:block;filter:drop-shadow(0 4px 10px #c8963e30);}
@@ -169,10 +169,10 @@ html[data-light] .path-art {background:var(--red-panel);}
 @media(max-width:600px){.rest-identity{grid-template-columns:1fr;}.rest-identity .banner-photo{width:min(240px,100%);margin-inline:auto;}}
 
 /* Editorial art direction: crafted identity, spacious reading, focused actions. */
-:root {--red-bg:#13080f;--red-dark:#200d18;--red-panel:#301420;--border:#795b3b;--gold-light:#f2d6a2;}
-body {background:radial-gradient(ellipse at 80% 0%,#5b23333b,transparent 52%),var(--red-bg)!important;}
+:root {--red-bg:#100707;--red-dark:#240b0c;--red-panel:#3b1013;--border:#795b3b;--gold-light:#f2d6a2;}
+body {background:radial-gradient(ellipse at 80% 0%,#681b203b,transparent 52%),var(--red-bg)!important;}
 main {max-width:1100px!important;}
-.site-header {background:#10090e!important;padding:13px 24px;}
+.site-header {background:#0d0808!important;padding:13px 24px;}
 .header-inner {max-width:1100px;}
 .brand-wordmark {display:block;width:230px;max-width:100%;height:auto;}
 .header-sub {margin-top:5px;font-size:12px;letter-spacing:.04em;}
@@ -200,7 +200,7 @@ h2 {line-height:1.3;}
 .welcome-note {display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:19px 0;margin:36px 0;}
 .welcome-note span {font-size:.8rem;color:var(--text-dim);}
 .welcome-note p {font-family:Georgia,serif;font-style:italic;color:var(--gold-light);margin:0;}
-.outreach-card {padding:28px 30px;background:linear-gradient(110deg,#4a2030, var(--red-panel));border-left:2px solid var(--gold);}
+.outreach-card {padding:28px 30px;background:linear-gradient(110deg,#50171b, var(--red-panel));border-left:2px solid var(--gold);}
 .path-art {border-width:0 0 1px;background:transparent;border-radius:0;}
 .magic-paths,.watch-section {margin:48px 0;}
 .rest-scene {margin:28px 0 34px;}
@@ -210,7 +210,7 @@ h2 {line-height:1.3;}
 .editorial-keeper figure {margin:0;}
 .editorial-keeper img {border:1px solid var(--border);border-radius:3px;}
 .editorial-keeper .hero-motto {font-size:clamp(1.4rem,3vw,2rem);}
-html[data-light] .site-header {background:#24101b!important;}
+html[data-light] .site-header {background:#240b0c!important;}
 html[data-light] .site-header .header-sub {color:#ead8ba;}
 html[data-light] .outreach-card {background:var(--red-panel);}
 @media(max-width:700px) {
