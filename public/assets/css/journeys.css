@@ -14,3 +14,9 @@ html[data-light] .entrance,html[data-light] .next-trial{background:var(--red-pan
 /* Keep light-theme calls to action readable despite earlier gold artwork rules. */
 html[data-light] .primary{background:#75500d!important;border-color:#75500d!important;color:#fff!important}
 @media(max-width:700px){.arrival-copy h1{font-size:clamp(2rem,10vw,2.8rem)}.reading-options{margin-top:0}.arrival-copy .lead{line-height:1.6}.arrival-copy .returning-link{padding-bottom:0}}
+
+/* Transparent crest aligns with the lettering, not its subtitle. */
+.site-header .header-sigil{width:80px!important;height:80px!important;object-fit:contain;align-self:flex-start;border-radius:0!important;background:transparent!important;box-shadow:none!important;filter:none!important}
+.brand-home{gap:16px}
+@media(max-width:700px){.site-header .header-sigil{width:66px!important;height:66px!important}.brand-home{gap:10px}}
+@media(max-width:360px){.site-header .brand-wordmark{width:190px}.site-header .header-sigil{width:60px!important;height:60px!important}}
