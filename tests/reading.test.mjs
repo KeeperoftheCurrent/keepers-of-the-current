@@ -2,7 +2,7 @@ import {test} from 'node:test';import assert from 'node:assert/strict';import {r
 const read=name=>readFileSync(new URL('../public/'+name,import.meta.url),'utf8');
 const guides=JSON.parse(read('assets/data/trial-guides.json'));
 test('all public journeys have skip links, optional reading preferences and a consistent navigation',()=>{
- for(const page of ['index','current','trials','rewards','seeker','lookup','tracker','keepers-rest']){
+ for(const page of ['index','current','trials','rewards','seeker','lookup','tracker','keepers-rest','members','member','character','chronicles']){
   const{document:d}=parseHTML(read(page+'.html'));
   assert.ok(d.querySelector('main#main-content'));assert.ok(d.querySelector('a[href="#main-content"]'));
   assert.ok(d.querySelector('#larger-text'));assert.ok(d.querySelector('#light-background'));
