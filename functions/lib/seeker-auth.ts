@@ -1,6 +1,7 @@
 import { exec, queryFirst, type Env } from './db';
 import { normalizeEmail } from './validate';
 import { sendViaResend } from './email';
+import { emailLayout } from './email-layout';
 import { jsonResponse } from '../_middleware';
 
 const LINK_SECONDS = 15 * 60;
@@ -44,7 +45,7 @@ async function issueLink(env: Env, email: string, ip: string, now: number) {
     from: env.EMAIL_FROM,
     to: [email],
     subject: 'Sign in to My Trials',
-    html: `<p><a href="${link.href}">Open My Trials</a></p><p>This link expires in 15 minutes and works once. Use it to view your recorded progress and booked times. Do not forward it. If you did not request it, ignore this email.</p><p>Need help? Reply to this email.</p>`,
+    html: emailLayout('Sign in to My Trials','<p>See your saved progress and booked times.</p><ul><li>This link works once.</li><li>It expires in <strong>15 minutes</strong>.</li><li>Keep it private: do not forward it.</li></ul><p>Didn’t request this? You can ignore this email.</p>',link.href,'Sign in to My Trials'),
     text: `Open My Trials: ${link.href}\n\nThis link expires in 15 minutes and works once. Use it to view your recorded progress and booked times. Do not forward it. If you did not request it, ignore this email.\nNeed help? Reply to this email.`,
     reply_to: env.KEEPER_NOTIFY_EMAIL,
     });

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -39,36 +39,29 @@
   .lb-table .rank-3::before { content: '🥉 '; }
   .lb-table .time { font-family: ui-monospace, Menlo, monospace; color: var(--gold-light); }
 </style>
-</head>
-<body>
+<link href="/assets/css/reading.css" rel="stylesheet"></head>
+<body><a href="#main-content" class="skip-link">Skip to content</a>
 
 <header class="site-header">
   <div class="header-inner">
-    <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil"/>
+    <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil">
     <div class="header-text">
       <div class="header-title">Keepers of the Current</div>
-      <div class="header-sub">Trial of the Three Rings &nbsp;·&nbsp; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
+      <div class="header-sub">Trial of the Three Rings &#160;·&#160; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
     </div>
   </div>
 </header>
 
-<nav class="site-nav" aria-label="Site navigation">
-  <a href="/current.html">The Current</a>
-  <a href="/trials.html">The Trials</a>
-  <a href="/seeker.html" class="nav-cta">Register</a>
-  <a href="/tracker.html" class="active">Trial Scroll</a>
-  <a href="/lookup.html">My Trials</a>
-  <a href="/rewards.html">Rewards</a>
-</nav>
+<nav class="site-nav" aria-label="Site navigation"><a href="/">Home</a><a href="/trials.html">Trials</a><a href="/seeker.html">Register</a><a href="/lookup.html">My Trials</a><details class="nav-more"><summary>More</summary><div><a href="/current.html">About the Current</a><a href="/rewards.html">Rewards</a><a href="/tracker.html">Community progress</a></div></details></nav>
 
 
-<main class="page-shell">
+<details class="reading-options"><summary>Reading options</summary><div><label><input id="larger-text" type="checkbox"> Larger text</label><label><input id="light-background" type="checkbox"> Light background</label></div></details><main tabindex="-1" id="main-content" class="page-shell"><h1>Community progress</h1><p>Looking for your bookings or next step? <a href="/lookup.html">Open My Trials →</a></p>
 
-  <p class="center italic muted" style="font-size:15px;margin-bottom:24px;">"The Current remembers."</p>
+
 
   <section class="panel">
-    <h2>Bearers & Seekers</h2>
-    <p class="muted">All who have entered their name in the Trial Scroll. Pillar counts show tiers complete; the rings to the right show conferred Rings of the Current.</p>
+    <h2>Bearers &amp; Seekers</h2>
+    <p class="muted">Completed levels and awarded Rings for our community.</p>
     <div id="seekers-list">
       <p class="muted center">Loading the Scroll…</p>
     </div>
@@ -88,9 +81,7 @@
     </div>
   </section>
 
-  <p class="center muted italic" style="font-size:14px;">
-    <a href="/seeker.html">Become a Seeker →</a>
-  </p>
+
 </main>
 
 <script type="module">
@@ -162,5 +153,5 @@
   loadBoard('plank');
 </script>
 
-</body>
+<script type="module" src="/assets/js/reading.js"></script></body>
 </html>

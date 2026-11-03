@@ -105,7 +105,7 @@ function renderResult(seeker) {
         const state = tier.complete ? 'complete' : tier.tier === next ? 'next' : 'later';
         return `<li class="${state}">Tier ${ROMAN[tier.tier]}<span>${tier.complete ? '✓ Complete' : tier.tier === next ? 'Next step' : 'Earlier tiers first'}</span></li>`;
       }).join('')}</ol>
-      <ul>${(seeker.requirements||[]).filter(r=>r.pillar===pillar).map(r=>`<li>${r.complete?'✓':'○'} Tier ${ROMAN[r.tier]} · ${escapeHtml(r.name)} — ${r.complete?'Complete':'Not yet recorded as complete'}</li>`).join('')}</ul>
+      <details class="optional"><summary>See each requirement</summary><ul>${(seeker.requirements||[]).filter(r=>r.pillar===pillar).map(r=>`<li>${r.complete?'✓':'○'} Tier ${ROMAN[r.tier]} · ${escapeHtml(r.name)} — ${r.complete?'Complete':'Not yet recorded as complete'}</li>`).join('')}</ul></details>
       ${next ? `<p class="next-step"><strong>Next: Tier ${ROMAN[next]}.</strong> ${guidance}</p>
         <a class="journey-link" href="/trials.html#${pillar}-tier-${next}">Read the Tier ${ROMAN[next]} trials →</a>`
         : `<p class="next-step">All tiers recorded.${seeker.rings[pillar] ? ' Your ring is earned.' : ' Ask the Keeper to review your ring award.'}</p>`}

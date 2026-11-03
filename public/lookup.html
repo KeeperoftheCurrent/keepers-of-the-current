@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -8,40 +8,33 @@
 <link rel="stylesheet" href="/assets/css/components.css">
 <link rel="stylesheet" href="/assets/css/my-trials.css">
 <link rel="stylesheet" href="/assets/css/seeker-flow.css">
-</head>
-<body>
+<link href="/assets/css/reading.css" rel="stylesheet"></head>
+<body><a href="#main-content" class="skip-link">Skip to content</a>
 
 <header class="site-header">
   <div class="header-inner">
-    <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil"/>
+    <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil">
     <div class="header-text">
       <div class="header-title">Keepers of the Current</div>
-      <div class="header-sub">Trial of the Three Rings &nbsp;·&nbsp; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
+      <div class="header-sub">Trial of the Three Rings &#160;·&#160; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
     </div>
   </div>
 </header>
 
-<nav class="site-nav" aria-label="Site navigation">
-  <a href="/current.html">The Current</a>
-  <a href="/trials.html">The Trials</a>
-  <a href="/seeker.html" class="nav-cta">Register</a>
-  <a href="/tracker.html">Trial Scroll</a>
-  <a href="/lookup.html" class="active">My Trials</a>
-  <a href="/rewards.html">Rewards</a>
-</nav>
+<nav class="site-nav" aria-label="Site navigation"><a href="/">Home</a><a href="/trials.html">Trials</a><a href="/seeker.html">Register</a><a href="/lookup.html" aria-current="page" class="active">My Trials</a><details class="nav-more"><summary>More</summary><div><a href="/current.html">About the Current</a><a href="/rewards.html">Rewards</a><a href="/tracker.html">Community progress</a></div></details></nav>
 
 
-<main class="page-shell">
+<details class="reading-options"><summary>Reading options</summary><div><label><input id="larger-text" type="checkbox"> Larger text</label><label><input id="light-background" type="checkbox"> Light background</label></div></details><main tabindex="-1" id="main-content" class="page-shell">
 
   <header class="page-header">
     <img src="/assets/img/sigil.png" alt="" class="sigil">
     <h1 class="title">My Trials</h1>
-    <div class="subtitle">Your rings, your next gathering, your path ahead.</div>
+    <div class="subtitle">Your saved progress, bookings and next step.</div>
   </header>
 
   <section id="form-wrap">
     <div class="panel">
-      <h2>Return to your path</h2>
+      <h2>Sign in with your email</h2>
       <p class="muted">Enter the email from your registration. We’ll send you a one-time link to your progress and booked trial times.</p>
 
       <div id="errors" role="alert" tabindex="-1" hidden></div>
@@ -58,7 +51,7 @@
     </div>
 
     <p class="center muted italic" style="font-size:14px;">
-      Not yet a seeker? <a href="/seeker.html">Mark your name in the Scroll →</a>
+      Not yet a seeker? <a href="/seeker.html">Register for your first trials →</a>
     </p>
   </section>
 
@@ -80,7 +73,7 @@
 
     <section class="panel" aria-labelledby="progress-title">
       <h2 id="progress-title">Your path ahead</h2>
-      <p class="quiet">Progress reflects the results recorded by the Keeper. If a completion is missing, ask the Keeper to update your Scroll.</p>
+      <p class="quiet">The Keeper records each result. If one is missing, contact the Keeper.</p>
       <div id="result-pillars"></div><details><summary>Recorded attempts</summary><div id="result-attempts"></div></details>
     </section>
 
@@ -103,5 +96,5 @@
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script type="module" src="/assets/js/lookup.js?v=20261103-mobile"></script>
-</body>
+<script type="module" src="/assets/js/reading.js"></script></body>
 </html>

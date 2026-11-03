@@ -1,16 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Keepers of the Current</title>
 <meta name="description" content="The Keepers of the Current — Trial Scroll, lore, and the Trial of the Three Rings.">
-<script>
-  /* Desktop users get the full lore landing. Mobile stays here. */
-  if (window.matchMedia && window.matchMedia('(min-width: 768px)').matches) {
-    window.location.replace('/trials.html');
-  }
-</script>
+
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="stylesheet" href="/assets/css/components.css">
 <style>
@@ -49,58 +44,22 @@
     font-style: italic;
   }
 </style>
-</head>
-<body>
+<link href="/assets/css/reading.css" rel="stylesheet"></head>
+<body><a href="#main-content" class="skip-link">Skip to content</a>
 
 <header class="site-header">
   <div class="header-inner">
-    <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil"/>
+    <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil">
     <div class="header-text">
       <div class="header-title">Keepers of the Current</div>
-      <div class="header-sub">Trial of the Three Rings &nbsp;·&nbsp; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
+      <div class="header-sub">Trial of the Three Rings &#160;·&#160; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
     </div>
   </div>
 </header>
 
-<nav class="site-nav" aria-label="Site navigation">
-  <a href="/current.html">The Current</a>
-  <a href="/trials.html">The Trials</a>
-  <a href="/seeker.html" class="nav-cta">Register</a>
-  <a href="/tracker.html">Trial Scroll</a>
-  <a href="/lookup.html">My Trials</a>
-  <a href="/rewards.html">Rewards</a>
-</nav>
+<nav class="site-nav" aria-label="Site navigation"><a href="/" aria-current="page" class="active">Home</a><a href="/trials.html">Trials</a><a href="/seeker.html">Register</a><a href="/lookup.html">My Trials</a><details class="nav-more"><summary>More</summary><div><a href="/current.html">About the Current</a><a href="/rewards.html">Rewards</a><a href="/tracker.html">Community progress</a></div></details></nav>
 
-<main class="page-shell">
+<details class="reading-options"><summary>Reading options</summary><div><label><input id="larger-text" type="checkbox"> Larger text</label><label><input id="light-background" type="checkbox"> Light background</label></div></details><main tabindex="-1" id="main-content" class="page-shell"><h1>Your next step with the Current</h1><p class="lead">Trials of Body, Mind and Soul at Hynafol.</p><p><strong>Level 1 (Tier I) is open to every Hynafol member.</strong> Start with one trial or choose several.</p><div class="action-grid"><a class="action-card" href="/seeker.html"><strong>Choose your trials →</strong><span>Pick a gathering, then build your plan.</span></a><a class="action-card" href="/lookup.html"><strong>Return to My Trials →</strong><span>See your saved progress and booked times.</span></a></div><section class="panel"><h2>How it works</h2><ol><li><strong>Choose.</strong> Register for the trials you want to try.</li><li><strong>Prepare.</strong> Read your checklist and confirm arrangements with the Keeper.</li><li><strong>Take part.</strong> The Keeper records your result in My Trials.</li></ol><a href="/trials.html">Explore the trial checklists →</a></section><details class="read-section"><summary>New to the Keepers?</summary><div class="read-content"><p>The Current is a Hynafol faith centred on genuine connection and practice. Explore three paths: Body, Mind and Soul.</p><p>Each path has three levels. Completing a path earns its Ring. Earn all three Rings to become a Master of the Three Rings.</p><a href="/current.html">Read the story and beliefs →</a></div></details></main>
 
-  <section class="panel">
-    <h2>The Trial of the Three Rings</h2>
-        <p><strong>Tier I trials are open to all Hynafol members.</strong> Register to begin in Body, Mind, or Soul.</p>
-<p>Three pillars — <strong>Body</strong>, <strong>Mind</strong>, <strong>Soul</strong> — three tiers each. Nine stages in all. Those who pass all three earn the title <strong>Bearer of the Current</strong>.</p>
-    <p style="color:var(--text-dim); font-style:italic; font-size:14px;">"When we move, we move as one."</p>
-
-    <div class="cta-row">
-      <a href="/lookup.html"><span class="cta-title">My Trials →</span><span class="cta-sub">your progress, booked times &amp; next steps</span></a>
-      <a href="/seeker.html">
-        <span class="cta-title">Become a Seeker →</span>
-        <span class="cta-sub">enter your name in the Trial Scroll</span>
-      </a>
-      <a href="/tracker.html">
-        <span class="cta-title">The Trial Scroll →</span>
-        <span class="cta-sub">all who walk the path</span>
-      </a>
-      <a href="/current.html">
-        <span class="cta-title">The Current →</span>
-        <span class="cta-sub">lore, faith &amp; the wider belief</span>
-      </a>
-      <a href="/trials.html">
-        <span class="cta-title">The Trials →</span>
-        <span class="cta-sub">the nine stages, explained</span>
-      </a>
-    </div>
-  </section>
-
-</main>
-
-</body>
+<script type="module" src="/assets/js/reading.js"></script></body>
 </html>

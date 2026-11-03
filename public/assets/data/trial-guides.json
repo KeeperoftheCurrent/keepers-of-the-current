@@ -1,0 +1,198 @@
+{
+  "body-tier-1": {
+    "title": "The Fast + The Watch",
+    "when": "Tier I · Any gathering · Complete both",
+    "prepare": [
+      "Agree on your Fast window, witness and Watch assignment with the Keeper.",
+      "Health needs are respected. Discuss your needs before starting."
+    ],
+    "steps": [
+      [
+        "The Fast",
+        "At least 4 hours at the event.",
+        "No food or drink except water; health needs are respected.",
+        "A witness is required. The Keeper or a Bearer releases you at the end."
+      ],
+      [
+        "The Watch",
+        "Stand unarmed guard for at least 1 hour at a sacred location or for a designated person.",
+        "Do not speak unless spoken to. Other players may interact with you.",
+        "Stay until formally dismissed by the Keeper or your charge."
+      ]
+    ],
+    "finish": "Complete both tasks. Ask the Keeper to record the result."
+  },
+  "body-tier-2": {
+    "title": "The Unison Drill",
+    "when": "Tier II · A later gathering than Tier I",
+    "prepare": [
+      "Confirm which sword drill to learn.",
+      "Find two willing partners before the next event."
+    ],
+    "steps": [
+      [
+        "Learn",
+        "Learn the drill independently."
+      ],
+      [
+        "Teach",
+        "Teach the drill to your two partners. Practise until they can perform it on their own."
+      ],
+      [
+        "Perform",
+        "At a subsequent event, all three perform before the Keeper.",
+        "Begin, move and finish together. The Keeper judges synchrony, not polish."
+      ]
+    ],
+    "finish": "The Keeper records the result after the shared performance."
+  },
+  "body-tier-3": {
+    "title": "The Grand Proving",
+    "when": "Tier III · Grand Gathering · Complete all three",
+    "prepare": [
+      "Arrange the relic handover and timed proofs with the Keeper.",
+      "Finish all three before the closing ceremony."
+    ],
+    "steps": [
+      [
+        "The Burden",
+        "On the designated day, carry the relic from the Keeper’s handover until the final bell.",
+        "Do not set it down, transfer it or ask for relief.",
+        "Exception: the Keeper may take it for her own use. Reclaim it when she finishes.",
+        "Surrendering it to anyone else fails the tier; the next attempt is at the next Grand Gathering."
+      ],
+      [
+        "The Plank",
+        "Hold a plank until you cannot continue, before witnesses and a timekeeper.",
+        "Your time is recorded publicly. Completing the challenge matters, not your rank."
+      ],
+      [
+        "The Foot Race",
+        "Run 100 metres, timed. Your time is recorded publicly.",
+        "The Plank and Foot Race may happen on any day of the Grand Gathering."
+      ]
+    ],
+    "finish": "Complete all three to earn the Ring of Endurance."
+  },
+  "mind-tier-1": {
+    "title": "The Dilemma or The Recitation",
+    "when": "Tier I · Any gathering · Choose one",
+    "prepare": [
+      "Book the appointment for the path you choose.",
+      "For the Recitation, choose and memorise your passage beforehand."
+    ],
+    "steps": [
+      [
+        "The Dilemma",
+        "Reason aloud about the Keeper’s moral or philosophical question.",
+        "No research or consulting others.",
+        "Honest reasoning matters more than a correct or elegant answer."
+      ],
+      [
+        "The Recitation",
+        "Deliver a passage you chose and memorised, without reference.",
+        "The Keeper judges whether the delivery is genuine, not only whether every word is exact."
+      ]
+    ],
+    "finish": "Complete either path. You do not need both."
+  },
+  "mind-tier-2": {
+    "title": "The Vow of Silence",
+    "when": "Tier II · A later gathering than Tier I",
+    "prepare": [
+      "Agree on a window of at least 3 hours with the Keeper.",
+      "Arrange a Bearer as witness. A Bearer holds at least one Ring; if none is present, the Keeper witnesses."
+    ],
+    "steps": [
+      [
+        "During the vow",
+        "Remain in the active spaces of the event.",
+        "No speech, whispers or gesture-communication.",
+        "A Bearer carries a sealed note: “I am in the Vow.”",
+        "If directly confronted, you may present the note, then re-pocket it immediately."
+      ]
+    ],
+    "finish": "Your witness attests at the end. Ask the Keeper to record the result."
+  },
+  "mind-tier-3": {
+    "title": "The Telling",
+    "when": "Tier III · Grand Gathering",
+    "prepare": [
+      "Organise and host a real gathering of your own.",
+      "Invite at least two people who are not members of the faith."
+    ],
+    "steps": [
+      [
+        "At your gathering",
+        "Speak honestly, without a script. This is not a recruitment pitch.",
+        "Explain what the Current is and what you believe.",
+        "Explain why you joined and why you are doing the trials.",
+        "The Keeper does not attend."
+      ]
+    ],
+    "finish": "Report back to the Keeper about what it cost you, rather than repeating what you said."
+  },
+  "soul-tier-1": {
+    "title": "The Approach or The Gift",
+    "when": "Tier I · Any gathering · Choose one",
+    "prepare": [
+      "For the Gift, make your item beforehand.",
+      "Choose someone you have never spoken to."
+    ],
+    "steps": [
+      [
+        "The Approach",
+        "Have a meaningful conversation with the stranger at the event.",
+        "Learn their name, house, and something true and personal about them.",
+        "Return to the Keeper and introduce the person through what you learned."
+      ],
+      [
+        "The Gift",
+        "Give something you made by hand to a stranger at the event.",
+        "Do not explain the trial, seek thanks or ask for anything in return.",
+        "Return to the Keeper. Describe the person, why you chose them, and how giving felt."
+      ]
+    ],
+    "finish": "Complete either path. You do not need both."
+  },
+  "soul-tier-2": {
+    "title": "The Service",
+    "when": "Tier II · A later gathering than Tier I",
+    "prepare": [
+      "Find a ritual, gathering or event task belonging to someone else.",
+      "Arrange their attestation before they leave."
+    ],
+    "steps": [
+      [
+        "Serve",
+        "Help prepare or facilitate their task on their terms.",
+        "Do not seek recognition, steer it toward your own faith or seek personal benefit."
+      ]
+    ],
+    "finish": "The beneficiary, not the Keeper, witnesses and attests. Then ask the Keeper to record the result."
+  },
+  "soul-tier-3": {
+    "title": "Tea Ceremony + Gift of the Coin",
+    "when": "Tier III · Grand Gathering · Complete both",
+    "prepare": [
+      "Arrange private tea with the Keeper.",
+      "Confirm the new member’s religious registration with the Keeper before the coin passes."
+    ],
+    "steps": [
+      [
+        "The Tea Ceremony",
+        "Meet privately with the Keeper, away from the gathering. Share tea.",
+        "No audience or witnesses. What is said belongs to the room.",
+        "Discuss honestly what the trials have cost and changed in you. This is a conversation, not a speech."
+      ],
+      [
+        "The Gift of the Coin",
+        "Someone has come to the Current through your presence, without pressure or recruitment.",
+        "Design and host a public, witnessed ceremony at the event.",
+        "Give the Coin of the Keepers with your own hands and words.",
+        "The new member must formally register their religion with the Keeper before this part is complete."
+      ]
+    ],
+    "finish": "Complete both parts to earn the Ring of Connection."
+  }
+}

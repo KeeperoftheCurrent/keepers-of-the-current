@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -40,30 +40,23 @@
   .pillar-group h4 { color: var(--gold); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
 </style>
 <link rel="stylesheet" href="/assets/css/seeker-flow.css">
-</head>
-<body>
+<link href="/assets/css/reading.css" rel="stylesheet"></head>
+<body><a href="#main-content" class="skip-link">Skip to content</a>
 
 <header class="site-header">
   <div class="header-inner">
-    <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil"/>
+    <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil">
     <div class="header-text">
       <div class="header-title">Keepers of the Current</div>
-      <div class="header-sub">Trial of the Three Rings &nbsp;·&nbsp; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
+      <div class="header-sub">Trial of the Three Rings &#160;·&#160; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
     </div>
   </div>
 </header>
 
-<nav class="site-nav" aria-label="Site navigation">
-  <a href="/current.html">The Current</a>
-  <a href="/trials.html">The Trials</a>
-  <a href="/seeker.html" class="nav-cta active">Register</a>
-  <a href="/tracker.html">Trial Scroll</a>
-  <a href="/lookup.html">My Trials</a>
-  <a href="/rewards.html">Rewards</a>
-</nav>
+<nav class="site-nav" aria-label="Site navigation"><a href="/">Home</a><a href="/trials.html">Trials</a><a href="/seeker.html" aria-current="page" class="active">Register</a><a href="/lookup.html">My Trials</a><details class="nav-more"><summary>More</summary><div><a href="/current.html">About the Current</a><a href="/rewards.html">Rewards</a><a href="/tracker.html">Community progress</a></div></details></nav>
 
 
-<main class="page-shell">
+<details class="reading-options"><summary>Reading options</summary><div><label><input id="larger-text" type="checkbox"> Larger text</label><label><input id="light-background" type="checkbox"> Light background</label></div></details><main tabindex="-1" id="main-content" class="page-shell">
 
   <header class="page-header compact"><h1 class="title">Choose your trials</h1>
     <p>Tier I is open to every Hynafol member.</p>
@@ -71,7 +64,7 @@
   </header>
   <section id="form-wrap" class="panel">
     <p id="welcome" role="status"></p>
-    <ol class="flow-steps" aria-label="Registration steps"><li>Gathering</li><li>Trials & times</li><li>Your details</li><li>Review</li></ol>
+    <ol class="flow-steps" aria-label="Registration steps"><li>Gathering</li><li>Trials &amp; times</li><li>Your details</li><li>Review</li></ol>
     <div id="errors" role="alert" tabindex="-1" hidden></div>
     <p id="load-status" role="status"></p>
     <button id="retry-load" type="button" hidden>Try loading again</button>
@@ -120,5 +113,5 @@
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script type="module" src="/assets/js/seeker.js?v=20261103-mobile"></script>
-</body>
+<script type="module" src="/assets/js/reading.js"></script></body>
 </html>

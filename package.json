@@ -2,7 +2,7 @@
   "name": "keepers-of-the-current",
   "private": true,
   "version": "2.0.0",
-  "description": "Keepers of the Current — LARP religion site, v2",
+  "description": "Keepers of the Current \u2014 LARP religion site, v2",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
@@ -10,11 +10,13 @@
     "migrate:local": "wrangler d1 migrations apply keepers-current-db --local",
     "migrate:remote": "wrangler d1 migrations apply keepers-current-db --remote",
     "db:local": "wrangler d1 execute keepers-current-db --local",
-    "db:remote": "wrangler d1 execute keepers-current-db --remote"
+    "db:remote": "wrangler d1 execute keepers-current-db --remote",
+    "build:guides": "node scripts/build-trial-guides.mjs"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241112.0",
     "esbuild": "0.27.3",
+    "linkedom": "^0.18.15",
     "miniflare": "4.20260430.0",
     "typescript": "^6.0.3",
     "wrangler": "^4.87.0"
