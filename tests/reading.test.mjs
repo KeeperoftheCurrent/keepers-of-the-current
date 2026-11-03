@@ -22,6 +22,22 @@ test('all nine deep links retain original rules and web checklists match email s
 });
 test('long lore is optional and the homepage has no screen-dependent redirect',()=>{
  const{document:d}=parseHTML(read('current.html'));assert.equal(d.querySelectorAll('details[open]').length,0);
- assert.equal(d.querySelectorAll('.read-section').length,6);
+ assert.equal(d.querySelectorAll('main > .read-section').length,5);
  assert.ok(!read('index.html').includes('window.location.replace'));
+});
+
+test('films and original reward artwork are visible without opening lore',()=>{
+ const {document:d}=parseHTML(read('current.html'));
+ assert.equal(d.querySelectorAll('iframe').length,3);
+ for(const frame of d.querySelectorAll('iframe')){
+  assert.equal(frame.closest('details'),null);
+  assert.ok(frame.getAttribute('title'));
+  assert.ok(!frame.getAttribute('src').includes('autoplay=1'));
+ }
+ const {document:rewards}=parseHTML(read('rewards.html'));
+ for(const pillar of ['body','mind','soul']){
+  const ring=rewards.querySelector(`img[src="/assets/img/ring_${pillar}.png"]`);
+  assert.ok(ring);assert.equal(ring.closest('details'),null);
+ }
+ assert.ok(rewards.querySelectorAll('.restored-reward .artifact-display > svg').length>=3);
 });

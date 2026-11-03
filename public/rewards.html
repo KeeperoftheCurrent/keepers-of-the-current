@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="stylesheet" href="/assets/css/components.css">
 <link rel="stylesheet" href="/assets/css/lore-pages.css">
-<link href="/assets/css/reading.css" rel="stylesheet"></head>
+<link href="/assets/css/reading.css" rel="stylesheet"><link href="/assets/css/magic.css?v=20261103" rel="stylesheet"></head>
 <body><a href="#main-content" class="skip-link">Skip to content</a>
 <div id="toast"></div>
 
@@ -17,20 +17,20 @@
     <img class="header-sigil" src="/assets/img/sigil.png" alt="Keepers of the Current sigil">
     <div class="header-text">
       <div class="header-title">Keepers of the Current</div>
-      <div class="header-sub">Trial of the Three Rings &#160;·&#160; <a href="https://hynafol.com" target="_blank">Hynafol</a></div>
+      <div class="header-sub">Trial of the Three Rings · Hynafol</div>
     </div>
   </div>
 </header>
 
 <nav class="site-nav" aria-label="Site navigation"><a href="/">Home</a><a href="/trials.html">Trials</a><a href="/seeker.html">Register</a><a href="/lookup.html">My Trials</a><details class="nav-more"><summary>More</summary><div><a href="/current.html">About the Current</a><a href="/rewards.html">Rewards</a><a href="/tracker.html">Community progress</a></div></details></nav>
 
-<details class="reading-options"><summary>Reading options</summary><div><label><input id="larger-text" type="checkbox"> Larger text</label><label><input id="light-background" type="checkbox"> Light background</label></div></details><main tabindex="-1" id="main-content" class="page active"><h1>What you can earn</h1><p class="lead">One path at a time. One Ring for each completed path.</p><ul><li><strong>Begin:</strong> receive the Seeker’s Cord.</li><li><strong>Complete Body:</strong> earn the Ring of Endurance.</li><li><strong>Complete Mind:</strong> earn the Ring of Focus.</li><li><strong>Complete Soul:</strong> earn the Ring of Connection.</li><li><strong>Earn all three:</strong> become a Master of the Three Rings.</li></ul><p><a href="/lookup.html">See my progress →</a></p><h2>Explore the rewards</h2><details class="read-section"><summary>The Seeker's Cord</summary><div class="read-content">
+<details class="reading-options"><summary>Reading options</summary><div><label><input id="larger-text" type="checkbox"> Larger text</label><label><input id="light-background" type="checkbox"> Light background</label></div></details><main tabindex="-1" id="main-content" class="page active"><h1>Treasures of the Current</h1><img class="illuminated-banner" src="/assets/img/current-illuminated.jpg" srcset="/assets/img/current-illuminated-small.jpg 720w, /assets/img/current-illuminated.jpg 1440w" sizes="(max-width: 600px) 100vw, 920px" width="1440" height="480" alt="An illuminated woodland: earth, silver wind and a golden river meet at a flame, framed by curling gold vines." loading="lazy"><p class="lead">One path at a time. One Ring for each completed path.</p><p><a href="/lookup.html">See my progress →</a></p><h2>Explore the rewards</h2><section class="reward-section restored-reward"><h2>The Seeker's Cord</h2>
 
     <div class="cord-layout">
       <!-- Cord SVG -->
-      <svg viewBox="0 0 130 380" width="130" height="380" xmlns="http://www.w3.org/2000/svg">
+      <div class="artifact-display"><svg viewBox="0 0 130 380" width="130" height="380" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <filter id="bead-glow"><fegaussianblur stdDeviation="1.5" result="b" /><femerge><femergenode in="b" /><femergenode in="SourceGraphic" /></femerge></filter>
+          <filter id="bead-glow"><feGaussianBlur stdDeviation="1.5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
         </defs>
         <!-- Cord threads -->
         <path d="M 40 18 Q 38 100, 40 380" stroke="#4a2808" stroke-width="3" fill="none" stroke-linecap="round" />
@@ -64,8 +64,8 @@
         <line x1="37" y1="370" x2="35" y2="380" stroke="#4a2808" stroke-width="2" />
         <line x1="43" y1="370" x2="43" y2="380" stroke="#4a2808" stroke-width="2" />
         <line x1="49" y1="370" x2="51" y2="380" stroke="#4a2808" stroke-width="2" />
-      </svg>
-      <div class="cord-desc">
+      </svg></div>
+      <div class="cord-desc"><details class="read-section reward-story"><summary>Read the meaning &amp; ceremony</summary><div class="read-content">
         <h4>How it works</h4>
         <p>When a candidate formally enters the Trial of the Three Rings, the Keeper ties them a braided cord — dark red, in the Keeper's colors. This is the seeker's cord.</p>
         <p>Each time a Tier I or Tier II is completed, a small bead is threaded onto the cord during ceremony:</p>
@@ -74,9 +74,9 @@
         <p style="color:var(--gold)">● Gold beads — Soul Tier I and II</p>
         <p>When a Tier III is completed and the Ring is earned, the beads for that pillar are removed from the cord in ceremony — replaced by the Ring itself. The cord remains, still holding any unearned beads, until the day all three Rings are won.</p>
         <p>When a Bearer earns their third Ring, the cord is <strong style="color:var(--gold-light)">retired publicly</strong> and presented back to them — a keepsake of the journey.</p>
-      </div>
+      </div></details></div>
     </div>
-  </div></details><details class="read-section"><summary>The Three Rings</summary><div class="read-content">
+  </section><section class="reward-section restored-reward"><h2>The Three Rings</h2>
 
     <div class="rings-trio">
 
@@ -106,8 +106,8 @@
     <div class="combined-display">
       <svg viewBox="0 0 210 90" width="210" height="90" xmlns="http://www.w3.org/2000/svg">
         <defs><filter id="ring-glow" x="-30%" y="-30%" width="160%" height="160%">
-          <fegaussianblur stdDeviation="2" result="b" />
-          <femerge><femergenode in="b" /><femergenode in="SourceGraphic" /></femerge>
+          <feGaussianBlur stdDeviation="2" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter></defs>
         <!-- Three rings side by side -->
         <circle cx="36" cy="45" r="28" fill="#b0aea6" filter="url(#ring-glow)" />
@@ -122,7 +122,7 @@
       </svg>
       <p>One of silver, for the body that did not break. One of deep onyx, for the mind that would not scatter. One of gold, for the soul that chose connection over isolation. Three rings. One truth. Carry them into the world and let them speak for what you survived.</p>
     </div>
-  </div></details><details class="read-section"><summary>Ways to Wear</summary><div class="read-content">
+  </section><section class="reward-section restored-reward"><h2>Ways to Wear</h2>
 
     <div class="wear-grid">
 
@@ -217,12 +217,12 @@
       Standard band rings fit any finger. A cord threaded through the band turns any ring into a pendant charm.<br>
       How you display your rings is part of your story in the Current.
     </p>
-  </div></details><details class="read-section"><summary>Master of the Three Rings</summary><div class="read-content">
+  </section><section class="reward-section restored-reward"><h2>Master of the Three Rings</h2>
 
     <div class="bearer-display">
       <!-- Bearer medallion SVG: sigil on a chain -->
-      <svg viewBox="0 0 100 130" width="100" height="130" xmlns="http://www.w3.org/2000/svg">
-        <defs><filter id="med-glow"><fegaussianblur stdDeviation="1.5" result="b" /><femerge><femergenode in="b" /><femergenode in="SourceGraphic" /></femerge></filter></defs>
+      <div class="artifact-display"><svg viewBox="0 0 100 130" width="100" height="130" xmlns="http://www.w3.org/2000/svg">
+        <defs><filter id="med-glow"><feGaussianBlur stdDeviation="1.5" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
         <!-- Chain links -->
         <g stroke="#C8963E" stroke-width="1.5" fill="none" opacity="0.7">
           <ellipse cx="50" cy="8" rx="6" ry="3" />
@@ -243,25 +243,25 @@
         <!-- Chain loop top -->
         <line x1="50" y1="29" x2="50" y2="54" stroke="#C8963E" stroke-width="1.5" opacity="0.5" />
         <circle cx="50" cy="54" r="3" fill="none" stroke="#C8963E" stroke-width="1.5" />
-      </svg>
-      <div>
+      </svg></div>
+      <div><details class="read-section reward-story"><summary>Read the meaning &amp; ceremony</summary><div class="read-content">
         <h4>Master of the Three Rings</h4>
         <p>When all three Rings are earned, the Keeper presents the Bearer with a pendant bearing the Keepers' sigil — the vine-infinity in its Celtic knotwork ring. This is the one piece of the reward system that does not vary. Every Bearer receives the same pendant. When others see it, they know what it means.</p>
         <p style="margin-top:0.7rem;">Pendants can be sourced from custom makers on Etsy, cast in resin, or stamped in metal. Bearers will be rare enough that cost stays manageable — a handful total, not dozens.</p>
         <p style="margin-top:0.7rem;">The Keeper's Beacon is lit for each new Bearer. The seeker's cord is retired in ceremony and returned to the Bearer as a keepsake of the journey. The Bearer is titled publicly and entered into the Trial Scroll as a permanent record.</p>
         <p style="margin-top:0.7rem;color:var(--gold);font-style:italic;font-size:0.82rem;">"When I call you respond. When we move, we move as one."</p>
-      </div>
+      </div></details></div>
     </div>
-  </div></details><details class="read-section"><summary>Shield of the Current</summary><div class="read-content">
+  </section><section class="reward-section restored-reward"><h2>Shield of the Current</h2>
 
     <div class="bearer-display">
 
       <!-- Shield SVG: heater shield bearing the vine-infinity sigil -->
-      <svg viewBox="0 0 100 120" width="100" height="120" xmlns="http://www.w3.org/2000/svg">
+      <div class="artifact-display"><svg viewBox="0 0 100 120" width="100" height="120" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <filter id="shield-glow" x="-20%" y="-20%" width="140%" height="140%">
-            <fegaussianblur stdDeviation="2" result="b" />
-            <femerge><femergenode in="b" /><femergenode in="SourceGraphic" /></femerge>
+            <feGaussianBlur stdDeviation="2" result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
         </defs>
         <!-- Shield body -->
@@ -280,9 +280,9 @@
         <!-- Small decoration at top of shield (boss) -->
         <circle cx="50" cy="28" r="4" fill="none" stroke="#C8963E" stroke-width="1" opacity="0.5" />
         <circle cx="50" cy="28" r="1.5" fill="#C8963E" opacity="0.6" />
-      </svg>
+      </svg></div>
 
-      <div>
+      <div><details class="read-section reward-story"><summary>Read the meaning &amp; ceremony</summary><div class="read-content">
         <h4>The Keeper's Chosen</h4>
         <p>The Shield of the Current is not a reward that can be sought. It supersedes the Master's title — not because it requires more, but because it is a different thing entirely. Where the Master has proven themselves to the Current, the Shield has been <em>chosen by the Keeper</em> to serve it.</p>
         <p style="margin-top:0.7rem;">The Keeper selects only from those who have already earned all three Rings. The choosing happens privately — no petition, no announcement, no trial to wait for. When the Keeper has decided, she alone knows it. Until she acts.</p>
@@ -290,6 +290,6 @@
         <p style="margin-top:0.7rem;">A Shield is the Keeper's elite guard: trusted to protect her person, the faith's sacred objects, and the integrity of the Current wherever it is threatened. In exchange, the Keeper extends her own protection to the Shield on the field of battle — favoring them, watching for them, standing for them as they stand for her. It is a symbiotic bond between equals, not a hierarchy of command.</p>
         <p style="margin-top:0.7rem;">The physical mark of the Shield is an actual shield — a field-worthy prop bearing the sigil of the Keepers of the Current. It is carried into the field. It is real. There is no mistaking what it means.</p>
         <p style="margin-top:0.7rem;color:var(--gold);font-style:italic;font-size:0.82rem;">"You do not ask to be chosen. You become someone who cannot be overlooked."</p>
-      </div>
+      </div></details></div>
     </div>
-  </div></details></main><script type="module" src="/assets/js/reading.js"></script></body></html>
+  </section></main><script type="module" src="/assets/js/reading.js"></script></body></html>
