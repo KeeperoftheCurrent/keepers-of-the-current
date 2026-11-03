@@ -1,4 +1,4 @@
-import{renderProfile}from'./member-view.js';
+import{renderProfile}from'./member-view.js?v=chapters';
 const status=document.querySelector('#member-status'),id=new URLSearchParams(location.search).get('id');
 try{const response=await fetch('/api/public/members'+(id?'?id='+encodeURIComponent(id):''));if(!response.ok)throw new Error();const{members}=await response.json();
  if(document.querySelector('#member-story')){if(!id||!members.length){status.textContent='This story is not currently shared with the Circle.';}else{status.textContent='';document.title=members[0].name+' — Members of the Current';document.querySelector('#member-story').append(renderProfile(members[0],true));}}

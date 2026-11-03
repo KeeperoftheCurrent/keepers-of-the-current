@@ -1,4 +1,4 @@
-import{api}from'./api.js';import{renderProfile,el}from'./member-view.js';
+import{api}from'./api.js';import{renderProfile,el}from'./member-view.js?v=chapters';
 const $=s=>document.querySelector(s),status=$('#member-admin-status');let selected,changed=false;
 async function call(body){const r=await api(body?'POST':'GET','/api/admin/members',body);if(!r.ok)throw new Error(r.body.error||'Unable to load members.');return r.body;}
 async function refresh(){try{const{members}=await call();$('#member-queue').replaceChildren();for(const m of members){const b=el('button',`${m.draft.name} · ${!m.active?'Suspended':m.submitted_revision!==null?'Awaiting review':m.published?'Published':'Private draft'}`);b.type='button';b.style.margin='12px';b.addEventListener('click',()=>open(m));$('#member-queue').append(b);}status.textContent=members.length+' member records.';}catch(e){status.textContent=e.message;}}
