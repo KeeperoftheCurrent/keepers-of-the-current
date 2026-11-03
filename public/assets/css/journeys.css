@@ -15,8 +15,9 @@ html[data-light] .entrance,html[data-light] .next-trial{background:var(--red-pan
 html[data-light] .primary{background:#75500d!important;border-color:#75500d!important;color:#fff!important}
 @media(max-width:700px){.arrival-copy h1{font-size:clamp(2rem,10vw,2.8rem)}.reading-options{margin-top:0}.arrival-copy .lead{line-height:1.6}.arrival-copy .returning-link{padding-bottom:0}}
 
-/* Transparent crest aligns with the lettering, not its subtitle. */
+/* Paired transparent crests frame the matched gold wordmark. */
 .site-header .header-sigil{width:80px!important;height:80px!important;object-fit:contain;align-self:flex-start;border-radius:0!important;background:transparent!important;box-shadow:none!important;filter:none!important}
-.brand-home{gap:16px}
-@media(max-width:700px){.site-header .header-sigil{width:66px!important;height:66px!important}.brand-home{gap:10px}}
-@media(max-width:360px){.site-header .brand-wordmark{width:190px}.site-header .header-sigil{width:60px!important;height:60px!important}}
+.brand-home{display:grid;grid-template-columns:80px minmax(0,280px) 80px;gap:18px;max-width:100%}
+.site-header .brand-wordmark{width:280px}.header-text{min-width:0}.footer-crest{display:block;margin:0 auto 16px;object-fit:contain}
+@media(max-width:700px){.brand-home{grid-template-columns:48px minmax(0,240px) 48px;gap:8px}.site-header .header-sigil{width:48px!important;height:58px!important}.site-header .brand-wordmark{width:100%}.header-sub{font-size:10px}}
+@media(max-width:360px){.brand-home{grid-template-columns:38px minmax(0,1fr) 38px;gap:6px}.site-header .header-sigil{width:38px!important;height:48px!important}.header-sub{font-size:9px}}
