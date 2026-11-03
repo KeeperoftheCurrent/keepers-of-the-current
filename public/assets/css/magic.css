@@ -134,3 +134,29 @@ html[data-light] .path-art {background:var(--red-panel);}
  .magic-hero .hero-motto{grid-column:1;grid-row:2;margin:0;font-size:1rem;}
  .magic-hero h1{grid-column:1;grid-row:3;margin:0;font-size:1.8rem;}
 }
+/* Two clear journeys: learn about the faith, or take part in its trials. */
+.brand-home {display:flex;align-items:center;gap:12px;color:var(--gold-light);text-decoration:none;border:0;min-width:0;}
+.brand-home .header-text {min-width:0;}
+.site-nav {gap:8px;}
+.site-nav>a {white-space:nowrap;}
+.site-footer nav {display:flex;gap:10px 24px;flex-wrap:wrap;margin-bottom:12px;}
+.site-footer p {max-width:none;}
+.site-footer nav a {min-height:44px;}
+.returning-link {padding:0 4px 12px;}
+.outreach-card {margin-top:26px;border-left:3px solid var(--gold);}
+.outreach-card h2 {margin-top:0;}
+.rest-benefits {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+.rest-benefits .panel {margin:0;}
+.rest-benefits h3 {margin:0 0 12px;}
+.rest-benefits p {margin-bottom:0;}
+.access-note {margin-top:28px;border-left:3px solid var(--gold);}
+.current-basics h2 {margin-top:0;}
+.rest-heading h1 {margin-bottom:12px;}
+.rest-heading .eyebrow {font-family:var(--display-font);font-size:1rem;}
+@media(max-width:600px){
+ .site-nav{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;padding:4px 12px 8px;}
+ .site-nav>a{justify-content:center;grid-column:span 2;padding:10px 2px!important;font-size:14px!important;}
+ .site-nav>a:nth-child(4),.site-nav>a:nth-child(5){grid-column:span 3;}
+ .rest-benefits{grid-template-columns:1fr;}
+ .site-footer nav{gap:6px 18px;}
+}
