@@ -195,5 +195,5 @@ $('#retry-load').onclick=init;$('#retry-times').onclick=loadTimes;
 field('event_id').addEventListener('change',()=>{choices={};change();loadTimes();$('#load-status').textContent='Gathering changed. Choose trial times for this gathering.';});
 form.querySelectorAll('[name=rings_pursued]').forEach(el=>el.addEventListener('change',()=>{change();render();}));
 for(const n of ['name','email','house'])field(n).addEventListener('input',change);
-$('#clear-draft').onclick=()=>{choices={};form.reset();requestId=crypto.randomUUID();try{sessionStorage.removeItem(draftKey);}catch{}if(seeker){field('name').value=seeker.name;field('email').value=seeker.email;field('house').value=seeker.house||'';}loadTimes();go(0);};
+$('#clear-draft').onclick=()=>{choices={};$('#plan-count').textContent='0 trials in your plan';form.reset();requestId=crypto.randomUUID();try{sessionStorage.removeItem(draftKey);}catch{}if(seeker){field('name').value=seeker.name;field('email').value=seeker.email;field('house').value=seeker.house||'';}loadTimes();go(0);};
 form.addEventListener('submit',submit);go(0);init();
