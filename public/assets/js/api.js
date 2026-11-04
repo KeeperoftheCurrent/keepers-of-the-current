@@ -18,7 +18,8 @@ export async function api(method, path, body = undefined) {
   try {
     res = await fetch(path, init);
   } catch (err) {
-    return { ok: false, status: 0, body: { error: 'Network error', detail: String(err) } };
+    if(path.startsWith('/api/admin/'))document.dispatchEvent(new CustomEvent('admin-auth-error',{detail:{network:true}}));
+    return { ok: false, status: 0, body: { error: 'Connection or sign-in failed. Reopen the secure admin sign-in.', detail: String(err) } };
   }
   const contentType = res.headers.get('Content-Type') || '';
   const isJson = contentType.includes('application/json');
@@ -30,5 +31,6 @@ export async function api(method, path, body = undefined) {
     return { ok: false, status: 401, body: { error: 'Authentication required. Please open this page in your browser to log in.', authRequired: true } };
   }
 
-  return { ok: res.ok, status: res.status, body: parsed };
+  if(path.startsWith('/api/admin/') && (res.status===401||res.status===403))document.dispatchEvent(new CustomEvent('admin-auth-error'));
+  return { ok: res.ok && isJson, status: res.status, body: parsed };
 }

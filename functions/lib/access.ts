@@ -146,7 +146,7 @@ export async function verifyAccessJWT(
   if (!audMatches) throw new Error('JWT aud mismatch');
 
   const now = Math.floor(Date.now() / 1000);
-  if (typeof claims.exp === 'number' && claims.exp < now) {
+  if (typeof claims.exp !== 'number' || claims.exp <= now) {
     throw new Error('JWT expired');
   }
 

@@ -1,4 +1,4 @@
-import{api}from'./api.js';import{el}from'./member-view.js';import{renderEntry}from'./chronicles.js';
+import{api}from'./api.js?v=20261103-admin';import{el}from'./member-view.js';import{renderEntry}from'./chronicles.js';
 const $=s=>document.querySelector(s),form=$('#chronicle-form'),status=$('#chronicle-admin-status');let selected=null,dirty=false;
 async function call(body){const r=await api(body?'POST':'GET','/api/admin/chronicles',body);if(!r.ok)throw new Error(r.body.error||'Unable to load chronicles.');return r.body;}
 async function refresh(){try{const{entries}=await call();$('#chronicle-queue').replaceChildren();for(const e of entries){const b=el('button',e.draft.title+' · '+(e.published?'Published + saved draft':'Private draft'));b.type='button';b.style.margin='12px';b.addEventListener('click',()=>open(e));$('#chronicle-queue').append(b);}status.textContent=entries.length+' chronicles.';}catch(e){status.textContent=e.message;}}

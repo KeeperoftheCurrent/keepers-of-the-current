@@ -291,3 +291,5 @@ input[type="search"]:focus { outline: none; border-color: var(--gold); }
   .data-table th, .data-table td { padding: 8px; }
   .window-row { grid-template-columns: 1fr 1fr 1fr auto; }
 }
+
+.registration-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:20px}.registration-card{padding:24px;overflow-wrap:anywhere}.registration-card h3{color:var(--gold-light);margin-top:0}.registration-card li{margin:10px 0}.registration-card button{min-height:44px}.admin-user{display:flex;gap:12px;flex-wrap:wrap}.admin-tabs{flex-wrap:wrap}.auth-banner{border:2px solid var(--gold);padding:20px;margin-bottom:24px}.admin-main input[type=search]{min-height:44px}@media(max-width:600px){.registration-card{padding:18px}.admin-header{position:static}.admin-tabs .tab{min-height:44px}.admin-user{font-size:12px}}

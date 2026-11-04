@@ -6,30 +6,32 @@
 <title>Keeper's Panel — Keepers of the Current</title>
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="stylesheet" href="/assets/css/components.css">
-<link rel="stylesheet" href="/assets/css/admin.css">
+<link rel="stylesheet" href="/assets/css/admin.css?v=20261103-dashboard">
 <link href="/assets/css/reading.css" rel="stylesheet"><link href="/assets/css/magic.css?v=20261103-maroon" rel="stylesheet"><link rel="stylesheet" href="/assets/css/members.css?v=20261103-portraits"></head>
 <body class="admin-body"><a href="#main-content" class="skip-link">Skip to content</a>
 
 <header class="admin-header">
   <a href="/" class="admin-brand" title="Back to keepersofthecurrent.org">
-    <img src="/assets/img/sigil.png" alt="Keepers of the Current" class="brand-sigil">
+    <img src="/assets/img/keepers-crest-v4.png" alt="Keepers of the Current" class="brand-sigil">
     <div>
       <div class="brand-title">Keeper's Panel</div>
       <div class="brand-sub">Keepers of the Current — Trial Scroll</div>
     </div>
   </a>
   <div class="admin-tabs">
+    <button class="tab" data-tab="registrations">Registrations</button>
     <button class="tab" data-tab="seekers">Seekers</button>
     <button class="tab" data-tab="schedule">Schedule</button>
     <button class="tab" data-tab="windows">Available times</button>
     <button class="tab" data-tab="events">Events</button>
     <button class="tab" data-tab="log">Activity</button><button class="tab" data-tab="members">Members</button><button class="tab" data-tab="chronicles">Chronicles</button>
   </div>
-  <div class="admin-user" id="admin-user-chip">⚡ <span id="admin-email">…</span></div>
+  <div class="admin-user" id="admin-user-chip"><span id="admin-email">Checking sign-in…</span> <a href="/cdn-cgi/access/logout" id="admin-sign-out">Sign out</a></div>
 </header>
 
 <details class="reading-options"><summary>Reading options</summary><div><label><input id="larger-text" type="checkbox"> Larger text</label><label><input id="light-background" type="checkbox"> Light background</label></div></details><main tabindex="-1" id="main-content" class="admin-main">
 
+  <section class="tab-panel" data-tab-panel="registrations" hidden><div class="tab-toolbar"><h1>Trial registrations</h1><button class="secondary" id="refresh-registrations">Refresh registrations</button></div><p>See what each seeker chose, then open their record to mark completed or failed tasks. All appointment times are Central.</p><p id="registration-status" role="status">Checking saved registrations…</p><button class="secondary" id="pending-stories">Member stories</button><label class="field">Find a seeker or gathering<input type="search" id="registration-search" placeholder="e.g. Korsin"></label><div id="registration-list" class="registration-grid"></div></section>
   <!-- ─── SEEKERS TAB ─── -->
   <section class="tab-panel" data-tab-panel="seekers">
     <div class="tab-toolbar">
@@ -48,7 +50,7 @@
             <th>Rings</th>
             <th>Title</th>
             <th>Tiers</th>
-            <th>Email status</th>
+            <th>Registrations</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -136,6 +138,6 @@
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="/assets/js/admin.js"></script>
+<script type="module" src="/assets/js/admin-registrations.js?v=20261103-admin"></script><script type="module" src="/assets/js/admin.js?v=20261103-dashboard"></script>
 <script type="module" src="/assets/js/reading.js"></script><script type="module" src="/assets/js/admin-members.js?v=20261103-review"></script><script type="module" src="/assets/js/admin-chronicles.js"></script></body>
 </html>

@@ -20,7 +20,7 @@ export const onRequest: PagesFunction<Env, string, AdminContextData> = async (co
 
   // Local-dev bypass — gated by env.SITE_URL containing 'localhost', not by anything
   // user-controllable in the request. Production env never has this in SITE_URL.
-  if (env.SITE_URL && env.SITE_URL.includes('localhost')) {
+  if (env.SITE_URL && ['localhost', '127.0.0.1', '[::1]'].includes(new URL(env.SITE_URL).hostname)) {
     const debugEmail = request.headers.get('X-Local-Admin-Email') || 'localdev@keepersofthecurrent.org';
     context.data.user = { email: debugEmail };
     return await context.next();

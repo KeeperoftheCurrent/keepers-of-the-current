@@ -1,4 +1,4 @@
-import { api } from './api.js';
+import { api } from './api.js?v=20261103-admin';
 
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => Array.from(document.querySelectorAll(sel));
@@ -7,7 +7,7 @@ const fmtDate = (ts) => new Date(ts * 1000).toLocaleString();
 
 let allEvents = [];
 let allSeekers = [];
-let activeTab = 'seekers';
+let activeTab = 'registrations';
 
 // ─── Hynafol 2026 calendar seed data ─────────────────────────────────────
 // IDs MUST match migration 0007 exactly — schedule windows are keyed to these.
@@ -38,6 +38,8 @@ function closeModal() {
 // ─── tabs ─────────────────────────────────────────────────────────────
 function switchTab(name) {
   activeTab = name;
+  sessionStorage.setItem('keeper_admin_tab',name);
+  document.dispatchEvent(new CustomEvent('admin-tab',{detail:name}));
   $$('.tab').forEach((b) => b.classList.toggle('active', b.dataset.tab === name));
   $$('.tab-panel').forEach((p) => (p.hidden = p.dataset.tabPanel !== name));
   if (name === 'seekers')   loadSeekers();
@@ -50,7 +52,7 @@ function switchTab(name) {
 // ─── seekers ──────────────────────────────────────────────────────────
 async function loadSeekers() {
   const { ok, body } = await api('GET', '/api/admin/seekers');
-  if (!ok) return showToast('Could not load seekers', 'error');
+  if (!ok) { $('#seekers-empty').hidden=false;$('#seekers-empty').textContent='Could not load saved records. Sign in or refresh to retry; this does not mean the database is empty.';return showToast('Could not load seekers', 'error'); }
   allSeekers = body.seekers || [];
   renderSeekers(allSeekers);
 }
@@ -59,6 +61,7 @@ function renderSeekers(list) {
   if (list.length === 0) {
     tbody.innerHTML = '';
     $('#seekers-empty').hidden = false;
+    $('#seekers-empty').textContent='No matching seekers.';
     return;
   }
   $('#seekers-empty').hidden = true;
@@ -92,7 +95,7 @@ async function openSeekerDetail(id) {
   if (!ok) return showToast('Could not load seeker', 'error');
   const s = body.seeker;
   const events = allEvents.length ? allEvents : (await api('GET', '/api/admin/events')).body?.events || [];
-  const trialOptions = (await api('GET', '/api/admin/seekers/' + id)).body?.progress || [];
+  const trialOptions = body.progress || [];
 
   const awards = body.awards || [];
   const activeAwards = awards.filter((a) => !a.revoked_at);
@@ -118,12 +121,15 @@ async function openSeekerDetail(id) {
     <li><strong>${escapeHtml(a.kind)}</strong> · ${escapeHtml(a.awarded_on)} ${a.auto_conferred ? '(auto)' : '(manual)'}</li>`)
     .join('') || '<li class="muted">No active awards.</li>';
 
+  const catalog = await fetchCatalog();
   const registrationsList = (body.registrations || []).map((r) => {
     const ev = eventsByCode.get(r.event_id);
+    let choices=[];try{choices=JSON.parse(r.trial_intentions||'[]');}catch{}
     return `<li>
-      <strong>${escapeHtml(ev?.name || r.event_id)}</strong>
+      <strong>${escapeHtml(ev?.name || r.event_name || r.event_id)}</strong>
+      ${choices.length?'<ul>'+choices.map(c=>'<li>'+escapeHtml(catalog.find(t=>t.code===c.code)?.name||c.code)+(c.preferred_time?' · requested '+escapeHtml(c.preferred_time):'')+' · timing to arrange</li>').join('')+'</ul>':''}
       <span class="muted">${escapeHtml(r.preferred_date || '')} ${escapeHtml(r.preferred_time || '')}</span>
-      <span class="email-status ${escapeHtml(r.email_status)}">${escapeHtml(r.email_status)}</span>
+      <span class="email-status ${escapeHtml(r.seeker_email_status||'unknown')}">${escapeHtml(r.seeker_email_status||'unknown')}</span>
     </li>`;
   }).join('') || '<li class="muted">No registrations.</li>';
 
@@ -544,7 +550,7 @@ function showAuthBanner() {
     <div class="auth-banner-inner">
       <strong>⚡ Authentication required</strong>
       <p>You need to log in via Cloudflare Access to use the Keeper's Panel.
-         Open <a href="/admin.html" target="_blank">/admin.html</a> directly in your browser — it will redirect you to the login page.</p>
+         <a href="/api/admin/session?enter=1">Sign in securely with your Keeper email →</a>. Your saved records remain in the database.</p>
       <button class="secondary" onclick="window.location.reload()">Reload &amp; try again</button>
     </div>
   `;
@@ -766,50 +772,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     else showToast(r.body?.error || 'Save failed', 'error');
   });
 
-  // Whoami via Cf-Access — not exposed via API; just show first part of email if available
-  $('#admin-email').textContent = 'Keeper';
+  document.addEventListener('admin-auth-error',showAuthBanner);
+  document.addEventListener('admin-open-seeker',e=>openSeekerDetail(e.detail));
+  $('#admin-sign-out').addEventListener('click',()=>{sessionStorage.removeItem('keeper_admin_key');sessionStorage.removeItem('keeper_admin_tab');});
+  const probe = await api('GET','/api/admin/session');
+  if(!probe.ok){showAuthBanner();$('#admin-email').textContent='Sign-in needed';return;}
+  $('#admin-email').textContent=probe.body.email;
+  const savedTab=sessionStorage.getItem('keeper_admin_tab');
+  const validTabs=['registrations','seekers','schedule','windows','events','log','members','chronicles'];
+  switchTab(validTabs.includes(savedTab)?savedTab:'registrations');
+  if(savedTab==='members'||savedTab==='chronicles')document.querySelector(`[data-tab="${savedTab}"]`).click();
 
-  // If CF Access JWT is broken, fall back to admin key entry.
-  // The key is set in Cloudflare Pages → Settings → Environment variables as KEEPER_ADMIN_KEY.
-  function showKeyForm(message) {
-    const main = document.querySelector('.admin-main');
-    main.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:center;min-height:60vh;">
-        <div class="card" style="max-width:420px;width:100%;padding:2rem;text-align:center;">
-          <div style="font-size:2rem;margin-bottom:1rem;">⚡</div>
-          <h3 style="margin-bottom:0.5rem;">Keeper Admin Key Required</h3>
-          <p style="color:var(--muted,#888);margin-bottom:1.5rem;">${message}</p>
-          <input id="key-input" type="password" placeholder="KEEPER_ADMIN_KEY"
-            style="width:100%;padding:0.6rem 0.8rem;font-size:1rem;border:1px solid var(--border,#444);border-radius:6px;background:var(--surface,#1a1a1a);color:inherit;margin-bottom:1rem;box-sizing:border-box;" />
-          <button id="key-submit" class="primary" style="width:100%;">Enter the Current</button>
-        </div>
-      </div>`;
-    const input = document.getElementById('key-input');
-    const submit = document.getElementById('key-submit');
-    input.focus();
-    const doSubmit = () => {
-      const val = input.value.trim();
-      if (!val) return;
-      sessionStorage.setItem('keeper_admin_key', val);
-      window.location.reload();
-    };
-    submit.addEventListener('click', doSubmit);
-    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSubmit(); });
-  }
-
-  const probe = await api('GET', '/api/admin/seekers');
-  if (probe.status === 401) {
-    const stored = sessionStorage.getItem('keeper_admin_key');
-    if (!stored) {
-      showKeyForm('Enter the KEEPER_ADMIN_KEY from your Cloudflare Pages settings.');
-      return;
-    } else {
-      // Key stored but still 401 — it's wrong, clear it and ask again.
-      sessionStorage.removeItem('keeper_admin_key');
-      showKeyForm('Admin key rejected — please re-enter KEEPER_ADMIN_KEY.');
-      return;
-    }
-  }
-
-  switchTab('seekers');
 });

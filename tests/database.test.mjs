@@ -14,6 +14,7 @@ before(async () => {
   const outfile = path.join(bundleDir, 'handlers.mjs');
   await build({
     stdin: { resolveDir: root, loader: 'ts', contents: `
+      export { onRequestGet as overview } from './functions/api/admin/overview.ts';
       export { onRequestPost as memberEditor } from './functions/api/members/editor.ts';
       export { onRequestPost as adminMember } from './functions/api/admin/members.ts';
       export { onRequestGet as publicMembers } from './functions/api/public/members.ts';
@@ -519,3 +520,17 @@ test('chronicles keep edits private, reject stale publishing, and can be hidden'
  assert.match(email.text,/lookup\.html\?next=character#sign-in=/);
  assert.match(email.html,/Write your story/);
  });
+
+test('admin registrations preserve selected trial names, booked times and delivery statuses', async t => {
+ const d=await database(t);
+ const id=await register(d,{bookings:[slot()],trial_intentions:[{code:'b_t1',preferred_time:'2026-11-08T10:00'}]});
+ const result=await d.call(app.overview);
+ assert.equal(result.status,200);
+ const r=result.data.registrations.find(r=>r.seeker_id===id);
+ assert.equal(r.choices[0].code,'b_t1');assert.ok(r.choices[0].name);
+ assert.equal(r.choices[0].preferred_time,'2026-11-08T10:00');
+ assert.equal(r.bookings[0].trial_code,'m_t1_recitation');
+ assert.equal(r.seeker_email_status,'sent');
+ assert.deepEqual(result.data.pending_profiles,[]);
+ assert.equal((await d.call(app.overview)).data.registrations[0].id,r.id);
+});
