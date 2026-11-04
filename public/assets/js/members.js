@@ -1,6 +1,7 @@
-import{renderProfile}from'./member-view.js?v=markdown-3';
+import {addStoryDownloads} from './story-downloads.js?v=1';
+import{renderProfile}from'./member-view.js?v=reader-4';
 const status=document.querySelector('#member-status'),id=new URLSearchParams(location.search).get('id');
 try{const response=await fetch('/api/public/members'+(id?'?id='+encodeURIComponent(id):''));if(!response.ok)throw new Error();const{members}=await response.json();
- if(document.querySelector('#member-story')){if(!id||!members.length){status.textContent='This story is not currently shared with the Circle.';}else{status.textContent='';document.title=members[0].name+' — Members of the Current';document.querySelector('#member-story').append(renderProfile(members[0],true));}}
+ if(document.querySelector('#member-story')){if(!id||!members.length){status.textContent='This story is not currently shared with the Circle.';}else{status.textContent='';document.title=members[0].name+' — Members of the Current';const profile=renderProfile(members[0],true);document.querySelector('#member-story').append(profile);addStoryDownloads(profile,members[0]);}}
  else{function draw(){const shown=members;for(const [container,leader]of[['leadership',true],['member',false]]){const list=document.querySelector('#'+container+'-list');list.replaceChildren(...shown.filter(p=>p.leadership===leader).map(p=>renderProfile(p)));document.querySelector(container==='leadership'?'#leadership-section':'#circle-section').hidden=!list.children.length;}status.textContent=shown.length?`${shown.length} ${shown.length===1?'member':'members'} sharing their story.`:'The Circle’s stories will appear here as members choose to share them.';}draw();}
 }catch{status.textContent='The Circle’s stories could not be loaded. Please refresh to try again.';}
