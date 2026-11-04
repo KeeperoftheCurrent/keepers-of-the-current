@@ -1,3 +1,4 @@
+import {renderStoryMarkdown} from './story-markdown.js?v=1';
 import {renderStoryDocument} from './story-format.js?v=1';
 export const emblem='/assets/img/keepers-crest-v4.png';
 export function el(tag,text,cls){const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;}
@@ -11,9 +12,9 @@ export function renderProfile(p,full=false){
  const chapters=p.story.split(/^##\s+/m).filter(x=>x.trim());
  if(chapters.length>1||p.story.startsWith('## ')){
   const controls=el('div',null,'actions');const expand=el('button','Open all chapters');expand.type='button';const close=el('button','Close all chapters');close.type='button';controls.append(expand,close);book.append(controls);
-  chapters.forEach((chapter,i)=>{const lines=chapter.trim().split('\n');const title=lines.shift();const details=el('details',null,'story-chapter');details.open=i===0;details.append(el('summary',`${String(i+1).padStart(2,'0')} · ${title}`));const content=el('div',null,'chapter-content');for(const paragraph of lines.join('\n').trim().split(/\n\s*\n/))if(paragraph.trim())content.append(el('p',paragraph.trim()));details.append(content);book.append(details);});
+  chapters.forEach((chapter,i)=>{const lines=chapter.trim().split('\n');const title=lines.shift();const details=el('details',null,'story-chapter');details.open=i===0;details.append(el('summary',`${String(i+1).padStart(2,'0')} · ${title}`));const content=el('div',null,'chapter-content');content.append(renderStoryMarkdown(lines.join('\n').trim()));details.append(content);book.append(details);});
   expand.addEventListener('click',()=>book.querySelectorAll('details').forEach(d=>d.open=true));close.addEventListener('click',()=>book.querySelectorAll('details').forEach(d=>d.open=false));
- }else{book.append(el('div',p.story,'member-backstory'));}root.append(book);
+ }else{book.append(renderStoryMarkdown(p.story));}root.append(book);
  }
 
  if(!full){const link=el('a','Read their story →');link.href='/member.html?id='+encodeURIComponent(p.id);root.append(link);}return root;

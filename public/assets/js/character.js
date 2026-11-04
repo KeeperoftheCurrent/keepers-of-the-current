@@ -1,5 +1,6 @@
+import {renderStoryMarkdown} from './story-markdown.js?v=1';
 import {renderStoryDocument} from './story-format.js?v=1';
-import{renderProfile,emblem}from'./member-view.js?v=formatted-2';
+import{renderProfile,emblem}from'./member-view.js?v=markdown-3';
 const $=s=>document.querySelector(s),form=$('#character-form'),status=$('#editor-status');let revision=0,portrait='',portraitData='',cropImage,dirty=false,busy=false;let storyDocument='';
 async function api(body){const r=await fetch('/api/members/editor',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const d=await r.json();if(!r.ok){const e=new Error(d.error||'Please sign in again.');e.status=r.status;throw e;}return d;}
 function values(){return Object.fromEntries(['name','introduction','story','current_role','hynafol_title','honours','affiliations','source'].map(k=>[k,form.elements[k].value.trim()]).concat([['portrait',portrait],['story_document',storyDocument]]));}
@@ -36,7 +37,7 @@ $('#story-file').addEventListener('change', () => {
    if (data.error) { importStatus.textContent = data.error; return; }
    importedStory = data.text;
    importedDocument=data.document?JSON.stringify(data.document):'';
-   $('#story-import-preview').replaceChildren(...(importedDocument?[renderStoryDocument(importedDocument)]:[document.createTextNode(importedStory)]));
+   $('#story-import-preview').replaceChildren(...(importedDocument?[renderStoryDocument(importedDocument)]:[renderStoryMarkdown(importedStory)]));
    $('#story-import-review').hidden = false;
    importStatus.textContent = `Your document is ready: ${importedStory.length.toLocaleString()} characters. Review it below, then choose “Use this text”. ${data.warnings.join(' ')}`;
   };

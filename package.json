@@ -2,7 +2,7 @@
   "name": "keepers-of-the-current",
   "private": true,
   "version": "2.0.0",
-  "description": "Keepers of the Current — LARP religion site, v2",
+  "description": "Keepers of the Current \u2014 LARP religion site, v2",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
@@ -12,7 +12,8 @@
     "db:local": "wrangler d1 execute keepers-current-db --local",
     "db:remote": "wrangler d1 execute keepers-current-db --remote",
     "build:guides": "node scripts/build-trial-guides.mjs",
-    "build:story-import": "esbuild scripts/story-import-worker.js --bundle --platform=browser --format=iife --minify --legal-comments=eof --outfile=public/assets/js/story-import-worker.js"
+    "build:story-import": "esbuild scripts/story-import-worker.js --bundle --platform=browser --format=iife --minify --legal-comments=eof --outfile=public/assets/js/story-import-worker.js",
+    "build:story-markdown": "esbuild scripts/story-markdown.js --bundle --platform=browser --format=esm --minify --legal-comments=eof --outfile=public/assets/js/story-markdown.js"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241112.0",
@@ -25,6 +26,7 @@
   "dependencies": {
     "@xmldom/xmldom": "0.9.12",
     "ical.js": "^2.2.1",
-    "jszip": "3.10.2"
+    "jszip": "3.10.2",
+    "marked": "18.1.3"
   }
 }
