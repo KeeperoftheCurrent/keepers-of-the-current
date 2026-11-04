@@ -3,7 +3,7 @@ import { authenticateSeeker } from './seeker-auth';
 import { jsonResponse } from '../_middleware';
 export interface Profile { name:string; introduction:string; story:string; current_role:string; hynafol_title:string; honours:string; affiliations:string; portrait:string; source:string; }
 export interface Member { id:string; seeker_id:string; active:number; draft:string; published:string|null; revision:number; submitted_revision:number|null; review_note:string; leadership:number; }
-export const limits = {name:80,introduction:240,story:50000,current_role:120,hynafol_title:160,honours:240,affiliations:200,portrait:100,source:500};
+export const limits = {name:80,introduction:240,story:500000,current_role:120,hynafol_title:160,honours:240,affiliations:200,portrait:100,source:500};
 export function profile(input: unknown): Profile {
  if(!input || typeof input !== 'object') throw new Error('Please complete your character details.');
  const out:Record<string,string>={};
@@ -14,6 +14,7 @@ export function profile(input: unknown): Profile {
  }
  if(out.source&&(!out.source.startsWith('https://')||new URL(out.source).username||new URL(out.source).password))throw new Error('Use an HTTPS story source.');
  if(!out.name) throw new Error('Your character needs a name.');
+ if(new TextEncoder().encode(JSON.stringify(out)).length>900000)throw new Error('This story is too large to store safely. Please shorten it slightly before saving.');
  return out as unknown as Profile;
 }
 export async function ownsPortrait(env:Env,id:string,portrait:string) {

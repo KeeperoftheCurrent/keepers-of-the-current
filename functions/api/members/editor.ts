@@ -3,8 +3,8 @@ import {jsonResponse} from '../../_middleware';
 import{memberSession,profile,ownsPortrait,cleanPortrait}from'../../lib/members';
 export const onRequestPost:PagesFunction<Env>=async context=>{
  const member=await memberSession(context);if(member instanceof Response)return member;
- if(Number(context.request.headers.get('content-length'))>300000)return jsonResponse({error:'Upload is too large.'},413);
- const raw=await context.request.text();if(raw.length>300000)return jsonResponse({error:'Upload is too large.'},413);
+ if(Number(context.request.headers.get('content-length'))>1600000)return jsonResponse({error:'Upload is too large.'},413);
+ const raw=await context.request.text();if(raw.length>1600000)return jsonResponse({error:'Upload is too large.'},413);
  try{
  const b=JSON.parse(raw);const env=context.env;
  if(b.action==='load'){

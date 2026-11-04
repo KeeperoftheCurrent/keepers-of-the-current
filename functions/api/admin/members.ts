@@ -8,7 +8,7 @@ export const onRequestGet:PagesFunction<Env,string,AdminContextData>=async({env}
 };
 export const onRequestPost:PagesFunction<Env,string,AdminContextData>=async context=>{
  const {request,env}=context;if(request.headers.get('Origin')!==new URL(request.url).origin)return jsonResponse({error:'Invalid origin.'},403);
- const raw=await request.text();if(raw.length>70000)return jsonResponse({error:'Request too large.'},413);
+ const raw=await request.text();if(raw.length>1600000)return jsonResponse({error:'Request too large.'},413);
  try{
  const b=JSON.parse(raw);const actor=context.data.user.email;let id=b.id;
  if(b.action==='grant'){

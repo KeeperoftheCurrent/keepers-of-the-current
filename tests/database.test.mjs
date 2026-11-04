@@ -550,3 +550,19 @@ test('admin and seeker availability agree after calendar conflicts and booking b
  d.env.TALIA_CALENDAR_ICS_URL='https://calendar.google.com/calendar/ical/test/basic.ics';t.mock.method(globalThis,'fetch',async()=>new Response('unavailable',{status:503}));
  const failed=await d.call(app.adminAvailability,undefined,{route});assert.equal(failed.status,503);assert.equal(failed.data.trials,undefined);
 });
+
+test('novel-length member stories survive submission, publication and later edits',async t=>{
+ const d=await database(t);await register(d);const cookie=await d.login();
+ await d.call(app.adminMember,{action:'grant',email:'seeker@example.invalid',name:'Aster'});
+ const loaded=(await d.call(app.memberEditor,{action:'load'},{cookie})).data.member;
+ const story=('## A chapter\nThe Current remembers.\n\n').repeat(15000).slice(0,500000);
+ const profile={...loaded.draft,introduction:'A novel of the Current.',story};
+ const submit=await d.call(app.memberEditor,{action:'submit',revision:0,profile,consent:true},{cookie});assert.equal(submit.status,200);
+ assert.equal((await d.call(app.adminMember,{action:'approve',id:loaded.id,revision:1})).status,200);
+ const read=()=>d.call(app.publicMembers,undefined,{route:'/api/public/members?id='+loaded.id});
+ assert.equal((await read()).data.members[0].story,story);
+ assert.equal((await d.call(app.memberEditor,{action:'save',revision:1,profile:{...profile,story:story+'x'}},{cookie})).status,400);
+ assert.equal((await d.call(app.adminMember,{action:'save',id:loaded.id,revision:1,profile:{...profile,story:story.replace('A chapter','A Chapter')}})).status,200);
+ assert.equal((await read()).data.members[0].story,story);
+ assert.equal((await d.call(app.memberEditor,{action:'load'},{cookie})).data.member.draft.story.length,500000);
+});
