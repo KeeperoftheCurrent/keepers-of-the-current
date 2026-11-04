@@ -28,3 +28,6 @@ html[data-light] .primary{background:#75500d!important;border-color:#75500d!impo
 
 /* Shared heading and active-tab treatment across public journeys. */
 main h1,main .title{color:var(--gold-light)}.site-nav a:last-child{border-radius:0!important}.site-nav a[aria-current="page"]{box-shadow:inset 0 -2px var(--gold)}
+
+/* Five visible destinations: three then two, with generous phone tap targets. */
+@media(max-width:600px){.site-nav{grid-template-columns:repeat(6,minmax(0,1fr));gap:0}.site-nav>a:nth-child(n){grid-column:span 2;min-height:44px}.site-nav>a:nth-child(4),.site-nav>a:nth-child(5){grid-column:span 3}}
