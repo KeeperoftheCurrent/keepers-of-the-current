@@ -1,4 +1,4 @@
-import{test,before,after}from'node:test';import assert from'node:assert/strict';import{build}from'esbuild';import{mkdtemp,rm}from'node:fs/promises';import{tmpdir}from'node:os';import{pathToFileURL}from'node:url';
+import{test,before,after}from'node:test';import assert from'node:assert/strict';import{build}from'esbuild';import{mkdtemp,rm,readFile}from'node:fs/promises';import{tmpdir}from'node:os';import{pathToFileURL}from'node:url';
 let dir,app,keys,jwk;
 before(async()=>{dir=await mkdtemp(tmpdir()+'/keeper-auth-');await build({entryPoints:['functions/lib/admin-page.ts'],bundle:true,platform:'node',format:'esm',outfile:dir+'/gate.mjs'});app=await import(pathToFileURL(dir+'/gate.mjs'));keys=await crypto.subtle.generateKey({name:'RSASSA-PKCS1-v1_5',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['sign','verify']);jwk={...await crypto.subtle.exportKey('jwk',keys.publicKey),kid:'test'};});
 after(()=>rm(dir,{recursive:true,force:true}));
@@ -7,3 +7,5 @@ async function gate(jwt,site='https://example.invalid'){let served=false;const r
 test('admin page redirects signed-out visitors and does not serve its contents',async()=>{const{result,served}=await gate();assert.equal(result.status,302);assert.equal(result.headers.get('Location'),'/api/admin/session?enter=1');assert.equal(served,false);});
 test('admin page accepts a verified session and refuses expired or missing expiration',async t=>{t.mock.method(globalThis,'fetch',async()=>Response.json({keys:[jwk]}));const good=await gate(await token());assert.equal(good.served,true);assert.equal(good.result.headers.get('Cache-Control'),'private, no-store');for(const exp of [1,undefined])assert.equal((await gate(await token({exp}))).served,false);assert.equal((await gate(await token({aud:'different-app'}))).served,false);});
 test('a production hostname containing localhost cannot bypass admin sign-in',async()=>{assert.equal((await gate(undefined,'https://localhost.evil.invalid')).served,false);});
+
+test('deployed Pages routes include both protected admin addresses',async()=>{const routes=JSON.parse(await readFile('public/_routes.json','utf8'));for(const path of ['/admin','/admin.html'])assert(routes.include.includes(path));});
