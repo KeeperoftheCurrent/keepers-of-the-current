@@ -1,4 +1,4 @@
-import {addStoryDownloads} from './story-downloads.js?v=1';
+import {addStoryDownloads} from './story-downloads.js?v=2';
 import{renderProfile}from'./member-view.js?v=reader-4';
 const status=document.querySelector('#member-status'),id=new URLSearchParams(location.search).get('id');
 try{const response=await fetch('/api/public/members'+(id?'?id='+encodeURIComponent(id):''));if(!response.ok)throw new Error();const{members}=await response.json();

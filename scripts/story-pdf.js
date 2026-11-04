@@ -1,0 +1,11 @@
+import pdfMake from 'pdfmake/build/pdfmake.js';
+import fonts from 'pdfmake/build/vfs_fonts.js';
+pdfMake.addVirtualFileSystem(fonts);
+export function storyPdfDefinition(root,name){
+ const book=root.querySelector('.story-book');const content=[{text:'The Book of '+name,fontSize:24,bold:true,margin:[0,0,0,20]}];
+ function runs(n,style={}){if(n.nodeType===3)return [{text:n.textContent,...style}];if(n.nodeType!==1)return [];const t=n.tagName.toLowerCase(),s={...style};if(t==='br')return [{text:'\n',...s}];if(['em','i'].includes(t)||n.style.fontStyle==='italic')s.italics=true;if(['strong','b'].includes(t)||Number(n.style.fontWeight)>=600)s.bold=true;if(n.style.textDecoration.includes('underline'))s.decoration='underline';if(n.style.textDecoration.includes('line-through'))s.decoration='lineThrough';return [...n.childNodes].flatMap(c=>runs(c,s));}
+ function walk(n){if(n.nodeType!==1)return;const t=n.tagName.toLowerCase();if(n.matches('.actions,.eyebrow,summary,button'))return;if(/^h[1-6]$/.test(t)){content.push({text:n.textContent,fontSize:t==='h1'?20:16,bold:true,margin:[0,16,0,10],headlineLevel:1,tocItem:true});return;}if(['p','li','pre','blockquote'].includes(t)){content.push({text:runs(n),margin:[t==='li'?12:0,0,0,9],alignment:['left','right','center','justify'].includes(n.style.textAlign)?n.style.textAlign:'left'});return;}if(t==='hr'){content.push({text:'*  *  *',alignment:'center',margin:[0,8,0,8]});return;}if(n.matches('.story-chapter')&&n.querySelector('.chapter-content'))content.push({text:n.querySelector('summary').textContent,fontSize:16,bold:true,margin:[0,16,0,10],headlineLevel:1,tocItem:true});for(const c of n.children)walk(c);}
+ for(const child of book.children){if(child.tagName==='H2'&&child.textContent==='A life in chapters')continue;walk(child);}
+ return {info:{title:'The Book of '+name,author:name},pageSize:'A5',pageMargins:[32,38,32,38],defaultStyle:{font:'Roboto',fontSize:11,lineHeight:1.25},content,footer:(page,total)=>({text:page+' / '+total,alignment:'center',fontSize:8,margin:[0,12,0,0]}),pageBreakBefore:(node,following)=>node.headlineLevel===1&&following.length===0};
+}
+export function createStoryPdf(root,name){return new Promise((resolve,reject)=>{try{pdfMake.createPdf(storyPdfDefinition(root,name)).getBlob(resolve);}catch(e){reject(e);}});}
