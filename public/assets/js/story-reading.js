@@ -1,0 +1,12 @@
+export function addReadingTools(root,p){
+ const book=root.querySelector('.story-book');if(!book)return;
+ const panel=document.createElement('div');panel.className='story-reading';
+ const time=document.createElement('p');time.className='small';const minutes=Math.max(1,Math.ceil(p.story.trim().split(/\s+/).length/200));time.textContent=`About ${minutes<60?minutes+' minutes':Math.floor(minutes/60)+' hr '+minutes%60+' min'} to read · Take it a chapter at a time.`;panel.append(time);
+ const chapters=[...book.querySelectorAll('.story-chapter')];
+ if(chapters.length){const label=document.createElement('label');label.textContent='Choose a chapter';const select=document.createElement('select');select.setAttribute('aria-label','Choose a chapter');select.append(new Option('Jump to a chapter…',''));chapters.forEach((d,i)=>select.append(new Option(d.querySelector('summary').textContent,String(i))));select.onchange=()=>{if(select.value==='')return;const d=chapters[Number(select.value)];d.open=true;d.scrollIntoView({block:'start'});d.querySelector('summary').focus();};label.append(select);panel.append(label);}
+ const key='keeper-reading:'+p.id;const targets=[...book.querySelectorAll('.formatted-story p,.chapter-content p,.story-chapter summary')];let saved;try{saved=JSON.parse(localStorage.getItem(key));}catch{}
+ const signature=p.story.length+':'+p.story.slice(0,100);const resume=document.createElement('button');resume.type='button';resume.textContent='Continue reading';resume.hidden=!(saved&&saved.signature===signature&&Number.isInteger(saved.index)&&targets[saved.index]);
+ resume.onclick=()=>{const n=targets[saved.index];if(!n)return;const chapter=n.closest('details');if(chapter)chapter.open=true;n.scrollIntoView({block:'start'});n.setAttribute('tabindex','-1');n.focus({preventScroll:true});};panel.append(resume);
+ const note=document.createElement('p');note.className='small';note.textContent='Your reading place is remembered on this device and browser.';panel.append(note);book.before(panel);
+ let timer;window.addEventListener('scroll',()=>{clearTimeout(timer);timer=setTimeout(()=>{let index=-1;targets.forEach((n,i)=>{if(!n.getClientRects().length)return;const r=n.getBoundingClientRect();if(r.top<innerHeight*.5&&r.bottom>0)index=i;});if(index<0)return;saved={index,signature};try{localStorage.setItem(key,JSON.stringify(saved));resume.hidden=false;}catch{}},250);},{passive:true});
+}
