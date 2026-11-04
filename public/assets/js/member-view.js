@@ -1,3 +1,4 @@
+import {renderStoryDocument} from './story-format.js?v=1';
 export const emblem='/assets/img/keepers-crest-v4.png';
 export function el(tag,text,cls){const n=document.createElement(tag);if(text)n.textContent=text;if(cls)n.className=cls;return n;}
 export function renderProfile(p,full=false){
@@ -6,6 +7,7 @@ export function renderProfile(p,full=false){
  copy.append(el('p',p.introduction));if(full&&p.affiliations)copy.append(el('p','Affiliations: '+p.affiliations));hero.append(copy);root.append(hero);
  if(full&&p.story){
  const book=el('section',null,'story-book');book.append(el('p','The Book of '+p.name,'eyebrow'),el('h2','A life in chapters'));
+ if(p.story_document){try{book.append(renderStoryDocument(p.story_document));root.append(book);return root;}catch{/* Older stories remain readable as plain text. */}}
  const chapters=p.story.split(/^##\s+/m).filter(x=>x.trim());
  if(chapters.length>1||p.story.startsWith('## ')){
   const controls=el('div',null,'actions');const expand=el('button','Open all chapters');expand.type='button';const close=el('button','Close all chapters');close.type='button';controls.append(expand,close);book.append(controls);

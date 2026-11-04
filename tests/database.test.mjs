@@ -566,3 +566,19 @@ test('novel-length member stories survive submission, publication and later edit
  assert.equal((await read()).data.members[0].story,story);
  assert.equal((await d.call(app.memberEditor,{action:'load'},{cookie})).data.member.draft.story.length,500000);
 });
+
+test('formatted stories persist through draft, approval and public reading; invalid formatting cannot inject HTML',async t=>{
+ const d=await database(t);await register(d);const cookie=await d.login();
+ await d.call(app.adminMember,{action:'grant',email:'seeker@example.invalid',name:'Aster'});
+ const loaded=(await d.call(app.memberEditor,{action:'load'},{cookie})).data.member;
+ const document={version:1,blocks:[{heading:1,marker:'',style:{font:'Garamond',align:'center',size:20},runs:[{text:'The Beginning',style:{bold:true,color:'#800020',background:'url(https://bad.invalid)',font:'x";color:red'}}]}]};
+ const profile={...loaded.draft,introduction:'A styled tale.',story:'The Beginning',story_document:JSON.stringify(document)};
+ assert.equal((await d.call(app.memberEditor,{action:'submit',revision:0,profile,consent:true},{cookie})).status,200);
+ const draft=(await d.call(app.memberEditor,{action:'load'},{cookie})).data.member.draft;
+ const cleaned=JSON.parse(draft.story_document);assert.equal(cleaned.blocks[0].style.font,'Garamond');assert.equal(cleaned.blocks[0].runs[0].style.background,undefined);assert.equal(cleaned.blocks[0].runs[0].style.font,undefined);
+ assert.equal((await d.call(app.adminMember,{action:'approve',id:loaded.id,revision:1})).status,200);
+ const publicProfile=(await d.call(app.publicMembers,undefined,{route:'/api/public/members?id='+loaded.id})).data.members[0];assert.deepEqual(JSON.parse(publicProfile.story_document),cleaned);
+ assert.equal((await d.call(app.publicMembers,undefined,{route:'/api/public/members'})).data.members[0].story_document,undefined);
+ assert.equal((await d.call(app.memberEditor,{action:'save',revision:1,profile:{...profile,story:'Mismatched text'}},{cookie})).status,400);
+ assert.equal((await d.call(app.memberEditor,{action:'save',revision:1,profile:{...profile,story_document:'',story:'Plain text now'}},{cookie})).status,200);
+});

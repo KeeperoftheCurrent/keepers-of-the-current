@@ -1,7 +1,8 @@
+import {cleanStoryDocument,storyText} from '../../shared/story-document';
 import { queryFirst, type Env } from './db';
 import { authenticateSeeker } from './seeker-auth';
 import { jsonResponse } from '../_middleware';
-export interface Profile { name:string; introduction:string; story:string; current_role:string; hynafol_title:string; honours:string; affiliations:string; portrait:string; source:string; }
+export interface Profile { name:string; introduction:string; story:string; story_document?:string; current_role:string; hynafol_title:string; honours:string; affiliations:string; portrait:string; source:string; }
 export interface Member { id:string; seeker_id:string; active:number; draft:string; published:string|null; revision:number; submitted_revision:number|null; review_note:string; leadership:number; }
 export const limits = {name:80,introduction:240,story:500000,current_role:120,hynafol_title:160,honours:240,affiliations:200,portrait:100,source:500};
 export function profile(input: unknown): Profile {
@@ -12,6 +13,8 @@ export function profile(input: unknown): Profile {
   if(typeof val!=='string'||val.length>max) throw new Error(`${key.replaceAll('_',' ')} is too long.`);
   out[key]=val.trim();
  }
+ const formatted=(input as Record<string,unknown>).story_document;
+ if(formatted){if(typeof formatted!=='string'||formatted.length>850000)throw new Error('Formatted story is too large.');const doc=cleanStoryDocument(JSON.parse(formatted));if(storyText(doc)!==out.story)throw new Error('The formatted story and its text do not match. Please reimport your document.');out.story_document=JSON.stringify(doc);}
  if(out.source&&(!out.source.startsWith('https://')||new URL(out.source).username||new URL(out.source).password))throw new Error('Use an HTTPS story source.');
  if(!out.name) throw new Error('Your character needs a name.');
  if(new TextEncoder().encode(JSON.stringify(out)).length>900000)throw new Error('This story is too large to store safely. Please shorten it slightly before saving.');
