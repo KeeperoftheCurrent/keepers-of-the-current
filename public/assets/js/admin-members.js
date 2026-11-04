@@ -13,3 +13,4 @@ $('#unpublish-member').addEventListener('click',()=>mutate('unpublish'));
 $('#suspend-member').addEventListener('click',()=>{if(confirm('Hide this profile and suspend the member’s editing access? Trial progress will remain unchanged.'))mutate('suspend');});
 $('#grant-member').addEventListener('submit',async e=>{e.preventDefault();try{await call({action:'grant',name:e.target.elements.name.value,email:e.target.elements.email.value});e.target.reset();await refresh();status.textContent='Membership granted. The member can sign in and open My character.';}catch(e){status.textContent=e.message;}});
 $('#refresh-members').addEventListener('click',refresh);document.querySelector('[data-tab="members"]').addEventListener('click',refresh);
+if(location.hash==='#members')document.querySelector('[data-tab="members"]').click();

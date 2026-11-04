@@ -41,3 +41,9 @@ test('reminder uses the same rules and sends an idempotency key; delivery failur
   globalThis.fetch=async()=>new Response('failed',{status:503});
   assert.deepEqual(await app.sendBothEmails(env,context),{seeker:'failed',admin:'failed'});
 });
+
+test('story review alert goes to Talia with escaped name and revision idempotency',async t=>{
+ const calls=[];t.mock.method(globalThis,'fetch',async(url,options)=>{calls.push(options);return Response.json({id:'fake'});});
+ await app.sendMemberReviewNotification(env,{id:'member-123',name:'Kairos <Test>',revision:3,hasPublished:true});
+ const message=JSON.parse(calls[0].body);assert.deepEqual(message.to,['talia.emberborn@gmail.com']);assert.match(message.html,/Kairos &lt;Test&gt;/);assert.match(message.text,/revised/);assert.match(message.text,/Revision 3/);assert.match(message.text,/admin.html#members/);assert.equal(calls[0].headers['Idempotency-Key'],'member-review-member-123-3');
+});

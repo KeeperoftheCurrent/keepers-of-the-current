@@ -233,3 +233,16 @@ export async function sendBookingUpdate(env: Env, seekerId: string, trialCode: s
  await sendViaResend(env,{from:env.EMAIL_FROM,to:[seeker.email],subject:action==='cancel'?'Trial appointment canceled':'Trial appointment rescheduled',text,html:emailLayout(action==='cancel'?'Appointment canceled':'Appointment rescheduled',`<p>${escapeHtml(text).replace(/\n/g,'</p><p>')}</p>`,env.SITE_URL+'/lookup.html'),reply_to:env.KEEPER_NOTIFY_EMAIL});
  await sendViaResend(env,{from:env.EMAIL_FROM,to:[env.KEEPER_NOTIFY_EMAIL],subject:'Seeker booking change',text,html:emailLayout('Your trial update',`<p>${escapeHtml(text).replace(/\n/g,'</p><p>')}</p>`,env.SITE_URL+'/lookup.html')});
 }
+
+/** Notify the Keeper only for committed submissions, never private drafts. */
+export async function sendMemberReviewNotification(env: Env, member: {id:string; name:string; revision:number; hasPublished:boolean}): Promise<void> {
+ const title=member.hasPublished?'A revised tale awaits your review':'A new tale awaits your review';
+ const url=env.SITE_URL+'/admin.html#members';
+ const message=`${member.name} has submitted ${member.hasPublished?'a revised':'a new'} character profile and story for your review. Revision ${member.revision}.`;
+ const guidance='Open the Keeper’s Panel, choose Members, then select the name marked Awaiting review. Nothing new is published until you approve it.';
+ const payload={from:env.EMAIL_FROM,to:['talia.emberborn@gmail.com'],subject:`Story awaiting review: ${member.name}`,html:emailLayout(title,`<p>${escapeHtml(message)}</p><p>${escapeHtml(guidance)}</p>`,url,'Review the tale'),text:`${title}\n\n${message}\n\n${guidance}\n${url}`};
+ const key=`member-review-${member.id}-${member.revision}`;
+ for(let attempt=0;attempt<3;attempt++){
+  try{await sendViaResend(env,payload,key);return;}catch(e){if(attempt===2)throw e;await new Promise(resolve=>setTimeout(resolve,500*(attempt+1)));}
+ }
+}

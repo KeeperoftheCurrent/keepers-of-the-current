@@ -1,3 +1,4 @@
+import {sendMemberReviewNotification} from '../../lib/email';
 import { queryFirst,exec,type Env } from '../../lib/db';
 import {jsonResponse} from '../../_middleware';
 import{memberSession,profile,ownsPortrait,cleanPortrait}from'../../lib/members';
@@ -27,6 +28,7 @@ export const onRequestPost:PagesFunction<Env>=async context=>{
  if(portraitId)statements.push(env.DB.prepare('INSERT INTO member_portraits(id,member_id,jpeg,created_at) SELECT ?,?,?,? WHERE EXISTS(SELECT 1 FROM member_profiles WHERE id=? AND revision=? AND active=1)').bind(portraitId,member.id,jpeg,now,member.id,b.revision));
  statements.push(env.DB.prepare('UPDATE member_profiles SET draft=?,revision=revision+1,submitted_revision=?,review_note=\'\',updated_at=? WHERE id=? AND revision=? AND active=1').bind(JSON.stringify(draft),b.action==='submit'?member.revision+1:null,now,member.id,b.revision));
  const results=await env.DB.batch(statements);if(!results.at(-1)?.meta.changes)return jsonResponse({error:'Your page changed. Reload before saving.'},409);
+ if(b.action==='submit')context.waitUntil(sendMemberReviewNotification(env,{id:member.id,name:draft.name,revision:member.revision+1,hasPublished:!!member.published}).catch(error=>console.error('[member-review-email] delivery failed',{memberId:member.id,revision:member.revision+1,error:String(error)})));
  // Keep only the current draft and published portraits; bound storage per member.
  await exec(env,`DELETE FROM member_portraits WHERE member_id=? AND id NOT IN (SELECT COALESCE(json_extract(draft,'$.portrait'),'') FROM member_profiles WHERE id=? UNION SELECT COALESCE(json_extract(published,'$.portrait'),'') FROM member_profiles WHERE id=?)`,member.id,member.id,member.id);
  return jsonResponse({ok:true,revision:member.revision+1,portrait:draft.portrait});
