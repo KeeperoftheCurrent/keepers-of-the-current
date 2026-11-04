@@ -508,3 +508,14 @@ test('chronicles keep edits private, reject stale publishing, and can be hidden'
  assert.equal((await d.call(app.adminChronicle,{action:'publish',id,revision:1})).status,409);
  await d.call(app.adminChronicle,{action:'hide',id,revision:2});assert.equal((await d.call(app.publicChronicles)).data.entries.length,0);
 });
+
+ test('character sign-in email preserves the editor destination', async t => {
+ const d = await database(t);
+ await register(d);
+ const result = await d.call(app.lookup,{action:'request',email:'seeker@example.invalid',next:'character'});
+ assert.equal(result.status,202);
+ const email = d.env.testSignInEmails[0];
+ assert.equal(email.subject,'Sign in to My character');
+ assert.match(email.text,/lookup\.html\?next=character#sign-in=/);
+ assert.match(email.html,/Write your story/);
+ });

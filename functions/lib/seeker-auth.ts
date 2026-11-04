@@ -18,7 +18,7 @@ function sessionCookie(token: string, seconds: number): string {
   return `${COOKIE}=${token}; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=${seconds}`;
 }
 
-async function issueLink(env: Env, email: string, ip: string, now: number) {
+async function issueLink(env: Env, email: string, ip: string, now: number, character = false) {
   const token = crypto.randomUUID();
   const tokenHash = await hash(token);
   const ipHash = await hash(ip);
@@ -39,14 +39,17 @@ async function issueLink(env: Env, email: string, ip: string, now: number) {
   if (!recipient) return;
 
   const link = new URL('/lookup.html', env.SITE_URL);
+  if (character) link.searchParams.set('next', 'character');
+  const title = character ? 'Sign in to My character' : 'Sign in to My Trials';
+  const purpose = character ? 'Write your story and tend your portrait in the Circle.' : 'See your saved progress and booked times.';
   link.hash = `sign-in=${token}`;
   try {
     await sendViaResend(env, {
     from: env.EMAIL_FROM,
     to: [email],
-    subject: 'Sign in to My Trials',
-    html: emailLayout('Sign in to My Trials','<p>See your saved progress and booked times.</p><ul><li>This link works once.</li><li>It expires in <strong>15 minutes</strong>.</li><li>Keep it private: do not forward it.</li></ul><p>Didn’t request this? You can ignore this email.</p>',link.href,'Sign in to My Trials'),
-    text: `Open My Trials: ${link.href}\n\nThis link expires in 15 minutes and works once. Use it to view your recorded progress and booked times. Do not forward it. If you did not request it, ignore this email.\nNeed help? Reply to this email.`,
+    subject: title,
+    html: emailLayout(title,'<p>'+purpose+'</p><ul><li>This link works once.</li><li>It expires in <strong>15 minutes</strong>.</li><li>Keep it private: do not forward it.</li></ul><p>Didn’t request this? You can ignore this email.</p>',link.href,title),
+    text: `${title}: ${link.href}\n\nThis link expires in 15 minutes and works once. ${purpose} Do not forward it. If you did not request it, ignore this email.\nNeed help? Reply to this email.`,
     reply_to: env.KEEPER_NOTIFY_EMAIL,
     });
   } catch (error) {
@@ -69,7 +72,7 @@ export async function authenticateSeeker(context: EventContext<Env, string, unkn
     if (email.length > 200 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return jsonResponse({ ok: false }, 400);
     }
-    context.waitUntil(issueLink(env, email, request.headers.get('CF-Connecting-IP') ?? '', now).catch(() => {
+    context.waitUntil(issueLink(env, email, request.headers.get('CF-Connecting-IP') ?? '', now, body.next === 'character').catch(() => {
       console.error('[seeker sign-in] Unable to issue sign-in link');
     }));
     return jsonResponse({ ok: true }, 202);

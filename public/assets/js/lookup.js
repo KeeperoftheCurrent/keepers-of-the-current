@@ -1,4 +1,5 @@
 import { downloadCalendar } from './calendar-file.js';
+const characterSignIn = new URLSearchParams(location.search).get('next') === 'character';
 const $ = sel => document.querySelector(sel);
 const escapeHtml = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 const PILLARS = {
@@ -157,6 +158,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const status = $('#sign-in-status');
   const redeem = $('#redeem-link');
   const token = new URLSearchParams(location.hash.slice(1)).get('sign-in');
+  if (characterSignIn) {
+    document.title = 'Sign in to My character — Keepers of the Current';
+    $('.page-header h1').textContent = 'My character';
+    $('.page-header .subtitle').textContent = 'Return to your story in the Circle.';
+    $('#form-wrap .panel p.muted').textContent = 'Enter your member email. We’ll send a one-time link to your portrait and story editor. No trial booking is needed.';
+    $('#form-wrap > p').textContent = 'Your character page must first be opened by the Keeper. If you need member access, speak with a leader at Keepers Rest.';
+    redeem.textContent = 'Open My character';
+  }
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
@@ -167,7 +176,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const button = form.querySelector('button[type="submit"]');
     button.disabled = true;
     try {
-      await signIn('request', { email: email.value });
+      await signIn('request', { email: email.value, next: characterSignIn ? 'character' : undefined });
       status.textContent = 'If that email is registered, a sign-in link is on its way. Check your inbox and spam folder.';
     } catch {
       renderError('Could not request a link. Please try again.');
@@ -200,6 +209,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         const result = await signIn('redeem', { token });
         if (result?.seeker) {
+          if (characterSignIn) { location.replace('/character.html'); return; }
           renderResult(result.seeker);
           show('result');
         } else {
@@ -218,6 +228,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     const result = await signIn('session');
     if (result?.seeker) {
+          if (characterSignIn) { location.replace('/character.html'); return; }
       renderResult(result.seeker);
       show('result');
     }
