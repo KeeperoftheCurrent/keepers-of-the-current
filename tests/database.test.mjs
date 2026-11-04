@@ -14,6 +14,7 @@ before(async () => {
   const outfile = path.join(bundleDir, 'handlers.mjs');
   await build({
     stdin: { resolveDir: root, loader: 'ts', contents: `
+      export { onRequestGet as adminAvailability } from './functions/api/admin/availability.ts';
       export { onRequestGet as overview } from './functions/api/admin/overview.ts';
       export { onRequestPost as memberEditor } from './functions/api/members/editor.ts';
       export { onRequestPost as adminMember } from './functions/api/admin/members.ts';
@@ -533,4 +534,19 @@ test('admin registrations preserve selected trial names, booked times and delive
  assert.equal(r.seeker_email_status,'sent');
  assert.deepEqual(result.data.pending_profiles,[]);
  assert.equal((await d.call(app.overview)).data.registrations[0].id,r.id);
+});
+
+test('admin and seeker availability agree after calendar conflicts and booking buffers',async t=>{
+ const d=await database(t);await register(d,{bookings:[slot()]});
+ d.env.TALIA_CALENDAR_ICS_URL='https://calendar.google.com/calendar/ical/test/basic.ics';
+ t.mock.method(globalThis,'fetch',async()=>new Response('BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nUID:lunch\r\nDTSTART:20261108T180000Z\r\nDTEND:20261108T200000Z\r\nEND:VEVENT\r\nEND:VCALENDAR'));
+ const route='/api/admin/availability?event_id=gg_2026&trial_codes=m_t1_recitation';
+ const admin=await d.call(app.adminAvailability,undefined,{route});
+ const publicView=await d.call(app.availability,undefined,{route});
+ assert.equal(admin.status,200);assert.equal(admin.data.calendar_connected,true);assert.deepEqual(admin.data.trials,publicView.data.trials);
+ const starts=admin.data.trials.m_t1_recitation.available_starts;assert.ok(starts.length);assert.ok(!starts.includes(slot().start_at));
+ assert.ok(!starts.some(s=>s>='2026-11-08T12:00'&&s<'2026-11-08T14:00'));
+ delete d.env.TALIA_CALENDAR_ICS_URL;assert.equal((await d.call(app.adminAvailability,undefined,{route})).status,503);
+ d.env.TALIA_CALENDAR_ICS_URL='https://calendar.google.com/calendar/ical/test/basic.ics';t.mock.method(globalThis,'fetch',async()=>new Response('unavailable',{status:503}));
+ const failed=await d.call(app.adminAvailability,undefined,{route});assert.equal(failed.status,503);assert.equal(failed.data.trials,undefined);
 });

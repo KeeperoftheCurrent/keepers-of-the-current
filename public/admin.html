@@ -6,7 +6,7 @@
 <title>Keeper's Panel — Keepers of the Current</title>
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="stylesheet" href="/assets/css/components.css">
-<link rel="stylesheet" href="/assets/css/admin.css?v=20261103-dashboard">
+<link rel="stylesheet" href="/assets/css/admin.css?v=20261103-calendar">
 <link href="/assets/css/reading.css" rel="stylesheet"><link href="/assets/css/magic.css?v=20261103-maroon" rel="stylesheet"><link rel="stylesheet" href="/assets/css/members.css?v=20261103-portraits"></head>
 <body class="admin-body"><a href="#main-content" class="skip-link">Skip to content</a>
 
@@ -80,14 +80,14 @@
         <select aria-label="Choose a gathering" id="windows-event"></select>
       </div>
     </div>
-    <div class="card">
-      <p class="muted">Define the days and times you're available to keep trials at this event. Seekers will only see open slots inside these windows.</p>
+    <button class="secondary" id="refresh-availability">Refresh from calendar</button><div class="card" id="actual-availability" aria-live="polite"><p>Choose a gathering to check Talia’s calendar.</p></div>
+    <details class="card"><summary>Opening-hour settings — before calendar exclusions</summary><p>These are the outer limits for trial bookings, not a copy of your Google Calendar. Busy calendar events and booked trials are removed automatically. Change protected time in your calendar; change these settings only to adjust when you offer trials.</p>
       <div id="windows-list"></div>
       <div class="windows-actions">
         <button class="secondary" id="windows-add-btn">+ Add window</button>
-        <button class="primary" id="windows-save-btn">Save windows</button>
+        <button class="primary" id="windows-save-btn">Save opening hours</button>
       </div>
-    </div>
+    </details>
   </section>
 
   <!-- ─── EVENTS TAB ─── -->
@@ -138,6 +138,6 @@
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-<script type="module" src="/assets/js/admin-registrations.js?v=20261103-admin2"></script><script type="module" src="/assets/js/admin.js?v=20261103-dashboard"></script>
+<script type="module" src="/assets/js/admin-registrations.js?v=20261103-admin2"></script><script type="module" src="/assets/js/admin.js?v=20261103-calendar"></script>
 <script type="module" src="/assets/js/reading.js"></script><script type="module" src="/assets/js/admin-members.js?v=20261103-review"></script><script type="module" src="/assets/js/admin-chronicles.js"></script></body>
 </html>

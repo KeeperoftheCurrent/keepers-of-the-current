@@ -1,3 +1,4 @@
+import {renderAvailability} from './admin-availability.js?v=20261103-calendar';
 import { api } from './api.js?v=20261103-admin';
 
 const $ = (sel) => document.querySelector(sel);
@@ -420,7 +421,8 @@ async function renderSchedule(eventId) {
       }</ul></div>`
     : '';
 
-  $('#schedule-content').innerHTML = html + openRegHtml;
+  $('#schedule-content').innerHTML = '<p>Opening hours below are not free-time blocks: your calendar may contain other commitments. Check the calendar-filtered appointment starts here.</p><div id="schedule-availability"></div><h3>Saved trial bookings within opening hours</h3>' + html + openRegHtml;
+  renderAvailability($('#schedule-availability'),eventId);
 }
 
 // ─── windows config ───────────────────────────────────────────────────
@@ -432,12 +434,14 @@ async function loadEventsForWindows() {
   const sel = $('#windows-event');
   sel.innerHTML = '<option value="">— choose an event —</option>' +
     allEvents.map((e) => `<option value="${e.id}">${escapeHtml(e.name)}</option>`).join('');
-  sel.onchange = () => loadWindowsFor(sel.value);
+  sel.value=sessionStorage.getItem('keeper_windows_event')||[...allEvents].sort((a,b)=>(a.starts_on||'9999').localeCompare(b.starts_on||'9999')).find(e=>e.active&&e.ends_on>=new Date().toLocaleDateString('en-CA'))?.id||'';
+  sel.onchange = () => {sessionStorage.setItem('keeper_windows_event',sel.value);loadWindowsFor(sel.value);};
   if (sel.value) loadWindowsFor(sel.value);
 }
 
 async function loadWindowsFor(eventId) {
   editingWindowsEventId = eventId;
+  renderAvailability($('#actual-availability'),eventId);
   if (!eventId) { $('#windows-list').innerHTML = ''; editingWindowsBuffer = []; return; }
   const { ok, body } = await api('GET', `/api/admin/events/${eventId}/windows`);
   if (!ok) return showToast('Could not load windows', 'error');
@@ -760,6 +764,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     openNewSeekerModal();
   });
 
+  $('#refresh-availability').addEventListener('click',()=>renderAvailability($('#actual-availability'),$('#windows-event').value));
   $('#windows-add-btn').addEventListener('click', () => {
     if (!editingWindowsEventId) return showToast('Choose an event first', 'error');
     editingWindowsBuffer.push({ day_date: '', start_time: '09:00', end_time: '17:00' });
@@ -768,7 +773,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   $('#windows-save-btn').addEventListener('click', async () => {
     if (!editingWindowsEventId) return;
     const r = await api('PUT', `/api/admin/events/${editingWindowsEventId}/windows`, { windows: editingWindowsBuffer });
-    if (r.ok) showToast(`Saved ${r.body.count} window(s)`);
+    if (r.ok) {showToast(`Saved ${r.body.count} opening-hour window(s)`);renderAvailability($('#actual-availability'),editingWindowsEventId);}
     else showToast(r.body?.error || 'Save failed', 'error');
   });
 
