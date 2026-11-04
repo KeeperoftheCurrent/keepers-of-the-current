@@ -6,7 +6,7 @@ test('all public journeys have skip links, optional reading preferences and a co
   const{document:d}=parseHTML(read(page+'.html'));
   assert.ok(d.querySelector('main#main-content'));assert.ok(d.querySelector('a[href="#main-content"]'));
   assert.ok(d.querySelector('#larger-text'));assert.ok(d.querySelector('#light-background'));
-  assert.equal(d.querySelectorAll('.site-nav>a').length,4);
+  assert.deepEqual([...d.querySelectorAll('.site-nav>a')].map(a=>a.textContent.trim()),['The Current','Keepers Rest','Chronicles','Members','Trials']);
   assert.ok(d.querySelector('link[href="/assets/css/reading.css"]'));
  }
 });
@@ -22,7 +22,7 @@ test('all nine deep links retain original rules and web checklists match email s
 });
 test('long lore is optional and the homepage has no screen-dependent redirect',()=>{
  const{document:d}=parseHTML(read('current.html'));assert.equal(d.querySelectorAll('details[open]').length,0);
- assert.equal(d.querySelectorAll('main > .read-section').length,5);
+ assert.equal(d.querySelectorAll('main > .read-section').length,4);
  assert.ok(!read('index.html').includes('window.location.replace'));
 });
 

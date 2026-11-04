@@ -11,7 +11,8 @@
     "migrate:remote": "wrangler d1 migrations apply keepers-current-db --remote",
     "db:local": "wrangler d1 execute keepers-current-db --local",
     "db:remote": "wrangler d1 execute keepers-current-db --remote",
-    "build:guides": "node scripts/build-trial-guides.mjs"
+    "build:guides": "node scripts/build-trial-guides.mjs",
+    "build:story-import": "esbuild scripts/story-import-worker.js --bundle --platform=browser --format=iife --minify --legal-comments=eof --outfile=public/assets/js/story-import-worker.js"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241112.0",
@@ -22,6 +23,7 @@
     "wrangler": "^4.87.0"
   },
   "dependencies": {
-    "ical.js": "^2.2.1"
+    "ical.js": "^2.2.1",
+    "mammoth": "1.13.0"
   }
 }

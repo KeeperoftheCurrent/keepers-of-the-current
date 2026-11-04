@@ -13,3 +13,40 @@ $('#preview-profile').addEventListener('click',()=>{$('#preview-content').replac
 async function save(action){if(busy)return;if(!$('#crop-controls').hidden){status.textContent='Choose “Use this crop” before saving.';return;}if(action==='submit'&&!form.reportValidity())return;busy=true;form.querySelectorAll('button').forEach(b=>b.disabled=true);try{const d=await api({action,revision,profile:values(),portrait_data:portraitData||undefined,consent:$('#publish-consent').checked});revision=d.revision;portrait=d.portrait;portraitData='';dirty=false;status.textContent=action==='submit'?'Your story is with the Keeper for approval. Your current published page is unchanged.':'Draft saved. Only you and the Keeper can see these changes.';status.scrollIntoView({behavior:'auto'});}catch(e){status.textContent=e.message;}finally{busy=false;form.querySelectorAll('button').forEach(b=>b.disabled=false);}}
 $('#save-profile').addEventListener('click',()=>save('save'));form.addEventListener('submit',e=>{e.preventDefault();save('submit');});
 $('#withdraw-profile').addEventListener('click',async()=>{if(!confirm('Hide your published profile and cancel any pending review? Your saved draft will remain.'))return;try{await api({action:'withdraw'});status.textContent='Your profile is no longer public. You can submit it again when ready.';}catch(e){status.textContent=e.message;}});
+
+// Documents are read locally, off the main thread. Only reviewed story text is saved.
+let importWorker, importTimer, importedStory = '';
+const importStatus = $('#story-import-status');
+function stopImport() { clearTimeout(importTimer); importWorker?.terminate(); importWorker = undefined; }
+function clearImport() { stopImport(); importedStory = ''; $('#story-import-review').hidden = true; $('#story-import-preview').value = ''; $('#story-file').value = ''; }
+$('#story-file').addEventListener('change', () => {
+ const file = $('#story-file').files[0];
+ clearImport();
+ if (!file) return;
+ importStatus.textContent = 'Opening your document… Your current story is unchanged.';
+ try {
+  importWorker = new Worker('/assets/js/story-import-worker.js?v=1');
+  const fail = message => { stopImport(); importStatus.textContent = message; };
+  importWorker.onerror = () => fail('This document could not be opened. Try a Word (.docx) or text (.txt) copy, or paste your story below.');
+  importWorker.onmessage = ({data}) => {
+   stopImport();
+   if (data.error) { importStatus.textContent = data.error; return; }
+   importedStory = data.text;
+   $('#story-import-preview').value = importedStory;
+   $('#story-import-review').hidden = false;
+   importStatus.textContent = `Your document is ready: ${importedStory.length.toLocaleString()} characters. Review it below, then choose “Use this text”.`;
+  };
+  importTimer = setTimeout(() => fail('This document took too long to open. Try a text (.txt) copy or paste your story below.'), 20000);
+  importWorker.postMessage(file);
+ } catch { stopImport(); importStatus.textContent = 'Document import is unavailable in this browser. You can still paste your story below.'; }
+});
+$('#cancel-story-import').addEventListener('click', () => { clearImport(); importStatus.textContent = 'Import cancelled. Your story is unchanged.'; });
+$('#use-story-import').addEventListener('click', () => {
+ if (!importedStory || busy) return;
+ if (form.elements.story.value.trim() && !confirm('Replace the text currently in your backstory editor with this imported story? Your saved draft stays unchanged until you save.')) return;
+ form.elements.story.value = importedStory;
+ dirty = true;
+ clearImport();
+ importStatus.textContent = 'Your text is in the editor. Review it, add chapter headings if you wish, then save your draft or submit for approval.';
+ form.elements.story.focus();
+});
