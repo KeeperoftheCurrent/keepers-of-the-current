@@ -1,6 +1,6 @@
 import {addReadingTools} from './story-reading.js?v=1';
 import {addStoryDownloads} from './story-downloads.js?v=3';
-import{renderProfile}from'./member-view.js?v=reader-4';
+import{renderProfile}from'./member-view.js?v=reader-7';
 const status=document.querySelector('#member-status'),id=new URLSearchParams(location.search).get('id');
 try{const response=await fetch('/api/public/members'+(id?'?id='+encodeURIComponent(id):''));if(!response.ok)throw new Error();const{members}=await response.json();
  if(document.querySelector('#member-story')){if(!id||!members.length){status.textContent='This story is not currently shared with the Circle.';}else{status.textContent='';document.title=members[0].name+' — Members of the Current';const profile=renderProfile(members[0],true);document.querySelector('#member-story').append(profile);addReadingTools(profile,members[0]);addStoryDownloads(profile,members[0]);}}

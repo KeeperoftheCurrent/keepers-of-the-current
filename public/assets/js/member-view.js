@@ -13,7 +13,7 @@ export function renderProfile(p,full=false){
  const controls=el('div',null,'actions');const expand=el('button','Open all chapters');expand.type='button';const close=el('button','Close all chapters');close.type='button';controls.append(expand,close);book.append(controls);
  let group=[],title='',count=0;
  function flush(){if(!group.length)return;if(title){const details=el('details',null,'story-chapter');details.open=count++===0;details.append(el('summary',title),renderStoryDocument({version:1,blocks:group}));book.append(details);}else book.append(renderStoryDocument({version:1,blocks:group}));group=[];}
- for(const block of doc.blocks){if(block.heading){flush();title=block.runs.map(r=>r.text).join('');}group.push(block);}flush();
+ for(const original of doc.blocks){const text=original.runs.map(r=>r.text).join('');const numbered=/^\s*\d{1,2}\s*[·]\s+\S.{0,150}$/.test(text);const block=numbered&&!original.heading?{...original,heading:2}:original;if(block.heading){flush();title=text.trim();}if(!text.trim()&&group.length===1&&group[0].heading)continue;group.push(block);}flush();
  expand.addEventListener('click',()=>book.querySelectorAll('details').forEach(d=>d.open=true));close.addEventListener('click',()=>book.querySelectorAll('details').forEach(d=>d.open=false));
  if(!count)controls.remove();root.append(book);return root;
  }catch{/* Older stories remain readable as plain text. */}}
