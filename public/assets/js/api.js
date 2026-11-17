@@ -2,7 +2,10 @@
 // Body is parsed JSON when Content-Type is JSON, otherwise raw text.
 
 export async function api(method, path, body = undefined) {
-  const adminKey = sessionStorage.getItem('keeper_admin_key') || '';
+  // Private/embedded browsers may deny tab storage. Public requests and
+  // cookie-authenticated sessions must still work without the optional key.
+  let adminKey = '';
+  try { adminKey = sessionStorage.getItem('keeper_admin_key') || ''; } catch {}
   const init = {
     method,
     headers: {
