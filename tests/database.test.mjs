@@ -41,6 +41,7 @@ before(async () => {
       builder.onLoad({ filter: /functions\/lib\/email\.ts$/ }, () => ({
         loader: 'js', contents: `export async function sendBookingUpdate() {}
         export async function sendProgressUpdate() {}
+        export async function sendMemberReviewNotification() {}
         export async function sendViaResend(env, payload) { env.testSignInEmails.push(payload); }
         export async function sendSeekerConfirmation(env, payload) { if (env.failReminder) throw new Error('simulated mail failure'); env.reminders.push(payload); }
         export async function sendBothEmails(env) {
